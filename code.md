@@ -116,6 +116,8 @@
     
 - `git remote -v`：显示需要读写远程仓库使用的 Git 保存的简写与其对应的 URL
 
+- `git remote remove origin`：取消本地目录下关联的远程库
+
 - `git push -u origin master`：把本地库的所有内容**推送**到远程库。推送之前必须将SSH Key公钥添加到Github账户的列表里面。参数`-u`在第一次推送成功后将本地和远程的`master`分支关联，可以**化简**以后的push和pull的命令
 
 - `git fetch <remote>`：从远程仓库中获得数据
