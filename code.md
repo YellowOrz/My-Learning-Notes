@@ -174,9 +174,106 @@
 
 - 
 
-    
+ ## 技巧
 
-    
+- 电脑上Github与Gitlab账号共存：
+
+    - 分别使用两个账号的邮箱去生成ssh key。先生成的要改名，以免后面的把它覆盖了
+
+        ```shell
+        # your.email@example.com是账号所用的邮箱
+        $ ssh-keygen -t rsa -C "your.email@example.com"
+        # 。。。这里省略一些操作。操作完后效果如下
+        $ ll ~/.ssh/
+        总用量 28
+        drwx------  2 orz orz 4096 8月  10 14:22 ./
+        drwxr-xr-x 43 orz orz 4096 8月  10 14:29 ../
+        -rw-------  1 orz orz 1675 7月   1 11:11 id_rsa_github
+        -rw-r--r--  1 orz orz  405 7月   1 11:11 id_rsa_github.pub
+        -rw-------  1 orz orz 3247 8月  10 14:22 id_rsa_gitlab
+        -rw-r--r--  1 orz orz  743 8月  10 14:22 id_rsa_gitlab.pub
+        -rw-r--r--  1 orz orz 1994 8月  10 14:14 known_hosts
+        ```
+
+    - 到两个账号的后台设置里面，将公钥（.pub结尾）的内容复制粘贴进去
+
+    - 选择一：将其中一个常用的账号设置为全局的，另一个只在特定项目中设置
+
+        ```shell
+        # 比如将github账号设置成全局的，在任意路径下操作
+        $ git config --global user.name "YellowOrz"
+        $ git config --global user.email "silence_33_@outlook.com"
+        
+        # 将gitlab账号只在特定项目中使用，需要进入项目文件夹，比如项目“test”
+        $ cd ~/Desktop/test
+        $ git config user.name "楚门"
+        $ git config user.email "chumen@orbbec.com"
+        $ cat .git/config
+        [core]
+        	repositoryformatversion = 0
+        	filemode = true
+        	bare = false
+        	logallrefupdates = true
+        [remote "origin"]
+        	url = gitlab@code.orbbec.com.cn:chumen/test.git
+        	fetch = +refs/heads/*:refs/remotes/origin/*
+        [branch "master"]
+        	remote = origin
+        	merge = refs/heads/master
+        [user]
+        	name = 楚门
+        	email = chumen@orbbec.com
+        ```
+
+    - 选择二：在`/etc/ssh/ssh_config`后添加如下内容：
+
+        ```
+        Host github.com
+         hostname github.com
+         User Boy-A
+         IdentityFile /User/<yourusername>/.ssh/id_rsa
+        
+        Host code.orbbec.com.cn
+         hostname code.orbbec.com.cn
+         User chumen@
+         IdentityFile /User/<yourusername>/.ssh/didi_id_rsa
+        ```
+
+        
+
+    > 参考资料：[[Git技巧]两个Git帐号如何在一台电脑上共存](https://mp.weixin.qq.com/s?__biz=MzI3NTE2NjYxNw==&mid=2650600198&idx=1&sn=4b1a910e5461653ca6963fac9c460bbe&scene=21)、[gitlab和github共存](https://www.jianshu.com/p/6325e9929232)
+
+- 一个项目与多个远程仓库关联：比如一个项目已经与Github上的远程仓库相关联了，但是还想跟GitLab上的一个远程仓库相关联
+
+    - 目前状态如下：
+
+        ```shell
+        $ git remote -v
+        origin	git@github.com:YellowOrz/Practice_Orbbec.git (fetch)
+        origin	git@github.com:YellowOrz/Practice_Orbbec.git (push)
+        ```
+
+    - 方法一：使用`git remote add`在添加一个远程仓库
+
+        ```shell
+        # “gitlab”可以任意，后面为Gitlab远程仓库的地址
+        $ git remote add gitlab gitlab@code.orbbec.com.cn:PointCloudFeature.git
+        
+        # 再查看状态，可以看到有两个远程仓库了。缺点是要push两次
+        $ git remote -v
+        gitlab	gitlab@code.orbbec.com.cn:PointCloudFeature.git (fetch)
+        gitlab	gitlab@code.orbbec.com.cn:PointCloudFeature.git (push)
+        origin	git@github.com:YellowOrz/Practice_Orbbec.git (fetch)
+        origin	git@github.com:YellowOrz/Practice_Orbbec.git (push)
+        
+        # 缺点是要分开push，也就是push两次
+        $ git push origin master
+        $ git push gitlab master
+        ```
+
+    > 参考资料：[一个项目push到多个远程Git仓库](https://segmentfault.com/a/1190000011294144)
+
+  
 
 
 
