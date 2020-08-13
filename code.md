@@ -199,7 +199,7 @@
 
     - 到两个账号的后台设置里面，将公钥（.pub结尾）的内容复制粘贴进去
 
-    - 选择一：将其中一个常用的账号设置为全局的，另一个只在特定项目中设置
+    - 将其中一个常用的账号设置为全局的，另一个只在特定项目中设置
 
         ```shell
         # 比如将github账号设置成全局的，在任意路径下操作
@@ -227,25 +227,34 @@
         	email = chumen@orbbec.com
         ```
 
-    - 选择二：在`/etc/ssh/ssh_config`后添加如下内容：
+    - （可选？）在`/etc/ssh/ssh_config`后添加如下内容：
 
-        ```
+        ```shell
         Host github.com
          hostname github.com
-         User Boy-A
-         IdentityFile /User/<yourusername>/.ssh/id_rsa
+         User git
+         IdentityFile /home/orz/.ssh/id_rsa_github
         
         Host code.orbbec.com.cn
          hostname code.orbbec.com.cn
-         User chumen@
-         IdentityFile /User/<yourusername>/.ssh/didi_id_rsa
+         User gitlab
+         IdentityFile /home/orz/.ssh/id_rsa_gitlab
         ```
 
-        
+    - 测试：
+
+        ```bash
+        $ ssh -T git@github.com
+        Hi YellowOrz! You've successfully authenticated, but GitHub does not provide shell access.
+        $ ssh -T gitlab@code.orbbec.com.cn
+        Welcome to GitLab, 楚门!
+        ```
 
     > 参考资料：[[Git技巧]两个Git帐号如何在一台电脑上共存](https://mp.weixin.qq.com/s?__biz=MzI3NTE2NjYxNw==&mid=2650600198&idx=1&sn=4b1a910e5461653ca6963fac9c460bbe&scene=21)、[gitlab和github共存](https://www.jianshu.com/p/6325e9929232)
 
-- 一个项目与多个远程仓库关联：比如一个项目已经与Github上的远程仓库相关联了，但是还想跟GitLab上的一个远程仓库相关联
+    
+
+- **一个项目与多个远程仓库关联**：比如一个项目已经与Github上的远程仓库相关联了，但是还想跟GitLab上的一个远程仓库相关联
 
     - 目前状态如下：
 
@@ -273,6 +282,8 @@
         $ git push gitlab master
         ```
 
+    > ==好像不能设置使用不同的用户名&邮箱==
+    >
     > 参考资料：[一个项目push到多个远程Git仓库](https://segmentfault.com/a/1190000011294144)
 
   
