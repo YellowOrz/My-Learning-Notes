@@ -1,12 +1,12 @@
 [TOC]
 
-# Git
+
 
 > 来源：[Git教程- 廖雪峰的官方网站](https://www.liaoxuefeng.com/wiki/896043488029600)
 >
 > 其他学习资料：[LearnGitBranching](https://learngitbranching.js.org/?demo=&locale=zh_CN)
 
-## 概念
+# 概念
 
 - **工作区**（Working Directory）：就是整个文件夹，比如本文件所在文件夹`My-Learning-Notes`就是工作区
 
@@ -24,7 +24,7 @@
 
 - **冲突**（Conflict）：产生原因为被合并的两个分支修改了同一个地方，Git会用`<<<<<<<`，`=======`，`>>>>>>>`标记出不同分支的内容
 
-## 基础操作
+# 基础操作
 
 - `git init`：**初始化**本地文件夹变成Git可以管理的仓库。会创建一个隐藏文件夹`.git`
 
@@ -49,7 +49,7 @@
 
 > 可以多次`add`不同的文件，然后`commit`一次
 
-## 时光机穿梭
+# 时光机穿梭
 
 - `git status`：查看**仓库**当前的**状态**。比如
 
@@ -108,7 +108,7 @@
 
     > 如果不小心用`rm <file>`误删文件了，可以用命令`git checkout -- <file>`恢复
 
-## 远程仓库
+# 远程仓库
 
 - `git remote add origin <url>`：将本地已有仓库与远程仓库**关联**。`origin`是Git对远程仓库的默认叫法，可以修改
 
@@ -122,7 +122,7 @@
 
 - `git fetch <remote>`：从远程仓库中获得数据
 
-## 分支管理
+# 分支管理
 
 - `git branch`：**列出所有分支**，当前分支前会有`*`
 
@@ -176,7 +176,7 @@
 
 - 
 
- ## 技巧
+ # 技巧
 
 - 电脑上Github与Gitlab账号共存：
 
