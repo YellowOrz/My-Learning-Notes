@@ -204,6 +204,7 @@ make install
 cd ../..
 ```
 ## 图形界面
+
 1. WSL上安装图形界面：我选择的是`apt install xfce4`
 2. Windows安装[MobaXTerm](https://mobaxterm.mobatek.net/download.html)。然后运行MobaXTerm
 3. 在WSL上运行如下命令就会出现图形界面了
@@ -216,8 +217,14 @@ startxfce4
 
 # Typora
 
-- 扩展语法：文件 -> 偏好设置 -> Markdown -> Markdown 扩展语法，全部&#10003;
-- 文件 -> 偏好设置 -> 编辑器：默认缩进 = 4，默认换行符 = LF
+- 偏好设置：
+
+    ![editor](images/editor.png)
+
+    ![image](images/image.png)
+
+    ![Markdown](images/Markdown.png)
+
 - 快捷键配置：编辑文件`conf.user.json`，Linux上的路径为`~/.config/Typora/conf/conf.user.json`。在大的花括号之间添加如下内容
 ```shell
 "keyBinding": {
@@ -248,6 +255,8 @@ startxfce4
 # CLion
 
 - 与WSL连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
+- 设置自动补全提示不区分大小写：设置成下图所示![20200824170831738](images/20200824170831738.png)
+- 
 
 # VS Code
 
