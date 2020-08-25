@@ -64,10 +64,9 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
 3. 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
     ```shell
-    IP=127.0.0.1
-    Port=1080
-export http_proxy="http://${IP}:${Port}"
-    export https_proxy="https://${IP}:${Port}"
+    IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ")                                 Port=23333
+    export http_proxy="http://${IP}:${Port}"
+export https_proxy="https://${IP}:${Port}"
     
     httpon(){
     	export http_proxy="http://${IP}:${Port}"
@@ -96,7 +95,18 @@ export http_proxy="http://${IP}:${Port}"
     ```shell
     # 启用鼠标
     set -g mouse on
+    # 复制模式	
+    set-window-option -g mode-keys vi #可以设置为vi或emacs
+    # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
     ```
+
+    复制模式步骤：
+
+    1. C-b [ 进入复制模式
+    2. 参考上表移动鼠标到要复制的区域，移动鼠标时可用vim的搜索功能"/","?"
+    3. 安空格键开始选择复制区域
+    4. 选择完成后安enter键退出
+    5. C-b ] 粘贴
 
 6. 自动进行git操作脚本：
 
@@ -179,7 +189,7 @@ pip install opencv-contrib-python
 |Ceres|求解最小二乘问题|依赖：apt install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev<br>[git](https://github.com/ceres-solver/ceres-solver)后用cmake编译安装|
 |g2o|基于图优化|依赖：apt install cmake libeigen3-dev libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3<br>[git](https://github.com/RainerKuemmerle/g2o)后用cmake编译安装|
 | FLANN | 最邻近算法 | [git](https://github.com/mariusmuja/flann)后用cmake编译安装 |
-|PCL|点云处理|依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev<br>[git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装|
+|PCL|点云处理|依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev libusb-1.0-0-dev <br> [git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装|
 整理成.sh如下：
 ```bash
 #安装这些依赖的时候好像会安装python2.7，我也不知道为啥。而且安装完后运行python会自动运行python2.7。  
@@ -244,8 +254,8 @@ startxfce4
 4. 如果报错，则在
 
     ```shell
-    WINIP=。。。
-    PortOffset=。。。
+    IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ")
+    PortOffset=2222.0
     export DISPALY=${WINIP}:${PortOffeset}
     ```
 
