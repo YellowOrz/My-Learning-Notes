@@ -1,10 +1,21 @@
 [TOC]
 
+# 系统设置
+
+- 分区：系统装在SSD上面。
+    - C盘：至少150G。
+    - D盘：剩下所有的容量都分给D盘
+- OneDrive
+
 # 必装软件
-+ 必装软件分三种，一种是通过**软件包安装**而且比较平常的（比如QQ、微信等），一种是通过**压缩包解压**的不平常的（比如PdgCntEditor、OfficeBox），一种是**库软件**（比如OpenCV，Anaconda）
-+ 所有的软件都安装在D盘（可以选择的话），软件包安装的放在`Program Files`或者`Program Files (x86)`文件夹，压缩包解压的放在`Soft`文件夹，库软件放在`Library`文件夹
+
++ 必装软件分三种：
+    + 通过**软件包安装**而且比较平常的（比如TIM、微信等）
+    + 通过**压缩包解压**的不平常的（比如PdgCntEditor、OfficeBox）
+    + **库软件**（比如OpenCV，Anaconda）：==如果可以全部装在WSL里面==
++ 所有的软件都**安装在C盘**，软件包安装的放在`Program Files`或者`Program Files (x86)`文件夹，压缩包解压的放在`Soft`文件夹，库软件放在`Library`文件夹
 ## 软件包安装
-1. 不做介绍的软件：[TIM](https://tim.qq.com/download.html)、[微信](https://pc.weixin.qq.com/)、[网易云音乐](https://music.163.com/download)、[网易有道词典](https://cidian.youdao.com/index.html)、[钉钉](https://www.dingtalk.com/download)、[福昕阅读器](https://www.foxitsoftware.cn/downloads/PDF)、[阿里旺旺](https://wangwang.taobao.com/)、[百度网盘](https://pan.baidu.com/download)、[GitHub Desktop](https://help.github.com/cn/desktop/getting-started-with-github-desktop/installing-github-desktop) 
+1. 不做介绍的软件：[TIM](https://tim.qq.com/download.html)、[微信](https://pc.weixin.qq.com/)、[网易云音乐](https://music.163.com/download)、[网易有道词典](https://cidian.youdao.com/index.html)、[钉钉](https://www.dingtalk.com/download)、[福昕阅读器](https://www.foxitsoftware.cn/downloads/PDF)、[阿里旺旺](https://wangwang.taobao.com/)、[百度网盘](https://pan.baidu.com/download)、[GitHub Desktop](https://help.github.com/cn/desktop/getting-started-with-github-desktop/installing-github-desktop)、[OneDrive](https://www.microsoft.com/zh-cn/microsoft-365/onedrive/online-cloud-storage)
 2. 稍作介绍的软件：
 
 | 软件名 | 介绍                | 软件名      | 介绍|
@@ -17,6 +28,7 @@
 |[flux](https://justgetflux.com/)|调节屏幕色温|[stretchly](https://hovancik.net/stretchly/)|休息提醒|
 |[MobaXTerm](https://mobaxterm.mobatek.net/download.html)|远程连接linux的好工具|[Typora](https://typora.io/#download)|Markdown编辑器|
 |[Foxmail](https://www.foxmail.com/)|邮箱|[AIDA64](https://www.aida64.com/downloads)|显示电脑详细信息|
+|[cloc](https://github.com/AlDanial/cloc)|代码行数统计|||
 
 3. 大型软件：Lightroom Classic、Photoshop、Microsoft Office、~~Visual Studio~~、WLS（Ubuntu 18.04 LTS）、Visio、CLion
 ## 压缩包解压
@@ -28,17 +40,20 @@
 | [万彩办公大师](http://www.wofficebox.com/) | 办公工具箱  | [SpeedPan](http://supanx.com/speedpan-free.html)     | 百度网盘资源下载器，免费版，用来搜资源 |
 | [软媒魔方](https://mofang.ruanmei.com/)    | 管理电脑的工具箱 | [SpeedPanX](http://supanx.com/)    | 百度网盘资源下载器，付费版，用来下资源 |
 ## 库软件
-全部安装于`E:\Library\`中  
+==如果可以全部装在WSL里面==，否则全部安装于`C:\Library\`中  
+
 | 软件名 | 介绍| 软件名| 介绍|
 | ---------- | ------ | ------------ | ------ |
-| [Anaconda3](https://www.anaconda.com/distribution/)  | 管理python| CTEX| LaTeX发行版，毕设用|
-| mingw64| 和VSCode一起配置c/c++环境 |[OpenCV](https://github.com/opencv/opencv/releases)| 计算机视觉库|
+| [Anaconda3](https://www.anaconda.com/distribution/)  | 管理python| ~~CTEX~~ | ~~LaTeX发行版，毕设用~~ |
+| ~~mingw64~~ | ~~和VSCode一起配置c/c++环境~~ |[OpenCV](https://github.com/opencv/opencv/releases)| 计算机视觉库|
 |[Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)|矩阵库|[PCL](https://github.com/PointCloudLibrary/pcl/releases)|处理点云库|
 |[CMake](https://cmake.org/download/)|编译工具|[Git](https://git-scm.com/download/win)|版本控制系统|
 # WSL
 WSL的版本是Ubuntu 18.04。
-首先需要到`控制面板 -> 卸载程序 -> 启用或关闭Windows功能 -> 适用于Linux的Windows子系统`，打勾（忘了要不要重启）
-进入`Microsoft Store`安装。从WSL升级到WSL2可以参考[教程](https://www.liumingye.cn/archives/326.html)
+首先需要到`控制面板 -> 卸载程序 -> 启用或关闭Windows功能 -> 适用于Linux的Windows子系统`，打勾，然后重启
+进入`Microsoft Store`安装。
+
+从WSL升级到WSL2可以参考[教程](https://www.liumingye.cn/archives/326.html)
 
 ## 配置
 1. 更改镜像为[清华镜像](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
@@ -49,24 +64,29 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
 3. 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
     ```shell
-    export http_proxy="http://127.0.0.1:1080"
-    export https_proxy="https://127.0.0.1:1080"
-
-    proxyon(){
-    	#http
-    	export http_proxy="http://127.0.0.1:1080"
-    	export https_proxy="https://127.0.0.1:1080"
-        #socks5
-        #export http_proxy="socks5://10.168.1.176:1080"
-        #export https_proxy="socks5://10.168.1.176:1080"
+    IP=127.0.0.1
+    Port=1080
+export http_proxy="http://${IP}:${Port}"
+    export https_proxy="https://${IP}:${Port}"
+    
+    httpon(){
+    	export http_proxy="http://${IP}:${Port}"
+    	export https_proxy="https://${IP}:${Port}"
     	echo "proxy on, and IP is $(curl ip.sb)"
     }
-    
+    socks5on(){
+        export http_proxy="socks5://${IP}:${Port}"
+        export https_proxy="socks5://${IP}:${Port}"
+    	echo "proxy on, and IP is $(curl ip.sb)"
+    }
     proxyoff(){
       unset http_proxy
       unset https_proxy
       echo "proxy off"
     }
+    # git的代理。不支持socks5
+    git config --global http.proxy http://${IP}:${Port}
+    git config --global https.proxy https://${IP}:${Port}
     ```
     
 4. 安装cuda：参考[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
@@ -115,7 +135,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
             cd -L
             continue
         else
-            read -p "输入message：" message
+            read -p "输入姓名（可以空白）：" message
             if [ -n "$message" ]
             then
                 message=$message"-"$date
@@ -154,66 +174,86 @@ pip install opencv-contrib-python
 |库名称|说明|安装方法|
 |---|---|---|
 |Eigen|矩阵处理|apt install libeigen3-dev|
-|Pangolin|可视化|依赖：apt install libgl1-mesa-dev libglew-dev<br>[git](https://github.com/stevenlovegrove/Pangolin)后用cmake编译安装|
+|Pangolin|可视化|依赖：apt install libgl1-mesa-dev libglew-dev <br>(可选，用于生成html/pdf文档) apt install Doxygen <br>[git](https://github.com/stevenlovegrove/Pangolin)后用cmake编译安装|
 |Sophus|李代数|[git](https://github.com/strasdat/Sophus)后用cmake编译（无需安装）|
 |Ceres|求解最小二乘问题|依赖：apt install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev<br>[git](https://github.com/ceres-solver/ceres-solver)后用cmake编译安装|
 |g2o|基于图优化|依赖：apt install cmake libeigen3-dev libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3<br>[git](https://github.com/RainerKuemmerle/g2o)后用cmake编译安装|
+| FLANN | 最邻近算法 | [git](https://github.com/mariusmuja/flann)后用cmake编译安装 |
+|PCL|点云处理|依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev<br>[git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装|
 整理成.sh如下：
 ```bash
 #安装这些依赖的时候好像会安装python2.7，我也不知道为啥。而且安装完后运行python会自动运行python2.7。  
 #不过重新注入环境变量了以后再运行python用的就是anaconda里面的python，所以我也就没有管它了。
-apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev cmake libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3 libgl1-mesa-dev libglew-dev
-#安装Pangolin出现‘No package ‘xkbcommon’ found’
+apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev cmake libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3 libgl1-mesa-dev libglew-dev build-essential libboost-all-dev libvtk7-dev
+
+#如果安装Pangolin出现‘No package ‘xkbcommon’ found’
 apt install libxkbcommon-x11-dev
 
 git clone https://github.com/stevenlovegrove/Pangolin.git
-cd Pangolin
-mkdir build
-cd build
-cmake ..
+cd Pangolin && mkdir build && cd build && cmake ..
 make -j7
 make install
 cd ../..
 
 git clone https://github.com/strasdat/Sophus.git
-cd Sophus
-mkdir build
-cd build
-cmake ..
+cd Sophus && mkdir build && cd build && cmake ..
 make -j7
 #可以不安装，但是我还是装了
 make install
 cd ../..
 
 git clone https://github.com/ceres-solver/ceres-solver.git
-cd ceres-solver
-mkdir build
-cd build
-cmake ..
+cd ceres-solver && mkdir build && cd build && cmake ..
 make -j7
 make install
 cd ../..
 
 git clone https://github.com/RainerKuemmerle/g2o.git
-cd g2o
-mkdir build
-cd build
-cmake ..
+cd g2o && mkdir build && cd build && cmake ..
 make -j7
 make install
 cd ../..
+
+git clone https://github.com/mariusmuja/flann.git
+cd flann && mkdir build && cd build && cmake ..
+make -j7
+make install
+cd ../..
+
+# PCL安装也可以 git clone 
+tar xvfj pcl-pcl-1.7.2.tar.gz
+cd pcl-pcl-1.7.2 && mkdir build && cd build && cmake ..
+# 如果想要安装Release版本，运行命令cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j7
+make -j7 install
 ```
 ## 图形界面
 
 1. WSL上安装图形界面：我选择的是`apt install xfce4`
-2. Windows安装[MobaXTerm](https://mobaxterm.mobatek.net/download.html)。然后运行MobaXTerm
+
+2. Windows安装[MobaXTerm](https://mobaxterm.mobatek.net/download.html)。然后运行MobaXTerm，保证其X server为开启状态，即左上角的“X”为彩色，为灰色的话，按一下就彩色了
+
+    ![MobaXTerm_X](images/MobaXTerm_X.png)
+
 3. 在WSL上运行如下命令就会出现图形界面了
 ```bash
 startxfce4
 ```
-**PS**：如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
+​		**PS**：如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
 
+4. 如果报错，则在
 
+    ```shell
+    WINIP=。。。
+    PortOffset=。。。
+    export DISPALY=${WINIP}:${PortOffeset}
+    ```
+
+    其中，PortOffset需与MobaXTerm中的X server设置保持一致
+
+    ![MobaXTerm_offset](images/MobaXTerm_offset.png)
+
+    PS：
 
 # Typora
 
