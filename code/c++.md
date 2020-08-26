@@ -38,6 +38,7 @@
 
 ```cpp
 #include <dirent.h>
+# 注意father_dir要以“/”结尾，例如“../binfiles/”
 bool GetFilesPath(string father_dir, vector<string> &files ){
     DIR *dir=opendir(father_dir.c_str());
     if(dir==NULL){
@@ -66,7 +67,31 @@ bool GetFilesPath(string father_dir, vector<string> &files ){
 
 # 字符串操作
 
-## 根据分隔符分割字符串
+## String <--> int、float、double
+
+```c++
+// int、float、double  --> string
+string s = to_string(num);
+
+// string --> int、float、double
+cout << stoi(s) << endl; //string --> int;
+cout << stol(s) << endl; //string --> int
+cout << stof(s) << endl; //string --> float
+cout << stof(s) << endl; //string --> doubel
+```
+
+
+
+## find()：查询是否包含字符(串)
+
+```c++
+string s = "...";
+if (s.find("...") != String::)
+```
+
+
+
+## strtok()：根据分隔符分割字符串
 
 > 参考资料：[C++之split字符串分割](https://blog.csdn.net/Mary19920410/article/details/77372828)
 
