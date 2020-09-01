@@ -306,7 +306,7 @@ startxfce4
 
 - 与WSL连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
 - 设置自动补全提示不区分大小写：设置成下图所示![20200824170831738](images/20200824170831738.png)
-- 
+- 设置提示无延迟：![image-20200828191656396](images/image-20200828191656396.png)
 
 # VS Code
 
