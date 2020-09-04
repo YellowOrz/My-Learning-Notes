@@ -39,17 +39,17 @@
 ```cpp
 #include <dirent.h>
 # 注意father_dir要以“/”结尾，例如“../binfiles/”
-bool GetFilesPath(string father_dir, vector<string> &files ){
+bool GetFilesPath(const string& father_dir, vector<string> &files ){
     DIR *dir=opendir(father_dir.c_str());
-    if(dir==NULL){
+    if(dir==nullptr){
         cout << father_dir << " don't exit!" << endl;
         return false;
     }
     struct dirent *entry;
-    while((entry = readdir(dir)) != NULL){
+    while((entry = readdir(dir)) != nullptr){
         string name(entry->d_name);               
         if(entry->d_type == DT_DIR ) { // 类型为目录
-            if (name.find(".") == string::npos) {	//排除“.”和“..”以及隐藏文件夹
+            if (name.find('.') == string::npos) {	//排除“.”和“..”以及隐藏文件夹
                 string son_dir = father_dir + name + "/";
 
                 vector<string> tempPath;
@@ -66,6 +66,21 @@ bool GetFilesPath(string father_dir, vector<string> &files ){
 ```
 
 # 字符串操作
+
+## 提取字符串最后一个字符
+
+```c++
+string str = "...";
+// 方法一
+cout << str[str.length()-1] << endl;
+
+// 方法二
+string::const_iterator it = str.end();
+it--;
+cout << *it << endl;
+```
+
+
 
 ## String <--> int、float、double
 
@@ -125,6 +140,24 @@ vector<string> split(const string &str, const string &delim) {
 #define RESET   "\033[0m"
 #define RED     "\033[31m" 
 #define YELLOW  "\033[33m" 
+#define BLUE    "\033[34m"
+#define GREEN   "\033[32m" 
 cout << RED << "I am RED. " << RESET << "I am normal. " << YELLOW << "I am YELLOW" << endl; 
+```
+
+# 其他
+
+## 使用PCL解析命令行参数
+
+```c++
+int main(int argc, char **argv) {
+    cout << RED << "解析命令行参数中。。。" << RESET << endl;
+    string parameter;
+    int arg_index = pcl::console::find_argument(argc, argv, "--filename");
+    if (arg_index != -1)
+        parameter = argv[arg_index];
+    else parameter = "...";
+    ...
+}
 ```
 
