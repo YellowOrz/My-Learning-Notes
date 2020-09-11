@@ -64,9 +64,10 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
 3. 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
     ```shell
-    IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ")                                 Port=23333
-    export http_proxy="http://${IP}:${Port}"
-export https_proxy="https://${IP}:${Port}"
+    IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ") 
+    Port=23333
+export http_proxy="http://${IP}:${Port}"
+    export https_proxy="https://${IP}:${Port}"
     
     httpon(){
     	export http_proxy="http://${IP}:${Port}"
@@ -85,7 +86,7 @@ export https_proxy="https://${IP}:${Port}"
     }
     # git的代理。不支持socks5
     git config --global http.proxy http://${IP}:${Port}
-    git config --global https.proxy https://${IP}:${Port}
+    git config --global https.proxy http://${IP}:${Port}
     ```
     
 4. 安装cuda：参考[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
@@ -108,11 +109,11 @@ export https_proxy="https://${IP}:${Port}"
     4. 选择完成后安enter键退出
     5. C-b ] 粘贴
 
-6. 自动进行git操作脚本：
+6. 自动进行git操作脚本`gitauto.sh`：
 
     ```shell
     #!/bin/bash
-    # 判断关键词
+    # 用于判断的关键词
     fail="失败|error|fail"
     success="干净|succe|clear"
     
@@ -164,6 +165,12 @@ export https_proxy="https://${IP}:${Port}"
     
         cd -L
     done
+    ```
+
+    然后添加到环境变量`~/.bashrc`
+
+    ```shell
+    alias gitauto="bash ~/gitauto.sh"
     ```
 
 7. 与Clion连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
