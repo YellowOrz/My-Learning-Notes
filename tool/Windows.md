@@ -84,9 +84,9 @@ export http_proxy="http://${IP}:${Port}"
       unset https_proxy
       echo "proxy off"
     }
-    # git的代理。不支持socks5
-    git config --global http.proxy http://${IP}:${Port}
-    git config --global https.proxy http://${IP}:${Port}
+    # git的代理。不支持socks5。不过我加了以后好像更慢了。。。
+    # git config --global http.proxy http://${IP}:${Port}
+    # git config --global https.proxy http://${IP}:${Port}
     ```
     
 4. 安装cuda：参考[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
@@ -197,6 +197,8 @@ pip install opencv-contrib-python
 |g2o|基于图优化|依赖：apt install cmake libeigen3-dev libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3<br>[git](https://github.com/RainerKuemmerle/g2o)后用cmake编译安装|
 | FLANN | 最邻近算法 | [git](https://github.com/mariusmuja/flann)后用cmake编译安装 |
 |PCL|点云处理|依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev libusb-1.0-0-dev <br> [git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装|
+|OctoMap|八叉树建图|方法一：apt install liboctomap-dev<br>方法二：[git](https://github.com/OctoMap/octomap)后用cmake编译安装|
+||||
 整理成.sh如下：
 ```bash
 #安装这些依赖的时候好像会安装python2.7，我也不知道为啥。而且安装完后运行python会自动运行python2.7。  
@@ -205,6 +207,12 @@ apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glo
 
 #如果安装Pangolin出现‘No package ‘xkbcommon’ found’
 apt install libxkbcommon-x11-dev
+
+git clone https://github.com/OctoMap/octomap.git
+cd octomap && mkdir build && cd build && cmake ..
+make -j7
+make install
+cd ../..
 
 git clone https://github.com/stevenlovegrove/Pangolin.git
 cd Pangolin && mkdir build && cd build && cmake ..

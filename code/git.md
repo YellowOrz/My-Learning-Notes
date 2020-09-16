@@ -270,11 +270,12 @@ drwxr-xr-x 43 orz orz 4096 8月  10 14:29 ../
     origin	git@github.com:YellowOrz/Practice_Orbbec.git (push)
     ```
 
-    注意：如果想用ssh的方法关联多个远程仓库，需要先完成这一步：[电脑上Github与Gitlab账号共存](# 电脑上Github与Gitlab账号共存 )
+    注意：如果想用**ssh的方法**关联多个远程仓库，需要先完成这一步：[电脑上Github与Gitlab账号共存](# 电脑上Github与Gitlab账号共存 )
 
 - 方法一：使用`git remote add`在添加一个远程仓库
 
     ```shell
+    # 语法：git remote add [<选项>] <名称> <地址>
     # “gitlab”可以任意，后面为Gitlab远程仓库的地址
     $ git remote add gitlab gitlab@code.orbbec.com.cn:PointCloudFeature.git
     
