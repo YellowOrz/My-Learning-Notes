@@ -290,9 +290,25 @@ startxfce4
 
     ![Markdown](images/Markdown.png)
 
-- 快捷键配置：编辑文件`conf.user.json`，Linux上的路径为`~/.config/Typora/conf/conf.user.json`。在大的花括号之间添加如下内容
-```shell
-"keyBinding": {
+- 快捷键配置：编辑文件`conf.user.json`，Linux上的路径为`~/.config/Typora/conf/conf.user.json`；或者点击`文件` -> `偏好设置` -> `通用` -> `高级设置` -> `打开高级设置`。将整个文件内容替换为
+```json
+/** For advanced users. */
+{
+  "defaultFontFamily": {
+    "standard": null, //String - Defaults to "Times New Roman".
+    "serif": null, // String - Defaults to "Times New Roman".
+    "sansSerif": null, // String - Defaults to "Arial".
+    "monospace": null // String - Defaults to "Courier New".
+  },
+  "autoHideMenuBar": false, //Boolean - Auto hide the menu bar unless the `Alt` key is pressed. Default is false.
+
+  // Array - Search Service user can access from context menu after a range of text is selected. Each item is formatted as [caption, url]
+  "searchService": [
+    ["Search with Google", "https://google.com/search?q=%s"]
+  ],
+
+  // Custom key binding, which will override the default ones.
+  "keyBinding": {
     // for example: 
     // "Always on Top": "Ctrl+Shift+P"
     "Inline Math": "Ctrl+M",
@@ -302,9 +318,15 @@ startxfce4
     // "Comment": "Ctrl+K+C"
 
   },
+
+  "monocolorEmoji": false, //default false. Only work for Windows
+  "autoSaveTimer" : 3, // Deprecidated, Typora will do auto save automatically. default 3 minutes
+  "maxFetchCountOnFileList": 500,
+  "flags": [] // default [], append Chrome launch flags, e.g: [["disable-gpu"], ["host-rules", "MAP * 127.0.0.1"]]
+}
 ```
 
-- 
+- 字典更新：Typora支持用户更新字典。[字典](./user-dict.json)保存路径为`{typora-user-folder}\dictionaries`。`{typora-user-folder}`可以通过设置里面的`主题文件夹`找到，或者在Linux上为`~/.config/Typora`，在Windows上为`C:/user/<用户名>/appData/Roaming/Typora`。
 
 # Foxmail
 
