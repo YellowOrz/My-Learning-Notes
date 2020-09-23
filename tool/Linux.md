@@ -1,0 +1,264 @@
+
+
+# 必装软件&库
+
+==root身份==
+
+1. 不做介绍
+
+    ```shell
+    apt install tmux cmake make g++-4.8 g++-5 g++-6 g++-7 g++-8 gcc-4.8 gcc-5 gcc-6 gcc-7 gcc-8 unzip zip rar unrar gdb build-essential git cmake-curses-gui chromium-browser gedit vim
+    ```
+
+    | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍               |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------ |
+    | [dingtalk](https://github.com/nashaofu/dingtalk)             | 用electron封装的网页版钉钉                                   | [electron-ssr](https://github.com/shadowsocksrr/electron-ssr)（[备份](https://github.com/qingshuisiyuan/electron-ssr-backup)） | linux最好用的ssr吧 |
+    | [搜狗输入法](https://pinyin.sogou.com/linux/?r=pinyin)       | [参考教程](https://blog.csdn.net/lupengCSDN/article/details/80279177) | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器   |
+    | [Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm) | 下载工具。暂时没找到更好的                                   | [mendeley](https://www.mendeley.com/download-desktop-new/)   | 论文管理工具       |
+    | [网易云音乐](https://music.163.com/#/download)               | 网易云音乐                                                   | [qq](https://im.qq.com/linuxqq/download.html)                | qq                 |
+    | [WPS](https://linux.wps.cn/)                                 | linux最好用的office工具                                      | [XMind](https://www.xmind.cn/download/)                      | 思维导图           |
+    | [Typora](https://typora.io/#linux)                           | markdown编辑器                                               | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE                |
+    | [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件                                                 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒           |
+    | [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器                                                   | [福昕阅读器](https://www.foxitsoftware.cn/downloads/)        | pdf阅读器          |
+    | [vscode](https://code.visualstudio.com/download)             | linux最好用的文本显示工具                                    | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看       |
+
+2. [miniconda](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)：安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改[Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/)和[pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/)(可选)为清华镜像，并安装如下包
+
+```bash
+pip install opencv-contrib-python
+```
+
+3. OpenCV：参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/104040394)
+4. 各种库：
+
+| 库名称   | 说明             | 安装方法                                                     |
+| -------- | ---------------- | ------------------------------------------------------------ |
+| Eigen    | 矩阵处理         | apt install libeigen3-dev                                    |
+| Pangolin | 可视化           | 依赖：apt install libgl1-mesa-dev libglew-dev <br>(可选，用于生成html/pdf文档) apt install Doxygen <br>[git](https://github.com/stevenlovegrove/Pangolin)后用cmake编译安装 |
+| Sophus   | 李代数           | [git](https://github.com/strasdat/Sophus)后用cmake编译（无需安装） |
+| Ceres    | 求解最小二乘问题 | 依赖：apt install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev<br>[git](https://github.com/ceres-solver/ceres-solver)后用cmake编译安装 |
+| g2o      | 基于图优化       | 依赖：apt install cmake libeigen3-dev libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3<br>[git](https://github.com/RainerKuemmerle/g2o)后用cmake编译安装 |
+| FLANN    | 最邻近算法       | [git](https://github.com/mariusmuja/flann)后用cmake编译安装  |
+| PCL      | 点云处理         | 依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev libusb-1.0-0-dev <br> [git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装 |
+| OctoMap  | 八叉树建图       | 方法一：apt install liboctomap-dev<br>方法二：[git](https://github.com/OctoMap/octomap)后用cmake编译安装 |
+| OpenMesh | 三维网格处理     | [git](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh)or[下载release](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/releases)后用cmake编译安装 |
+
+整理成.sh如下：
+
+```bash
+#安装这些依赖的时候好像会安装python2.7，我也不知道为啥。而且安装完后运行python会自动运行python2.7。  
+#不过重新注入环境变量了以后再运行python用的就是anaconda里面的python，所以我也就没有管它了。
+apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev cmake libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3 libgl1-mesa-dev libglew-dev build-essential libboost-all-dev libvtk7-dev
+#如果安装Pangolin出现‘No package ‘xkbcommon’ found’
+apt install libxkbcommon-x11-dev
+# OpenMesh
+git clone https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh.git
+cd OpenMesh && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# octomap
+git clone https://github.com/OctoMap/octomap.git
+cd octomap && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# Pangolin
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# Sophus
+git clone https://github.com/strasdat/Sophus.git
+cd Sophus && mkdir build && cd build && cmake ..
+make -j7
+make install #可以不安装，但是我还是装了
+cd ../..
+# ceres
+git clone https://github.com/ceres-solver/ceres-solver.git
+cd ceres-solver && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# g2o
+git clone https://github.com/RainerKuemmerle/g2o.git
+cd g2o && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# flann
+git clone https://github.com/mariusmuja/flann.git
+cd flann && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+
+# PCL
+git clone https://github.com/PointCloudLibrary/pcl.git # 或者tar xvfj pcl-pcl-1.7.2.tar.gz
+cd pcl && mkdir build && cd build && cmake .. # 如果想要安装Release版本，运行命令cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j7 install
+```
+
+# 通用配置
+
+1. 更改镜像为[清华镜像](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
+2. 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`）添加如下代码，添加完后重新注入环境变量
+
+```bash
+export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ " 
+```
+
+3. 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
+
+    ```shell
+    # 在WSL为下面那个
+    # IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ") 
+    IP=127.0.0.1
+    Port=1080
+    export http_proxy="http://${IP}:${Port}"
+    export https_proxy="https://${IP}:${Port}"
+    
+    httpon(){
+    	export http_proxy="http://${IP}:${Port}"
+    	export https_proxy="https://${IP}:${Port}"
+    	echo "proxy on, and IP is $(curl ip.sb)"
+    }
+    #socks5on(){
+    #    export http_proxy="socks5://${IP}:${Port}"
+    #    export https_proxy="socks5://${IP}:${Port}"
+    #	echo "proxy on, and IP is $(curl ip.sb)"
+    #}
+    proxyoff(){
+      unset http_proxy
+      unset https_proxy
+      echo "proxy off"
+    }
+    # git的代理。不支持socks5。不过我加了以后好像更慢了。。。
+    # git config --global http.proxy http://${IP}:${Port}
+    # git config --global https.proxy http://${IP}:${Port}
+    ```
+
+4. Tmux：在配置文件`~/.tmux.conf `中加入如下内容
+
+    ```shell
+    # 启用鼠标
+    set -g mouse on
+    # 复制模式	
+    set-window-option -g mode-keys vi #可以设置为vi或emacs
+    # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
+    ```
+
+    复制模式步骤：
+
+    1. C-b [ 进入复制模式
+    2. 参考上表移动鼠标到要复制的区域，移动鼠标时可用vim的搜索功能"/","?"
+    3. 安空格键开始选择复制区域
+    4. 选择完成后安enter键退出
+    5. C-b ] 粘贴
+
+5. 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字history-search找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
+
+    <img src="images/image-20200923101318000.png" alt="image-20200923101318000" style="zoom:90%;" />
+
+6. 自动进行git操作脚本`gitauto.sh`：
+
+    ```shell
+    #!/bin/bash
+    # 用于判断的关键词
+    fail="失败|error|fail"
+    success="干净|succe|clear"
+    
+    # 将要监控的git仓库路径存放在下面
+    git_path=(
+        "/home/orz/Documents/My-Learning-Notes/"
+        # "/home/orz/Documents/"
+    )
+    date=$(date +%Y.%m.%d)
+    
+    # 处理每一个文件
+    for path in ${git_path[*]}
+    do
+        echo -e "\e[1;31m$path\e[0m"
+        name=$(echo $path | rev | cut  -d "/" -f  2 | rev )
+    
+        cd $path
+        # pull
+        if [ -n "$(git pull|grep -E "$fail")"  ]
+        then
+            echo -e "\e[1;33m ##### pull 失败 #####\e[0m"
+            cd -L
+            continue
+        fi
+    
+        # add + commit
+        if [ -n "$(git status|grep -E "$success")" ]
+        then
+            echo "无需commit"
+            cd -L
+            continue
+        else
+            read -p "输入姓名（可以空白）：" message
+            if [ -n "$message" ]
+            then
+                message=$message"-"$date
+            else
+                message=$date
+            fi
+            git add .
+            git commit -m "$message"
+        fi
+    
+        # push
+        if [ -n "$(git push|grep -E "$fail")" ]
+            then
+                echo -e "\e[1;34m ##### push 失败 ##### \e[0m"
+        fi
+    
+        cd -L
+    done
+    ```
+
+    然后添加到环境变量`~/.bashrc`
+
+    ```shell
+    alias gitauto="bash ~/gitauto.sh"
+    ```
+
+# WSL
+
+WSL的版本是Ubuntu 18.04。
+首先需要到`控制面板 -> 卸载程序 -> 启用或关闭Windows功能 -> 适用于Linux的Windows子系统`，打勾，然后重启
+进入`Microsoft Store`安装。
+
+从WSL升级到WSL2可以参考[教程](https://www.liumingye.cn/archives/326.html)
+
+## 基础配置
+
+1. 与Clion连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
+2. 安装cuda：参考[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
+
+## 图形界面
+
+1. WSL上安装图形界面：我选择的是`apt install xfce4`
+
+2. Windows安装[MobaXTerm](https://mobaxterm.mobatek.net/download.html)。然后运行MobaXTerm，保证其X server为开启状态，即左上角的“X”为彩色，为灰色的话，按一下就彩色了
+
+    ![MobaXTerm_X](images/MobaXTerm_X.png)
+
+3. 在WSL上运行如下命令就会出现图形界面了
+
+    ```bash
+    startxfce4
+    ```
+
+    ​		**PS**：如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
+
+4. 如果报错，则在
+
+    ```shell
+    IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ")
+    PortOffset=2222.0
+    export DISPALY=${WINIP}:${PortOffeset}
+    ```
+
+    其中，PortOffset需与MobaXTerm中的X server设置保持一致
+
+    ![MobaXTerm_offset](images/MobaXTerm_offset.png)
+
+    PS：
+
