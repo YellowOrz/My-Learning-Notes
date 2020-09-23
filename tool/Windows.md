@@ -198,7 +198,7 @@ pip install opencv-contrib-python
 | FLANN | 最邻近算法 | [git](https://github.com/mariusmuja/flann)后用cmake编译安装 |
 |PCL|点云处理|依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev libusb-1.0-0-dev <br> [git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装|
 |OctoMap|八叉树建图|方法一：apt install liboctomap-dev<br>方法二：[git](https://github.com/OctoMap/octomap)后用cmake编译安装|
-||||
+|OpenMesh|三维网格处理|[git](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh)or[下载release](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/releases)后用cmake编译安装|
 整理成.sh如下：
 ```bash
 #安装这些依赖的时候好像会安装python2.7，我也不知道为啥。而且安装完后运行python会自动运行python2.7。  
@@ -207,49 +207,46 @@ apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glo
 
 #如果安装Pangolin出现‘No package ‘xkbcommon’ found’
 apt install libxkbcommon-x11-dev
-
+# OpenMesh
+git clone https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh.git
+cd OpenMesh && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# octomap
 git clone https://github.com/OctoMap/octomap.git
 cd octomap && mkdir build && cd build && cmake ..
-make -j7
-make install
+make -j7 install
 cd ../..
-
+# Pangolin
 git clone https://github.com/stevenlovegrove/Pangolin.git
 cd Pangolin && mkdir build && cd build && cmake ..
-make -j7
-make install
+make -j7 install
 cd ../..
-
+# Sophus
 git clone https://github.com/strasdat/Sophus.git
 cd Sophus && mkdir build && cd build && cmake ..
 make -j7
-#可以不安装，但是我还是装了
-make install
+make install #可以不安装，但是我还是装了
 cd ../..
-
+# ceres
 git clone https://github.com/ceres-solver/ceres-solver.git
 cd ceres-solver && mkdir build && cd build && cmake ..
-make -j7
-make install
+make -j7 install
 cd ../..
-
+# g2o
 git clone https://github.com/RainerKuemmerle/g2o.git
 cd g2o && mkdir build && cd build && cmake ..
-make -j7
-make install
+make -j7 install
 cd ../..
-
+# flann
 git clone https://github.com/mariusmuja/flann.git
 cd flann && mkdir build && cd build && cmake ..
-make -j7
-make install
+make -j7 install
 cd ../..
 
-# PCL安装也可以 git clone 
-tar xvfj pcl-pcl-1.7.2.tar.gz
-cd pcl-pcl-1.7.2 && mkdir build && cd build && cmake ..
-# 如果想要安装Release版本，运行命令cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j7
+# PCL
+git clone https://github.com/PointCloudLibrary/pcl.git # 或者tar xvfj pcl-pcl-1.7.2.tar.gz
+cd pcl && mkdir build && cd build && cmake .. # 如果想要安装Release版本，运行命令cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j7 install
 ```
 ## 图形界面
@@ -261,9 +258,9 @@ make -j7 install
     ![MobaXTerm_X](images/MobaXTerm_X.png)
 
 3. 在WSL上运行如下命令就会出现图形界面了
-```bash
-startxfce4
-```
+    ```bash
+    startxfce4
+    ```
 ​		**PS**：如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
 
 4. 如果报错，则在
