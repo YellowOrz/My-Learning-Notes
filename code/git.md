@@ -89,7 +89,7 @@
 
         - 使用参数`--soft`退回之后，处于`add`**后**`commit`**之前**的状态，即位于暂存区；
         - 使用参数`--mixed`退回之后，处于**修改之后**`add`**之前**的状态；
-        - 使用参数`--mixed`退回之后，处于**修改之前**的状态。
+        - 使用参数`--hard`退回之后，处于**修改之前**的状态。
         
         ==注意==：不要撤销已经推送（push）到远程的提交，否则将无法再次正常推送！
 
@@ -184,7 +184,7 @@
 
 ## 电脑上Github与Gitlab账号共存
 
-- 分别使用两个账号的邮箱去生成ssh key。先生成的要改名，以免后面的把它覆盖了
+- 分别使用两个账号的邮箱去[生成ssh key](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)。先生成的要改名，以免后面的把它覆盖了
 
 ```shell
 # your.email@example.com是账号所用的邮箱

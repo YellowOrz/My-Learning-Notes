@@ -1,5 +1,7 @@
 
 
+[TOC]
+
 # 必装软件&库
 
 ==root身份==
@@ -7,7 +9,7 @@
 1. 不做介绍
 
     ```shell
-    apt install tmux cmake make g++-4.8 g++-5 g++-6 g++-7 g++-8 gcc-4.8 gcc-5 gcc-6 gcc-7 gcc-8 unzip zip rar unrar gdb build-essential git cmake-curses-gui chromium-browser gedit vim
+    apt install tmux cmake make g++-4.8 g++-5 g++-6 g++-7 g++-8 gcc-4.8 gcc-5 gcc-6 gcc-7 gcc-8 unzip zip rar unrar gdb build-essential git cmake-curses-gui chromium-browser gedit vim clang
     ```
 
     | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍               |
@@ -96,7 +98,7 @@ make -j7 install
 
 # 通用配置
 
-1. 更改镜像为[清华镜像](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)
+1. 更改镜像为[清华镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)or[阿里镜像源](https://developer.aliyun.com/mirror/ubuntu?spm=a2c6h.13651102.0.0.3e221b119vwOjw)
 2. 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`）添加如下代码，添加完后重新注入环境变量
 
 ```bash
@@ -109,20 +111,14 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     # 在WSL为下面那个
     # IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ") 
     IP=127.0.0.1
-    Port=1080
-    export http_proxy="http://${IP}:${Port}"
-    export https_proxy="https://${IP}:${Port}"
-    
-    httpon(){
+    Port=2333
+    proxyon(){
     	export http_proxy="http://${IP}:${Port}"
     	export https_proxy="https://${IP}:${Port}"
+    	#    export http_proxy="socks5://${IP}:${Port}"
+    	#    export https_proxy="socks5://${IP}:${Port}"
     	echo "proxy on, and IP is $(curl ip.sb)"
     }
-    #socks5on(){
-    #    export http_proxy="socks5://${IP}:${Port}"
-    #    export https_proxy="socks5://${IP}:${Port}"
-    #	echo "proxy on, and IP is $(curl ip.sb)"
-    #}
     proxyoff(){
       unset http_proxy
       unset https_proxy
@@ -132,7 +128,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     # git config --global http.proxy http://${IP}:${Port}
     # git config --global https.proxy http://${IP}:${Port}
     ```
-
+    
 4. Tmux：在配置文件`~/.tmux.conf `中加入如下内容
 
     ```shell
@@ -219,46 +215,56 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     alias gitauto="bash ~/gitauto.sh"
     ```
 
+
+
 # WSL
 
-WSL的版本是Ubuntu 18.04。
-首先需要到`控制面板 -> 卸载程序 -> 启用或关闭Windows功能 -> 适用于Linux的Windows子系统`，打勾，然后重启
-进入`Microsoft Store`安装。
+- 安装：现在BIOS打开虚化，然后控制面板 -> 启用或关闭Windows功能 中，打开虚拟机平台、适用于Linux的Windows子系统、Hyper-V，重启。
 
-从WSL升级到WSL2可以参考[教程](https://www.liumingye.cn/archives/326.html)
+    可以到微软商店直接安装。或者到[这里](https://docs.microsoft.com/zh-cn/windows/wsl/install-manual#installing-your-distro)安装，（如果是用IDM下载，格式可能会变为.zip，需要改为.appx），然后在PowerShell运行
 
-## 基础配置
+    ```powershell
+    Add-AppxPackage .\Ubuntu_1804.2019.522.0_x64.appx
+    ```
 
-1. 与Clion连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
-2. 安装cuda：参考[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
+- WSL1升级为WSL2：参考[教程](https://www.liumingye.cn/archives/326.html)or官网
 
-## 图形界面
+- 与Clion连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
 
-1. WSL上安装图形界面：我选择的是`apt install xfce4`
+- 图形界面：在WLS安装xfce4
 
-2. Windows安装[MobaXTerm](https://mobaxterm.mobatek.net/download.html)。然后运行MobaXTerm，保证其X server为开启状态，即左上角的“X”为彩色，为灰色的话，按一下就彩色了
+    ```shell
+    apt install xfce4
+    ```
+
+    Windows安装[MobaXTerm](https://mobaxterm.mobatek.net/download.html)。然后运行MobaXTerm，保证其X server为开启状态，即左上角的“X”为彩色，为灰色的话，按一下就彩色了
 
     ![MobaXTerm_X](images/MobaXTerm_X.png)
 
-3. 在WSL上运行如下命令就会出现图形界面了
+    在WSL上运行如下命令就会出现图形界面了
 
     ```bash
     startxfce4
     ```
 
-    ​		**PS**：如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
+    **PS**：如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
 
-4. 如果报错，则在
+    如果报错，则在环境变量中添加
 
     ```shell
-    IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ")
+    IP=localhost
     PortOffset=2222.0
-    export DISPALY=${WINIP}:${PortOffeset}
+    export DISPALY=${IP}:${PortOffeset}
     ```
 
     其中，PortOffset需与MobaXTerm中的X server设置保持一致
 
-    ![MobaXTerm_offset](images/MobaXTerm_offset.png)
+    <img src="images/MobaXTerm_offset.png" alt="MobaXTerm_offset" style="zoom: 80%;" />
 
-    PS：
+    或者MobaXterm可能会自动识别到WSL的图形界面，双击打开就好了
 
+    ![image-20201002190701696](images/image-20201002190701696.png)
+
+- 安装cuda：参考NIVIDIA官网[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
+
+- 
