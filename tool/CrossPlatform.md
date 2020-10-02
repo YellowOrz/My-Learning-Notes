@@ -178,3 +178,26 @@ pip install --upgrade flake8
 - 设置提示无延迟：![image-20200828191656396](images/image-20200828191656396.png)
 
 >](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
+
+# Git
+
+- 添加账号信息
+
+    ```shell
+    git config --global user.email "silence_33_@outlook.com"
+    git config --global user.name "YellowOrz"
+    ```
+
+- 生成ssh密钥
+
+    ```shell
+    ssh-keygen -t rsa -b 4096 -C "silence_33_@outlook.com"
+    ```
+
+    将生成的`.pub`文件的内容添加到Github设置的**SSH and GPG keys**里面。测试是否添加成功
+
+    ```shell
+    ssh -T git@github.com
+    ```
+
+> [官方教程](https://docs.github.com/cn/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
