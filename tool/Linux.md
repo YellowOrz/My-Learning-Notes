@@ -155,6 +155,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
 
     ```shell
     #!/bin/bash
+    proxyon
     # 用于判断的关键词
     fail="失败|error|fail"
     success="干净|succe|clear"
@@ -207,10 +208,12 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     
         cd -L
     done
-    ```
 
+    proxyoff
+```
+    
     然后添加到环境变量`~/.bashrc`
-
+    
     ```shell
     alias gitauto="bash ~/gitauto.sh"
     ```
@@ -266,5 +269,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     ![image-20201002190701696](images/image-20201002190701696.png)
 
 - 安装cuda：参考NIVIDIA官网[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
+
+    - 在Win上安装[相关驱动](https://developer.nvidia.com/cuda/wsl/download)，win会自动为wsl安装nvidia驱动
 
 - 
