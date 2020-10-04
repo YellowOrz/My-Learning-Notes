@@ -201,3 +201,74 @@ pip install --upgrade flake8
     ```
 
 > [官方教程](https://docs.github.com/cn/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
+
+# Libraries
+
+## 各种库
+
+| 库名称   | 说明             | 安装方法                                                     |
+| -------- | ---------------- | ------------------------------------------------------------ |
+| Eigen    | 矩阵处理         | apt install libeigen3-dev                                    |
+| Pangolin | 可视化           | 依赖：apt install libgl1-mesa-dev libglew-dev <br>(可选，用于生成html/pdf文档) apt install Doxygen <br>[git](https://github.com/stevenlovegrove/Pangolin)后用cmake编译安装 |
+| Sophus   | 李代数           | [git](https://github.com/strasdat/Sophus)后用cmake编译（无需安装） |
+| Ceres    | 求解最小二乘问题 | 依赖：apt install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev<br>[git](https://github.com/ceres-solver/ceres-solver)后用cmake编译安装 |
+| g2o      | 基于图优化       | 依赖：apt install cmake libeigen3-dev libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3<br>[git](https://github.com/RainerKuemmerle/g2o)后用cmake编译安装 |
+| FLANN    | 最邻近算法       | [git](https://github.com/mariusmuja/flann)后用cmake编译安装  |
+| PCL      | 点云处理         | 依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev libusb-1.0-0-dev <br> [git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装 |
+| OctoMap  | 八叉树建图       | 方法一：apt install liboctomap-dev<br>方法二：[git](https://github.com/OctoMap/octomap)后用cmake编译安装 |
+| OpenMesh | 三维网格处理     | [git](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh)or[下载release](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/releases)后用cmake编译安装 |
+
+整理成.sh如下：
+
+```bash
+#安装这些依赖的时候好像会安装python2.7，我也不知道为啥。而且安装完后运行python会自动运行python2.7。  
+#不过重新注入环境变量了以后再运行python用的就是anaconda里面的python，所以我也就没有管它了。
+apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev cmake libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3 libgl1-mesa-dev libglew-dev build-essential libboost-all-dev libvtk7-dev
+#如果安装Pangolin出现‘No package ‘xkbcommon’ found’
+apt install libxkbcommon-x11-dev
+# OpenMesh
+git clone https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh.git
+cd OpenMesh && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# octomap
+git clone https://github.com/OctoMap/octomap.git
+cd octomap && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# Pangolin
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# Sophus
+git clone https://github.com/strasdat/Sophus.git
+cd Sophus && mkdir build && cd build && cmake ..
+make -j7
+make install #可以不安装，但是我还是装了
+cd ../..
+# ceres
+git clone https://github.com/ceres-solver/ceres-solver.git
+cd ceres-solver && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# g2o
+git clone https://github.com/RainerKuemmerle/g2o.git
+cd g2o && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+# flann
+git clone https://github.com/mariusmuja/flann.git
+cd flann && mkdir build && cd build && cmake ..
+make -j7 install
+cd ../..
+
+# PCL
+git clone https://github.com/PointCloudLibrary/pcl.git # 或者tar xvfj pcl-pcl-1.7.2.tar.gz
+cd pcl && mkdir build && cd build && cmake .. # 如果想要安装Release版本，运行命令cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j7 install
+```
+
+## OpenCV
+
+参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/104040394)
