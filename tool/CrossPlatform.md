@@ -202,6 +202,12 @@ pip install --upgrade flake8
 
 > [官方教程](https://docs.github.com/cn/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
 
+
+
+# Mendeley
+
+![image-20201005112508339](images/image-20201005112508339.png)
+
 # Libraries
 
 ## 各种库
