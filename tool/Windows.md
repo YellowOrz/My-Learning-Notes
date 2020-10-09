@@ -5,7 +5,8 @@
 - 分区：系统装在SSD上面。
     - C盘：至少150G。
     - D盘：剩下所有的容量都分给D盘
-- OneDrive：将桌面文件夹放在OneDrive下面
+- OneDrive：将OneDrive文件夹存放在C盘以外的地方，然后桌面文件夹放在OneDrive下面
+- 开启剪贴板历史记录：按`Windows 键` + `V`
 
 # 必装软件
 
@@ -20,28 +21,23 @@
 
 | 软件名 | 介绍                | 软件名      | 介绍|
 | :---: | :---: | :---: | :---: |
-| ~~[XShell+Xftp](https://www.netsarang.com/zh/free-for-home-school/)~~ | ~~远程连接linux的好工具~~ | [~~X2Go~~](https://wiki.x2go.org/doku.php/download:start) | ~~远程连接Linux的图形界面~~ |
+| ~~[XShell+Xftp](https://www.netsarang.com/zh/free-for-home-school/)~~ | ~~远程连接linux的好工具~~ | [X2Go](https://wiki.x2go.org/doku.php/download:start) | 远程连接Linux的图形界面 |
 |[flux](https://justgetflux.com/)|调节屏幕色温|[stretchly](https://hovancik.net/stretchly/)|休息提醒|
 |[MobaXTerm](https://mobaxterm.mobatek.net/download.html)|远程连接linux的好工具|[Typora](https://typora.io/#download)|Markdown编辑器|
 |[cloc](https://github.com/AlDanial/cloc)|代码行数统计|[AIDA64](https://www.aida64.com/downloads)|显示电脑详细信息|
 |  [Mathpix Snip](https://mathpix.com/#downloads)  |     数学公式识别神器      |[clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases)|ShadowsocksR的替代品。更好用。[教程](https://merlinblog.xyz/wiki/cfw.html)，[汉化补丁](https://github.com/BoyceLig/Clash_Chinese_Patch/releases)，[ssr订阅链接转clash](https://bianyuan.xyz/)|
-|                                                              |                           |||
-|||||
-
-3. 大型软件：Lightroom Classic、Photoshop、Microsoft Office、~~Visual Studio~~、WLS（Ubuntu 18.04 LTS）、Visio、[CLion](https://www.jetbrains.com/clion/download/#section=windows)
-
-## 压缩包解压
-
-| 软件名   | 介绍           | 软件名    | 介绍                                 |
-| ----------- | ---------------- | ------------ | -------------------------------------- |
-|[唧唧Down](http://client.jijidown.com/) | 下载b站视频 | PdgCntEditor | 编辑PDF目录                        |
+|~~[唧唧Down](http://client.jijidown.com/)~~ | ~~下载b站视频~~ | PdgCntEditor | 编辑PDF目录                        |
 | [DiskGenius](https://www.diskgenius.cn/download.php)  | 管理磁盘     | Scrcpy_GUI   | 手机投屏到电脑（可以媲美华为的投屏） |
-|                                                      |                      | ~~ShadowsocksR~~ | ~~必备工具~~                       |
+| [哔哩哔哩动画](https://www.microsoft.com/zh-cn/p/%e5%93%94%e5%93%a9%e5%93%94%e5%93%a9%e5%8a%a8%e7%94%bb/9nblggh5q5fv?activetab=pivot:overviewtab) | 官方渠道下载b站视频 | ~~ShadowsocksR~~ | ~~必备工具~~                       |
 | [万彩办公大师](http://www.wofficebox.com/) | 办公工具~~箱~~ | ~~[SpeedPan](http://supanx.com/speedpan-free.html)~~ | ~~百度网盘资源下载器，免费版，用来搜资源~~ |
 | ~~[软媒魔方](https://mofang.ruanmei.com/)~~ | ~~管理电脑的工具箱~~ | [SpeedPanX](http://supanx.com/)    | 百度网盘资源下载器，付费版，用来下资源 |
+|||||
+
+3. 大型软件：[Lightroom Classic](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Photoshop](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Microsoft Office](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[WLS（Ubuntu 18.04 LTS）](https://docs.microsoft.com/zh-cn/windows/wsl/install-win10)、[Visio](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[CLion](https://www.jetbrains.com/clion/download/#section=windows)、[SolidWorks](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)
+
 ## 库软件
 
-==如果可以全部装在WSL里面==，否则全部安装于`C:\Library\`中  
+==如果可以全部装在WSL里面==，否则全部安装于`C:\Library\`中。源码安装方法参考[CrossPlatform的文档](./CrossPlatform.md)
 
 | 软件名 | 介绍| 软件名| 介绍|
 | ---------- | ------ | ------------ | ------ |
@@ -49,8 +45,6 @@
 | [mingw64](https://sourceforge.net/projects/mingw-w64/files/mingw-w64/) | 编译器。选择seh版本，并且需要将/bin添加到环境变量 |[OpenCV](https://github.com/opencv/opencv/releases)| 计算机视觉库|
 |[Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)|矩阵库|[PCL](https://github.com/PointCloudLibrary/pcl/releases)|处理点云库|
 |[CMake](https://cmake.org/download/)|编译工具|[Git](https://git-scm.com/download/win)|版本控制系统|
-
-
 
 # Foxmail
 

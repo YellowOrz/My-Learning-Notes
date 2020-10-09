@@ -46,6 +46,8 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     # IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ") 
     IP=127.0.0.1
     Port=7890
+    export http_proxy="http://${IP}:${Port}"
+    export https_proxy="https://${IP}:${Port}"
     proxyon(){
     	export http_proxy="http://${IP}:${Port}"
     	export https_proxy="https://${IP}:${Port}"
