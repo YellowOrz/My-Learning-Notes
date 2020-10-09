@@ -94,7 +94,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     proxyon
     # 用于判断的关键词
     fail="失败|error|fail"
-    success="干净|succe|clear"
+    success="干净|succe|clear|clean"
     
     # 将要监控的git仓库路径存放在下面
     git_path=(
