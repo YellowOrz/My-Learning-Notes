@@ -222,7 +222,19 @@ pip install --upgrade flake8
 | FLANN    | 最邻近算法       | [git](https://github.com/mariusmuja/flann)后用cmake编译安装  |
 | PCL      | 点云处理         | 依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev libusb-1.0-0-dev <br> [git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装 |
 | OctoMap  | 八叉树建图       | 方法一：apt install liboctomap-dev<br>方法二：[git](https://github.com/OctoMap/octomap)后用cmake编译安装 |
-| OpenMesh | 三维网格处理     | [git](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh)or[下载release](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/releases)后用cmake编译安装 |
+| OpenMesh | 三维网格处理     | 依赖：opengl、qt5、glew？？？<br>[git](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh)or[下载release](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/releases)后用cmake编译安装 |
+
+**注**：1. OpenMesh官网说依赖项只有qt5，但是我在有两个WSL上面安装的时候会报错大概`Not Find OpenGL(missing: OPENGL_opengl_LIBRARY, OPENGL_glx_LIBRARY)`和`Not Find QT5`，网上找了一些教程安装了几个，报错依旧存在。于是，我就找了另一台已经安装好的WSL（不记得当时怎么装的了），把ta上面的opengl和qt5的安装列表都copy下来了，然后就不报错了
+
+```shell
+# opengl
+apt install libqglviewer-dev-qt5 libqglviewer2-qt5 libqt5concurrent5 libqt5core5a libqt5dbus5 libqt5gui5 libqt5network5 libqt5opengl5 libqt5opengl5-dev libqt5positioning5 libqt5printsupport5 libqt5qml5 libqt5quick5 libqt5quickparticles5 libqt5quicktest5 libqt5quickwidgets5 libqt5sensors5 libqt5sql5 libqt5sql5-sqlite libqt5svg5 libqt5test5 libqt5webchannel5 libqt5webkit5 libqt5widgets5 libqt5x11extras5 libqt5xml5 libvtk7.1-qt qt5-default qt5-gtk-platformtheme qt5-qmake qt5-qmake-bin qt5-qmltooling-plugins qtbase5-dev qtbase5-dev-tools qtchooser qtdeclarative5-dev qttranslations5-l10n
+# qt5
+apt install libgl1 libgl1-mesa-dev libgl1-mesa-dri libgl1-mesa-glx libgl2ps-dev libgl2ps1.4 libglade2-0 libglapi-mesa libgles1 libgles2 libgles2-mesa-dev libglew-dev libglew2.0 libglib2.0-0 libglib2.0-bin libglib2.0-data libglib2.0-dev libglib2.0-dev-bin libglibmm-2.4-1v5 libglu1-mesa libglu1-mesa-dev libglvnd-core-dev libglvnd-dev libglvnd0 libglx-mesa0 libglx0
+# glew
+apt install libglew-dev libglew2.0
+# 有教程说还要装glue，但是已经装好OpenMesh的WSL上面并没有装
+```
 
 整理成.sh如下：
 
