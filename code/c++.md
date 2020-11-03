@@ -15,7 +15,7 @@
     fclose(fp);
     ```
 
-- c++风格：一次读取一行
+- c++风格：一次读取一行。头文件`#include <fstream>`
 
     ```c++
     string filepath = "./depth.txt", data;
@@ -101,7 +101,7 @@ cout << stof(s) << endl; //string --> doubel
 
 ```c++
 string s = "...";
-if (s.find("...") != String::)
+if (s.find("...") != String::npos)
 ```
 
 

@@ -126,11 +126,11 @@ pip install --upgrade flake8
 
 - 偏好设置：
 
-    ![editor](images/editor.png)
+    <img src="images/editor.png" alt="editor" style="zoom:80%;" />
 
-    ![image](images/image.png)
+    <img src="images/image.png" alt="image" style="zoom:80%;" />
 
-    ![Markdown](images/Markdown.png)
+    <img src="images/Markdown.png" alt="Markdown" style="zoom:80%;" />
 
 - 快捷键配置：编辑文件`conf.user.json`，Linux上的路径为`~/.config/Typora/conf/conf.user.json`；或者点击`文件` -> `偏好设置` -> `通用` -> `高级设置` -> `打开高级设置`。将整个文件内容替换为
 
@@ -174,10 +174,12 @@ pip install --upgrade flake8
 # CLion
 
 - 与WSL连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
-- 设置自动补全提示不区分大小写：设置成下图所示![20200824170831738](images/20200824170831738.png)
-- 设置提示无延迟：![image-20200828191656396](images/image-20200828191656396.png)
+- 设置自动补全提示不区分大小写：File -> Settings -> Editor -> General -> Code Completion -> Match case **打开**，并选择 All letters
+- 设置提示无延迟：File -> Settings -> Editor -> General -> Code Completion -> Show the documentation ... 关闭
 
->](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
+>[Clang-Format Style Options](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
+
+- 远程调试代码转发图形界面：在`Configuration`中的`Environment variables`添加内容`DISPLAY=localhost:0`。`0`为MobaXterm的X11设置的端口。
 
 # Git
 
@@ -206,7 +208,7 @@ pip install --upgrade flake8
 
 # Mendeley
 
-![image-20201005112508339](images/image-20201005112508339.png)
+<img src="images/image-20201005112508339.png" alt="image-20201005112508339" style="zoom:70%;" />
 
 # Libraries
 

@@ -198,7 +198,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     export DISPALY=${IP}:${PortOffeset}
     ```
 
-    其中，PortOffset需与MobaXTerm中的X server设置保持一致
+    其中，PortOffset需与MobaXTerm中的X11设置保持一致
 
     <img src="images/MobaXTerm_offset.png" alt="MobaXTerm_offset" style="zoom: 80%;" />
 
@@ -209,5 +209,17 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
 - 安装cuda：参考NIVIDIA官网[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
 
     - 在Win上安装[相关驱动](https://developer.nvidia.com/cuda/wsl/download)，win会自动为wsl安装nvidia驱动
+
+- `updatedb`排除文件夹`/mnt`：
+
+    - 暂时排除：使用参数`-e`
+
+        ```shell
+        updatedb -e /mnt
+        ```
+
+    - 永久排除：编辑`/etc/updatedb.conf`，在变量**PRUNEPATHS**中添加`/mnt`，例如
+
+    <img src="images/image-20201018111355994.png" alt="image-20201018111355994" style="zoom:80%;" />
 
 - 
