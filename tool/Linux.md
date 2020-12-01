@@ -46,7 +46,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
     # IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ") 
     IP=127.0.0.1
     Port=7890
-    #默认不开启代理。否则git可能会连不上。
+    #默认不开启代理。否则git可能会连不上，无论git有没有设置代理。
     #export http_proxy="http://${IP}:${Port}"
     #export https_proxy="https://${IP}:${Port}"
     proxyon(){
@@ -61,9 +61,23 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
       unset https_proxy
       echo "proxy off"
     }
-    # git的代理。不支持socks5。不过我加了以后好像更慢了。。。
-    # git config --global http.proxy http://${IP}:${Port}
-    # git config --global https.proxy http://${IP}:${Port}
+    # git的代理。默认开启。
+    git config --global http.proxy "socks5://${IP}:${Port}"
+    git config --global https.proxy "socks5://${IP}:${Port}"
+    gitproxyon(){
+        git config --global http.proxy "socks5://${IP}:${Port}"
+        git config --global https.proxy "socks5://${IP}:${Port}"
+        echo "git proxy on"
+        echo git config --global --get http.proxy $(git config --global --get http.proxy)
+        echo git config --global --get https.proxy $(git config --global --get https.proxy)
+    }
+    gitproxyoff(){
+        git config --global --unset http.proxy
+        git config --global --unset https.proxy
+        echo "git proxy off"
+        echo git config --global --get http.proxy $(git config --global --get http.proxy)
+        echo git config --global --get https.proxy $(git config --global --get https.proxy)
+    }
     ```
     
 4. Tmux：在配置文件`~/.tmux.conf `中加入如下内容
