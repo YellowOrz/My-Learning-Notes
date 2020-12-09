@@ -24,11 +24,7 @@
     | [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器                                                   | [福昕阅读器](https://www.foxitsoftware.cn/downloads/)        | pdf阅读器          |
     | [vscode](https://code.visualstudio.com/download)             | linux最好用的文本显示工具                                    | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看       |
 
-2. [miniconda](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)：安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改[Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/)和[pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/)(可选)为清华镜像，并安装如下包
 
-```bash
-pip install opencv-contrib-python
-```
 
 # 通用配置
 

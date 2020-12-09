@@ -292,3 +292,13 @@ make -j7 install
 ## OpenCV
 
 参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/104040394)
+
+## miniconda
+
+[官网](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)。安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改[Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/)和[pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/)(可选)为清华镜像，并安装如下包
+
+```bash
+conda install numpy matplotlib
+conda install pytorch torchvision tensorboard cudatoolkit=10.2 -c pytorch
+pip install opencv-contrib-python
+```
