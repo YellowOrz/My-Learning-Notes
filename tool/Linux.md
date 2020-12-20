@@ -9,7 +9,7 @@
 1. 不做介绍
 
     ```shell
-    apt install tmux cmake make g++-4.8 g++-5 g++-6 g++-7 g++-8 gcc-4.8 gcc-5 gcc-6 gcc-7 gcc-8 unzip zip rar unrar gdb build-essential git cmake-curses-gui chromium-browser gedit vim clang
+    apt install tmux cmake make g++-4.8 g++-5 g++-6 g++-7 g++-8 gcc-4.8 gcc-5 gcc-6 gcc-7 gcc-8 unzip zip rar unrar gdb build-essential git cmake-curses-gui chromium-browser gedit vim clang curl
     ```
 
     | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍               |
