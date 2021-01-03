@@ -300,5 +300,5 @@ make -j7 install
 ```bash
 conda install python=3.8 numpy matplotlib
 conda install pytorch torchvision tensorboard cudatoolkit=10.2 -c pytorch
-pip install opencv-contrib-python tensorboardX tensorflow
+pip install opencv-contrib-python tensorboardX tensorflow tensorflow-datasets
 ```
