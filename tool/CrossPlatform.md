@@ -298,7 +298,18 @@ make -j7 install
 [官网](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)。安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改 [Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/) 和 [pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/) (可选)为清华镜像，并安装如下包
 
 ```bash
-conda install python=3.8 numpy matplotlib
-conda install pytorch torchvision tensorboard cudatoolkit=10.2 -c pytorch
+conda install python=3.8 numpy matplotlib pandas ipython jupyter
+conda install pytorch torchvision tensorboard cudatoolkit cudnn -c pytorch
 pip install opencv-contrib-python tensorboardX tensorflow tensorflow-datasets
 ```
+
+如果tensorflow装好后，报错找不到cuda的dll，如下图。可能是因为安装的tensorflow太新，不支持老版的cuda。
+
+![image-20210117181603890](images/image-20210117181603890.png)
+
+解决方案：[使用**硬连接**，把老版的cuda名字变成新版的](https://github.com/tensorflow/tensorflow/issues/38194#issuecomment-657233766)。例如我的tf是2.4版本的，要求cuda>=11.0，而我在conda中装的cuda是10.2，则以**管理员身份**运行cmd，输入命令
+
+```powershell
+mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramData\Miniconda3\Library\bin\cudart64_102.dll"
+```
+
