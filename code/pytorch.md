@@ -85,7 +85,17 @@ onehot = t.zeros(4, 5, 32, 32).scatter(1, index.unsqueeze(1), 1)  # onehot大小
 # 倒数第一个1表示填充的数字为1
 ```
 
+## 并行化读取数据
 
+在[学习tensorflow](https://tf.wiki/)的时候，发现 tf 有一个函数可以并行化读取数据以提高训练效率
+
+<img src="images/image-20210120114828198.png" alt="image-20210120114828198" style="zoom:67%;" />
+
+网上找了一下，pytorch的[Dataloader](https://pytorch.org/docs/stable/data.html#module-torch.utils.data)中有一个类似的参数`prefetch_factor`
+
+> **prefetch_factor** ([*int*](https://docs.python.org/3/library/functions.html#int)*,* *optional**,* *keyword-only arg*) – Number of sample loaded in advance by each worker. `2` means there will be a total of 2 * num_workers samples prefetched across all workers. (default: `2`)
+
+还可以使用 Nvidia 提出的分布式框架 Apex提供的[解决方案](https://zhuanlan.zhihu.com/p/66145913)
 
 # 各种函数
 
