@@ -186,8 +186,12 @@ pip install --upgrade flake8
 - 添加账号信息
 
     ```shell
+    # 添加全局的账号信息
     git config --global user.email "silence_33_@outlook.com"
     git config --global user.name "YellowOrz"
+    # 仅对当前项目添加账号信息
+    git config user.email "silence_33_@outlook.com"
+    git config user.name "YellowOrz"
     ```
 
 - 生成ssh密钥

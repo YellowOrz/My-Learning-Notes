@@ -29,10 +29,10 @@
 # 通用配置
 
 1. 更改镜像为[清华镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)or[阿里镜像源](https://developer.aliyun.com/mirror/ubuntu?spm=a2c6h.13651102.0.0.3e221b119vwOjw)
-2. 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`）添加如下代码，添加完后重新注入环境变量
+2. 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
 
 ```bash
-export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ " 
+PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ " 
 ```
 
 3. 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
@@ -88,11 +88,11 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
 
     复制模式步骤：
 
-    1. C-b [ 进入复制模式
-    2. 参考上表移动鼠标到要复制的区域，移动鼠标时可用vim的搜索功能"/","?"
-    3. 安空格键开始选择复制区域
-    4. 选择完成后安enter键退出
-    5. C-b ] 粘贴
+    1. `ctrl+b`，然后按`[`进入复制模式
+    2. 移动鼠标到要复制的区域，移动鼠标时可用vim的搜索功能"/","?"
+    3. 按空格键开始选择复制区域
+    4. 选择完成后按`enter`退出，完成复制
+    5. `ctrl+b` ，然后按`]`粘贴
 
 5. 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字history-search找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
 
@@ -158,13 +158,13 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
 
     proxyoff
     ```
-```
+
     
-    然后添加到环境变量`~/.bashrc`
+    然后添加到环境变量文件`~/.bashrc`中添加如下内容
     
     ```shell
     alias gitauto="bash ~/gitauto.sh"
-```
+	```
 
 
 
@@ -228,7 +228,7 @@ export PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0
         updatedb -e /mnt
         ```
 
-    - 永久排除：编辑`/etc/updatedb.conf`，在变量**PRUNEPATHS**中添加`/mnt`，例如
+    - 永久排除：编辑文件`/etc/updatedb.conf`，在变量**PRUNEPATHS**里的后面加上`/mnt`，例如
 
     <img src="images/image-20201018111355994.png" alt="image-20201018111355994" style="zoom:80%;" />
 
