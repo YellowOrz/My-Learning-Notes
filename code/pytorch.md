@@ -97,6 +97,97 @@ onehot = t.zeros(4, 5, 32, 32).scatter(1, index.unsqueeze(1), 1)  # onehot大小
 
 还可以使用 Nvidia 提出的分布式框架 Apex提供的[解决方案](https://zhuanlan.zhihu.com/p/66145913)
 
+## 获取中间层的特征图和梯度
+
+### Hook技术
+
+由于pytorch在计算过程中会舍弃除了叶子节点以外的中间层的特征图和梯度，想要获取他们并进行一定的修改，可以使用Hook技术
+
+hook包含三种函数：
+
+- [register_hook(hook)](https://pytorch.org/docs/stable/autograd.html#torch.Tensor.register_hook)：该函数属于Tensor对象为Tensor注册一个backward hook，用来获取变量的梯度
+
+  其中的hook为函数名称（可以任意），必须遵循如下的格式：`hook(grad) -> Tensor or None`，其中grad为获取的梯度
+
+  具体实例：
+
+  ```python
+  import torch
+  
+  grad_list = []
+  def print_grad(grad):
+      grad = grad * 2	
+      grad_list.append(grad)
+  
+  x = torch.tensor([[1., -1.], [1., 1.]], requires_grad=True)
+  h = x.register_hook(print_grad)    # double the gradient
+  out = x.pow(2).sum()
+  out.backward()
+  print(grad_list) # [tensor([[ 4., -4.], [ 4.,  4.]])]
+  
+  # 删除hook函数
+  h.remove()
+  ```
+
+- [register_forward_hook(hook)](https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook)：该函数属于Module对象，返回为`torch.utils.hooks.RemovableHandle`。用于前向传播中进行hook，可以提取特征图
+
+  在网络执行`forward()`之后，执行hook函数，需要具有如下的形式：
+
+  ```python
+  hook(module, input, output) -> None or modified output
+  ```
+
+  hook可以修改input和output，但是不会影响**forward**的结果。最常用的场景是需要提取模型的某一层（不是最后一层）的输出特征，但又不希望修改其原有的模型定义文件，这时就可以利用forward_hook函数。
+
+- [register_backward_hook(hook)](https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_backward_hook)：该函数属于Module对象，返回为`torch.utils.hooks.RemovableHandle`。用于反向传播中进行hook，可以提取梯度
+
+  每一次module的inputs的梯度被计算后调用hook，hook具有如下的形式：
+
+  ```python
+  hook(module, grad_input, grad_output) -> Tensor or Non
+  ```
+
+  `grad_input` 和 `grad_output`参数分别表示输入的梯度和输出的梯度，是不能修改的，但是可以通过return一个梯度元组tuple来替代`grad_input`。
+
+  `grad_input`元组包含(`bias的梯度`，`输入x的梯度`，`权重weight的梯度`)，`grad_output`元组包含(`输出y的梯度`)。
+  可以在hook函数中通过return来修改`grad_input`
+
+  对于没有参数的Module，比如`nn.ReLU`来说，`grad_input`元组包含(`输入x的梯度`)，`grad_output`元组包含(`输出y的梯度`)。
+
+PS：经过实践，不能将`hook`定义为某个类的成员函数，否则会参数个数会不匹配的（因为会多一个`self`参数）
+
+> 参考：[Pytorch获取中间层信息-hook函数](https://blog.csdn.net/winycg/article/details/100695373)、[官方教程Forward and Backward Function Hooks](https://pytorch.org/tutorials/beginner/former_torchies/nnft_tutorial.html#forward-and-backward-function-hooks)
+
+### 自定义forward函数：只能获取中间层的特征
+
+此方法的原理是获取给定模型的每一层，然后在前向传播的时候将想要层的特征保存下来即可
+
+```python
+class FeatureExtractor(nn.Module):
+    def __init__(self, submodule, extracted_layers):	#extracted_layers为一个列表
+        super(FeatureExtractor, self).__init__()
+        self.submodule = submodule
+        self.extracted_layers = extracted_layers
+ 
+    # 自己修改forward函数
+    def forward(self, x):
+        outputs = []
+        for name, module in self.submodule._modules.items():
+            if name is "fc": x = x.view(x.size(0), -1)
+            x = module(x)
+            if name in self.extracted_layers:
+                outputs.append(x)
+        return outputs
+   
+extract_list = ["conv1", "maxpool", "layer1", "avgpool", "fc"]
+resnet = models.resnet50(pretrained=True)
+x = torch.random(1,3,256,256)
+extract_result = FeatureExtractor(resnet, extract_list)
+print(extract_result(x)[4])  # [0]:conv1  [1]:maxpool  [2]:layer1  [3]:avgpool  [4]:fc
+```
+
+> 参考：[PyTorch提取中间层的特征（Resnet）](https://www.codeleading.com/article/8544702154/)
+
 # 各种函数
 
 ## torch.Tensor
