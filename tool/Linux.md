@@ -94,7 +94,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     4. 选择完成后按`enter`退出，完成复制
     5. `ctrl+b` ，然后按`]`粘贴
 
-5. 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字history-search找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
+5. 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字`history-search`找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
 
     <img src="images/image-20200923101318000.png" alt="image-20200923101318000" style="zoom:90%;" />
 
