@@ -188,6 +188,48 @@ print(extract_result(x)[4])  # [0]:conv1  [1]:maxpool  [2]:layer1  [3]:avgpool  
 
 > 参考：[PyTorch提取中间层的特征（Resnet）](https://www.codeleading.com/article/8544702154/)
 
+## 参数统计&&共享问题
+
+统计方法有两种：
+
+```python
+# 第一种：使用torchsummary
+import torchsummary
+torchsummary.summary(model, (1, 512, 512))
+# 第二种：自定义函数，统计model中可导参数
+def count_parameters(model):
+	print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+```
+
+但是当网络中共享 层（即[参数共享](https://pytorch.org/tutorials/beginner/examples_nn/dynamic_net.html?highlight=share)）时，上面的统计方法都会有问题。例如：
+
+```python
+import torch
+import torch.nn as nn
+import torchsummary
+class BaseNet(nn.Module):
+    def __init__(self):
+        super(BaseNet,self).__init__()
+        self.conv1=nn.Conv2d(in_channels=1,out_channels=1,kernel_size=3,bias=False)
+        self.conv2=nn.Conv2d(in_channels=1,out_channels=1,kernel_size=3,bias=False)
+        self.conv3=nn.Conv2d(in_channels=1,out_channels=1,kernel_size=3,bias=False)
+    def forward(self,x):
+        x=self.conv1(x)
+        out_map=self.conv1(x)
+        return out_map
+def count_parameters(model):
+    print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+model = BaseNet()
+torchsummary.summary(model, (1, 512, 512))
+count_parameters(model)
+```
+
+实际输出参数个数应该为9（因为只有一个3*3的卷积核，没有权重），但是`torchsummary`输出为18，`count_parameters`输出为27
+
+因为`torchsummary`计算时是先把层结构打印下来，然后再统计对各个层的参数求和，`conv1`被调用了两次，所以为18；而在`BaseNet`类里多初始化了`conv2`和`conv3`，即使没有在forward里面调用，但是它也算在`model.parameters()`里面，因此`count_parameters`为27
+
+> 参考教程：[PyTorch几种情况下的参数数量统计](https://zhuanlan.zhihu.com/p/64425750)
+
 # 各种函数
 
 ## torch.Tensor

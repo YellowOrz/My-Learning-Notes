@@ -9,7 +9,7 @@
 1. 不做介绍
 
     ```shell
-    apt install tmux cmake make g++-4.8 g++-5 g++-6 g++-7 g++-8 gcc-4.8 gcc-5 gcc-6 gcc-7 gcc-8 unzip zip rar unrar gdb build-essential git cmake-curses-gui chromium-browser gedit vim clang curl
+    apt install tmux cmake make g++-4.8 g++-5 g++-6 g++-7 g++-8 gcc-4.8 gcc-5 gcc-6 gcc-7 gcc-8 unzip zip rar unrar gdb build-essential git cmake-curses-gui chromium-browser gedit vim clang curl lrzsz
     ```
 
     | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍               |
@@ -57,9 +57,9 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
       unset https_proxy
       echo "proxy off"
     }
-    # git的代理。默认开启。
-    git config --global http.proxy "socks5://${IP}:${Port}"
-    git config --global https.proxy "socks5://${IP}:${Port}"
+    # git的代理。默认关闭。
+    # git config --global http.proxy "socks5://${IP}:${Port}"
+    # git config --global https.proxy "socks5://${IP}:${Port}"
     gitproxyon(){
         git config --global http.proxy "socks5://${IP}:${Port}"
         git config --global https.proxy "socks5://${IP}:${Port}"

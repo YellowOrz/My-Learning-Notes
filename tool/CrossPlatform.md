@@ -13,6 +13,7 @@
     - [Grammarly](https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen?hl=zh-CN)：英语语法纠正和校对工具
     - [Browse Manager](https://chrome.google.com/webstore/detail/browse-manager/fibpimjmadkibpjkhlngcapnkkhhikpf)：网址/域名黑名单、访问次数统计
     - [Vimium](https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb)：通过键盘控制网页
+    - [browse-manager](https://github.com/ZDL-Git/browse-manager)：实现网址/域名拉黑
 
 # VS Code
 
@@ -318,18 +319,23 @@ make -j7 install
 ```bash
 conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow
 conda install pytorch torchvision tensorboard cudatoolkit cudnn -c pytorch
-pip install opencv-contrib-python tensorboardX tensorflow tensorflow-datasets
+pip install opencv-contrib-python tensorboardX tensorflow tensorflow-datasets torch-summary
 ```
 
 **注意**：tensorflow对于cudatoolkit和cudnn的版本有严格要求，建议查看官网（[win](https://www.tensorflow.org/install/source_windows#gpu)、[linux](https://www.tensorflow.org/install/source#gpu)）。不推荐安装2.4版本，因为2.4版本要求cuda11，而cuda11能用的cudnn只有6.0版本，还没有8版本的（2021.1.20）。或者可以给tf专门建一个环境，因为pytorch对于cuda、cudnn的版本要求并不严格。
 
 **问题**：如果tensorflow装好后，报错找不到cuda的dll，如下图。可能是因为安装的tensorflow太新，不支持老版的cuda。
 
-![image-20210117181603890](images/image-20210117181603890.png)
+<img src="images/image-20210117181603890.png" alt="image-20210117181603890" style="zoom:80%;" />
 
-解决方案：[使用**硬连接**，把老版的cuda名字变成新版的](https://github.com/tensorflow/tensorflow/issues/38194#issuecomment-657233766)。例如我的tf是2.4版本的，要求cuda>=11.0，而我在conda中装的cuda是10.2，则以**管理员身份**运行cmd，输入命令
+解决方案：（曲线救国）[使用**硬连接**，把老版的cuda名字变成新版的](https://github.com/tensorflow/tensorflow/issues/38194#issuecomment-657233766)。例如我的tf是2.4版本的，要求cuda>=11.0，而我在conda中装的cuda是10.2，则以**管理员身份**运行cmd，输入命令
 
 ```powershell
 mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramData\Miniconda3\Library\bin\cudart64_102.dll"
 ```
 
+**问题**：用pip安装库的时候总是有Warning，并且报错找不到（但是到镜像源里可以手动找到），如下图
+
+<img src="images/image-20210228102553533.png" alt="image-20210228102553533" style="zoom: 80%;" />
+
+解决方案：降低pip版本。比如我的pip版本为20.3.3，降低到20.2后就好了

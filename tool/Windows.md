@@ -5,12 +5,30 @@
 - 分区：系统+主要的软件装在SSD上面。
     - 若只有SSD：C盘至少150G，剩下所有的容量都分给D盘
     - SSD+HDD：SSD全分给C盘，HDD全分给其他盘
+    
 - OneDrive：将OneDrive文件夹存放在C盘以外的地方，然后桌面文件夹放在OneDrive下面
+
 - 开启剪贴板历史记录：按`Windows 键` + `V`
+
 - 开机启动管理：任务管理器 -> 启动
+
 - 设置多用户同时登陆
     - 首先，按照[这个教程](https://blog.csdn.net/u010804317/article/details/100055558)允许远程连接&添加允许远程桌面用户（对应教程第1点）、设置最大连接数量（对应教程3-1，并且设为无限！！！）、将远程桌面服务用户限制到单独的远程桌面服务会话（对应教程3-2）、自动注销登出用户（对应教程第4点）
     - 然后，按照[这个教程](https://blog.csdn.net/u010804317/article/details/104011926)配置软件RDP Wrapper Library。
+    
+- cmd/PowerShell代理：
+
+    ```powershell
+    # 开启
+    set http_proxy=http://10.168.1.237:7890
+    set https_proxy=https://10.168.1.237:7890
+    curl.exe ip.sb
+    # 关闭
+    set http_proxy=
+    set https_proxy=
+    ```
+
+    
 
 # 必装软件
 
