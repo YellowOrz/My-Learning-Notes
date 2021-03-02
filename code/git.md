@@ -233,7 +233,7 @@ drwxr-xr-x 43 orz orz 4096 8月  10 14:29 ../
     	email = hostname
     ```
 
-- 在`/etc/ssh/ssh_config`后添加如下内容，从而针对不同的git网站使用不同的ssh key：
+- 在`/etc/ssh/ssh_config`或者`~/.ssh/config`后添加如下内容，从而针对不同的git网站使用不同的ssh key：
 
     ```shell
     # 注意：User不能乱改，是固定的。主要是看git clone的链接中@前面的字符
