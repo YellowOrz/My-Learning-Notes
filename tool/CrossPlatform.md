@@ -319,10 +319,15 @@ make -j7 install
 ```bash
 conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow
 conda install pytorch torchvision tensorboard cudatoolkit cudnn -c pytorch
-pip install opencv-contrib-python tensorboardX tensorflow tensorflow-datasets torch-summary
+pip install opencv-contrib-python torch-summary tensorboardX tensorflow tensorflow-datasets 
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
-pip install easydict argparse scipy pprint 
+pip install easydict argparse scipy pprint albumentations json-py
 ```
+
+|       库       |                介绍                |    库    |              介绍              |
+| :------------: | :--------------------------------: | :------: | :----------------------------: |
+|    easydict    | 允许访问dict值作为属性（递归工作） | argparse |   解析 Python 中的命令行参数   |
+| albumentations |            数据增强工具            |  scipy   | 开源的Python算法库和数学工具包 |
 
 **注意**：tensorflow对于cudatoolkit和cudnn的版本有严格要求，建议查看官网（[win](https://www.tensorflow.org/install/source_windows#gpu)、[linux](https://www.tensorflow.org/install/source#gpu)）。不推荐安装2.4版本，因为2.4版本要求cuda11，而cuda11能用的cudnn只有6.0版本，还没有8版本的（2021.1.20）。或者可以给tf专门建一个环境，因为pytorch对于cuda、cudnn的版本要求并不严格。
 
