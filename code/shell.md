@@ -2,6 +2,6 @@
 
 ```shell
 #递归			筛选出目录  删除最后的冒号
-ls -R <dir> | grep \ | sed 's/://g'
+ls -R ./ | grep / | sed 's/://g'
 ```
 

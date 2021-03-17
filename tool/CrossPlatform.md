@@ -317,17 +317,21 @@ make -j7 install
 [官网](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)。安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改 [Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/) 和 [pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/) (可选)为清华镜像，并安装如下包
 
 ```bash
-conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow
+conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
 conda install pytorch torchvision tensorboard cudatoolkit cudnn -c pytorch
 pip install opencv-contrib-python torch-summary tensorboardX tensorflow tensorflow-datasets 
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
-pip install easydict argparse scipy pprint albumentations json-py
+conda install cupy -c anaconda	# 这个跟cuda=9.2 & pytorch=0.4兼容
+pip install easydict argparse scipy pprint albumentations json-py imageio
 ```
 
-|       库       |                介绍                |    库    |              介绍              |
-| :------------: | :--------------------------------: | :------: | :----------------------------: |
-|    easydict    | 允许访问dict值作为属性（递归工作） | argparse |   解析 Python 中的命令行参数   |
-| albumentations |            数据增强工具            |  scipy   | 开源的Python算法库和数学工具包 |
+|       库       |                介绍                |      库      |              介绍              |
+| :------------: | :--------------------------------: | :----------: | :----------------------------: |
+|    easydict    | 允许访问dict值作为属性（递归工作） |   argparse   |   解析 Python 中的命令行参数   |
+| albumentations |            数据增强工具            |    scipy     | 开源的Python算法库和数学工具包 |
+|    imageio     |            读写图片文件            | scikit-image |        轻量级图像处理库        |
+|      tqdm      |            进度提示信息            |     cupy     |       加速Numpy运算速度        |
+|                |                                    |              |                                |
 
 **注意**：tensorflow对于cudatoolkit和cudnn的版本有严格要求，建议查看官网（[win](https://www.tensorflow.org/install/source_windows#gpu)、[linux](https://www.tensorflow.org/install/source#gpu)）。不推荐安装2.4版本，因为2.4版本要求cuda11，而cuda11能用的cudnn只有6.0版本，还没有8版本的（2021.1.20）。或者可以给tf专门建一个环境，因为pytorch对于cuda、cudnn的版本要求并不严格。
 
