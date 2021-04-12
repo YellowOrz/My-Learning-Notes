@@ -76,13 +76,16 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     }
     ```
     
-4. Tmux：在配置文件`~/.tmux.conf `中加入如下内容
+4. Tmux：在配置文件`~/.tmux.conf `中加入如下内容，然后重启tmux，或者按`ctrl+b`后输入`:source-file ~/.tmux.conf`
 
     ```shell
     # 启用鼠标
     set -g mouse on
-    # 复制模式	
+    # set-option -g mouse on # 或者这个
+    # 复制模式
     set-window-option -g mode-keys vi #可以设置为vi或emacs
+    # 开启256 colors支持
+    set -g default-terminal "screen-256color"
     # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
     ```
 

@@ -318,7 +318,7 @@ make -j7 install
 
 ```bash
 conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
-conda install pytorch torchvision tensorboard cudatoolkit cudnn -c pytorch
+conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c conda-forge
 pip install opencv-contrib-python torch-summary tensorboardX tensorflow tensorflow-datasets 
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
 conda install cupy -c anaconda	# 这个跟cuda=9.2 & pytorch=0.4兼容
@@ -333,13 +333,13 @@ pip install easydict argparse scipy pprint albumentations json-py imageio
 |      tqdm      |            进度提示信息            |     cupy     |       加速Numpy运算速度        |
 |                |                                    |              |                                |
 
-**注意**：tensorflow对于cudatoolkit和cudnn的版本有严格要求，建议查看官网（[win](https://www.tensorflow.org/install/source_windows#gpu)、[linux](https://www.tensorflow.org/install/source#gpu)）。不推荐安装2.4版本，因为2.4版本要求cuda11，而cuda11能用的cudnn只有6.0版本，还没有8版本的（2021.1.20）。或者可以给tf专门建一个环境，因为pytorch对于cuda、cudnn的版本要求并不严格。
+~~**注意**：tensorflow对于cudatoolkit和cudnn的版本有严格要求，建议查看官网（[win](https://www.tensorflow.org/install/source_windows#gpu)、[linux](https://www.tensorflow.org/install/source#gpu)）。不推荐安装2.4版本，因为2.4版本要求cuda11，而cuda11能用的cudnn只有6.0版本，还没有8版本的（2021.1.20）。或者可以给tf专门建一个环境，因为pytorch对于cuda、cudnn的版本要求并不严格。~~
 
-**问题**：如果tensorflow装好后，报错找不到cuda的dll，如下图。可能是因为安装的tensorflow太新，不支持老版的cuda。
+~~**问题**：如果tensorflow装好后，报错找不到cuda的dll，如下图。可能是因为安装的tensorflow太新，不支持老版的cuda。~~
 
 <img src="images/image-20210117181603890.png" alt="image-20210117181603890" style="zoom:80%;" />
 
-解决方案：（曲线救国）[使用**硬连接**，把老版的cuda名字变成新版的](https://github.com/tensorflow/tensorflow/issues/38194#issuecomment-657233766)。例如我的tf是2.4版本的，要求cuda>=11.0，而我在conda中装的cuda是10.2，则以**管理员身份**运行cmd，输入命令
+~~解决方案：（曲线救国）[使用**硬连接**，把老版的cuda名字变成新版的](https://github.com/tensorflow/tensorflow/issues/38194#issuecomment-657233766)。例如我的tf是2.4版本的，要求cuda>=11.0，而我在conda中装的cuda是10.2，则以**管理员身份**运行cmd，输入命令~~
 
 ```powershell
 mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramData\Miniconda3\Library\bin\cudart64_102.dll"

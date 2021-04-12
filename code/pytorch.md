@@ -10,7 +10,7 @@
 
 - **池化层的反向传播**
 
-    ![preview](images/v2-76b89f5687c280675964e4ec50288e55_r.jpg)
+    <img src="images/v2-76b89f5687c280675964e4ec50288e55_r.jpg" alt="preview" style="zoom:67%;" />
 
     - **最大池化**：上图中池化后的数字6对应于池化前的红色区域，实际上只有红色区域中最大值数字6对池化后的结果有影响，权重为1，而其它的数字对池化后的结果影响都为0。
 
@@ -24,11 +24,12 @@
 
 - **卷积层的反向传播**
 
-    ![img](images/v2-88bd6e9ab498a92847a6bada18f37ee2_720w.jpg)
-    - 输入层（$l$层）的$\delta$误差：$\delta^{l}=\delta^{l+1} * Rotate 180\left(w^{l+1}\right)$，即把卷积核旋转180°后与后一层（$l+1$层）的$\delta$误差卷积
-
-    ![image-20201209211717228](images/image-20201209211717228.png)
-
+    <img src="images/v2-88bd6e9ab498a92847a6bada18f37ee2_720w.jpg" alt="img" style="zoom:67%;" />
+    
+- 输入层（$l$层）的$\delta$误差：$\delta^{l}=\delta^{l+1} * Rotate 180\left(w^{l+1}\right)$，即把卷积核旋转180°后与后一层（$l+1$层）的$\delta$误差卷积
+    
+<img src="images/image-20201209211717228.png" alt="image-20201209211717228" style="zoom:67%;" />
+    
     - 输入层与输出层之间**卷积核的导数**：$\frac{\partial C}{\partial w^{l}}=\delta^{l} * \sigma\left(z^{l-1}\right)$，即卷积核的每个位置，在输入层能影响到的像素与卷积结果进行卷积，上图。注意输入层需要先padding
     - 输入层与输出层之间**bias的导数**：$\frac{\partial C}{\partial b^{l}}=\sum_{x} \sum_{y} \delta^{l}$
 
@@ -51,8 +52,6 @@ ctx和self的区别[^13]：
 
 - ctx是context的缩写, 翻译成"上下文; 环境"，专门用在静态方法中
 - self指的是实例对象; 而ctx用在静态方法中, 调用的时候不需要实例化对象, 直接通过类名就可以调用, 所以self在静态方法中没有意义
-
-
 
 示例：自定义LinearFunction[^10]
 
@@ -229,6 +228,103 @@ count_parameters(model)
 因为`torchsummary`计算时是先把层结构打印下来，然后再统计对各个层的参数求和，`conv1`被调用了两次，所以为18；而在`BaseNet`类里多初始化了`conv2`和`conv3`，即使没有在forward里面调用，但是它也算在`model.parameters()`里面，因此`count_parameters`为27
 
 > 参考教程：[PyTorch几种情况下的参数数量统计](https://zhuanlan.zhihu.com/p/64425750)
+
+# 技巧
+
+## 节省显存
+
+1. **`ReLu`的`inplace`参数**。使用下面的代码可以将model中的`ReLu`全部设置为`inplace=True`
+
+   ```python
+   def inplace_relu(m):
+       classname = m.__class__.__name__
+       if classname.find('ReLU') != -1:
+           m.inplace=True
+   
+   model.apply(inplace_relu)
+   ```
+
+   > 参考教程：[Pytorch有什么节省显存的小技巧？ - 郑哲东的回答](https://www.zhihu.com/question/274635237/answer/573633662) 
+
+2. ☆**梯度累加**：即不是每个batch都更新 权重&超参，而是隔几个再更新，这样可以扩大batch_size：
+   $$
+   \text{真正的batch_size}  = \text{batch_size} * \text{accumulation_steps}
+   $$
+
+   ```python
+   for i,(features,target) in enumerate(train_loader):
+       outputs = model(images)  # 前向传播
+       loss = criterion(outputs,target)  # 计算损失
+       loss = loss/accumulation_steps   # 可选，如果损失要在训练样本上取平均
+   
+       loss.backward()  # 计算梯度
+       if((i+1)%accumulation_steps)==0:
+           optimizer.step()        # 反向传播，更新网络参数
+           optimizer.zero_grad()   # 清空梯度
+   ```
+
+   > 参考教程：[GPU 显存不足怎么办？](https://zhuanlan.zhihu.com/p/65002487)
+
+## 估计模型显存
+
+$$
+显存占用 = 模型自身参数 * n + batch size * 输出参数量 * 2 + 一个batch的输入数据（往往忽略）
+$$
+
+其中，n是根据优化算法来定的，如果选用SGD， 则 n = 2， 如果选择Adam， 则 n = 4
+
+一个很棒的实现如下， 我懒得再重新写了，你可以根据这个改一改，问题不大。
+
+```python
+# 模型显存占用监测函数
+# model：输入的模型
+# input：实际中需要输入的Tensor变量
+# type_size 默认为 4 默认类型为 float32 
+
+def modelsize(model, input, type_size=4):
+    para = sum([np.prod(list(p.size())) for p in model.parameters()])
+    print('Model {} : params: {:4f}M'.format(model._get_name(), para * type_size / 1000 / 1000))
+
+    input_ = input.clone()
+    input_.requires_grad_(requires_grad=False)
+
+    mods = list(model.modules())
+    out_sizes = []
+
+    for i in range(1, len(mods)):
+        m = mods[i]
+        if isinstance(m, nn.ReLU):
+            if m.inplace:
+                continue
+        out = m(input_)
+        out_sizes.append(np.array(out.size()))
+        input_ = out
+
+    total_nums = 0
+    for i in range(len(out_sizes)):
+        s = out_sizes[i]
+        nums = np.prod(np.array(s))
+        total_nums += nums
+
+
+    print('Model {} : intermedite variables: {:3f} M (without backward)'
+          .format(model._get_name(), total_nums * type_size / 1000 / 1000))
+    print('Model {} : intermedite variables: {:3f} M (with backward)'
+          .format(model._get_name(), total_nums * type_size*2 / 1000 / 1000))
+```
+
+> 参考教程：[GPU 显存不足怎么办？](https://zhuanlan.zhihu.com/p/65002487)
+
+## Debug时将Tensor转为图片
+
+```python
+# 假设tensor大小为1*3*720*1280
+img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
+# .detach()用于删除grad
+# .cpu()用于将数据从GPU转移到CPU
+```
+
+> 参考：[Pytorch中Tensor与各种图像格式的相互转化](https://oldpan.me/archives/pytorch-tensor-image-transform)
 
 # 各种函数
 
