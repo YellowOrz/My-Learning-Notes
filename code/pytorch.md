@@ -27,7 +27,8 @@
     <img src="images/v2-88bd6e9ab498a92847a6bada18f37ee2_720w.jpg" alt="img" style="zoom:67%;" />
     
 - 输入层（$l$层）的$\delta$误差：$\delta^{l}=\delta^{l+1} * Rotate 180\left(w^{l+1}\right)$，即把卷积核旋转180°后与后一层（$l+1$层）的$\delta$误差卷积
-    
+  
+
 <img src="images/image-20201209211717228.png" alt="image-20201209211717228" style="zoom:67%;" />
     
     - 输入层与输出层之间**卷积核的导数**：$\frac{\partial C}{\partial w^{l}}=\delta^{l} * \sigma\left(z^{l-1}\right)$，即卷积核的每个位置，在输入层能影响到的像素与卷积结果进行卷积，上图。注意输入层需要先padding
