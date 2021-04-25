@@ -329,38 +329,38 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 
 # 各种函数
 
-## torch.Tensor
-
-### Tensor.grad_fn[^1][^2]
-
-反向传播时，用来计算梯度的函数，即指示梯度函数是哪种类型。Tensor类属性方法。叶子节点通常为None，只有结果节点的grad_fn才有效
-
-### Tensor.is_leaf[^2]
-
-标记该tensor是否为叶子节点。Tensor类变量，布尔值。
-
-所有requires_grad=False的Tensors都为叶子节点
-
-所有用户显示初始化的Tensors也为叶子节点
-
-由各种操作(operation)的结果隐式生成的不是叶子节点，比如`a.cuda()`以及加减乘除操作
-
-叶节点就是由用户创建的 Variable（一般是输入变量） 或 Parameter（网络参数W和b）[^8]
-
-叶子节点没有下一个可传播的节点，它就是梯度反向传递在这条分路上的终点[^8]
-
 ## torch
 
-- **torch.expand(*sizes)**：返回当前张量在某维扩展更大后的张量
+- [**`Torch.bmn()`**](https://blog.csdn.net/qq_40178291/article/details/100302375)：计算两个矩阵的矩阵乘法，两个矩阵的维度必须为3，If input is a (b \times n \times m)(b×n×m) tensor, mat2 is a (b \times m \times p)(b×m×p) tensor, out will be a (b \times n \times p)(b×n×p) tensor.
+
+## torch.Tensor
+
+- **`Tensor.grad_fn`**[^1][^2]：反向传播时，用来计算梯度的函数，即指示梯度函数是哪种类型。Tensor类属性方法。叶子节点通常为None，只有结果节点的grad_fn才有效
+
+- **`Tensor.is_leaf`**[^2]：标记该tensor是否为叶子节点。Tensor类变量，布尔值。
+
+  所有requires_grad=False的Tensors都为叶子节点
+
+  所有用户显示初始化的Tensors也为叶子节点
+
+  由各种操作(operation)的结果隐式生成的不是叶子节点，比如`a.cuda()`以及加减乘除操作
+
+  叶节点就是由用户创建的 Variable（一般是输入变量） 或 Parameter（网络参数W和b）[^8]
+
+  叶子节点没有下一个可传播的节点，它就是梯度反向传递在这条分路上的终点[^8]
+
+- **`Tensor.is_contiguous`**：Tensor底层一维数组元素的存储顺序与Tensor按行优先一维展开的元素顺序是否一致。多维矩阵，在内存中都是使用内存的1维数组存储的，语义上连续，在实际存储中不一定连续。
+
+- **`Tensor.contiguous()`**：保证tensor在内存上存储时时连续的，如果本来就连续，则无操作。通常在`Tensor.view()`前面使用
+
+- **`Tensor.expand(*sizes)`**：返回当前张量在某维扩展更大后的张量
 
     ```python
     a = torch.rand(2,3)
     b = a.expand(6,3)
     ```
 
-    
-
-- **torch.view()**：相当于numpy中的resize()。例如
+- **`Tensor.view()`**：相当于numpy中的resize()，要求Tensor在内存中连续，如果不连续可以使用函数`Tensor.contiguous()`。例如
 
     ```python
     a = torch.rand(2,3,4,5)
@@ -368,9 +368,8 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
     # b.size() = [3, 4, 5, 2]
     ```
 
-- 
-
-- 
+- **`Tensor.permute(*dims)`**：将tensor的维度换位。
+- Tensor.repeat
 
 ## torch.autograd
 
@@ -391,6 +390,10 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 - **torch.autograd.grad()**[^1]：
 
 ## torch.nn
+
+- [**`nn.ZeroPad2d(padding)`**](https://www.cnblogs.com/wanghui-garcia/p/11265843.html)：使用0填充输入tensor的边界。参数如下：
+
+  padding（int, tuple）：指定填充的大小。如果是一个整数值a，则所有边界都使用相同的填充数，等价于输入(a,a,a,a)。如果是大小为4的元组，则表示 (padding_left, padding_right, padding_top, padding_bottom)
 
 ## torch.nn.functional
 
