@@ -360,6 +360,8 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
     b = a.expand(6,3)
     ```
 
+- [**`Tensor.repeat(*sizes)`**](https://pytorch-cn.readthedocs.io/zh/latest/package_references/Tensor/#repeatsizes)：沿着指定的维度重复tensor。 不同于`expand()`，该函数复制的是tensor中的数据。参数 *sizes (torch.Size ot int...)表示沿着每一维**重复的次数**
+
 - **`Tensor.view()`**：相当于numpy中的resize()，要求Tensor在内存中连续，如果不连续可以使用函数`Tensor.contiguous()`。例如
 
     ```python
@@ -369,7 +371,7 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
     ```
 
 - **`Tensor.permute(*dims)`**：将tensor的维度换位。
-- Tensor.repeat
+- 
 
 ## torch.autograd
 
@@ -396,6 +398,11 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
   padding（int, tuple）：指定填充的大小。如果是一个整数值a，则所有边界都使用相同的填充数，等价于输入(a,a,a,a)。如果是大小为4的元组，则表示 (padding_left, padding_right, padding_top, padding_bottom)
 
 ## torch.nn.functional
+
+一般`import torch.nn.functional as F`
+
+- **`F.unfold()`**：在N\*C*H\*W的H\*W平面上取块，然后堆叠，主要用于CV中的patch提取
+- F.re
 
 # 参考资料
 
