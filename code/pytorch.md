@@ -402,7 +402,7 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 一般`import torch.nn.functional as F`
 
 - **`F.unfold()`**：在N\*C*H\*W的H\*W平面上取块，然后堆叠，主要用于CV中的patch提取
-- F.re
+- **`F.grid_sample()`**：
 
 # 参考资料
 
