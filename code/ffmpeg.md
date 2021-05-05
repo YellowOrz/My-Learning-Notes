@@ -31,16 +31,22 @@ ffmpeg [全局参数] [输入文件参数] -i [输入文件] [输出文件参数
 - `-i`：指定输入文件。视频、图片、音频等
 - `-an`：去除音频流。a表示视频，n表示删除
 - `-vn`： 去除视频流。v表示音频，n表示删除
-- -vf：
+- `-vf`：
 - `-preset`：（libx264专属）指定输出的视频质量（压缩比率），会影响文件的生成速度，有以下几个可用的值 ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow。
 - `-y`：不经过确认，输出时直接覆盖同名文件。
 - `-hide_banner`：隐藏不必要的多余讯息
 - `-crf`：指定视频的品质，默认值为 23，取值范围为 0-51，值越小品质越高，0 为无损，取值为 18 时几乎是肉眼无损压制。
 
-## 视频相关
+> [FFmpeg视频转码技巧之-crf参数（H.264篇）](https://blog.csdn.net/happydeer/article/details/52610060)
+>
+> [FFmpeg 视频处理入门教程](https://www.ruanyifeng.com/blog/2020/01/ffmpeg.html)
 
-- `-vn`：去除视频。a表示视频，n表示删除
+# 技巧
 
-## 音频相关
+- 将视频转为单帧图片
 
-- `-an`：去除音频。a表示音频，n表示删除
+  ```shell
+  ffmpeg -i test.mp4 %03d.jpg
+  ```
+
+  

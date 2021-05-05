@@ -266,6 +266,14 @@ count_parameters(model)
 
    > 参考教程：[GPU 显存不足怎么办？](https://zhuanlan.zhihu.com/p/65002487)
 
+3. test阶段清除梯度：一般train阶段，会从正常图片上截取patch作为输入，而test阶段则会使用整张图片输入，这样导致test阶段可能会爆显存。通过清除test阶段的中间变量，可以节省大量显存，比如不保留梯度
+
+   ```
+   with torch.no_grad():
+   ```
+
+   
+
 ## 估计模型显存
 
 $$
@@ -401,8 +409,13 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 
 一般`import torch.nn.functional as F`
 
-- **`F.unfold()`**：在N\*C*H\*W的H\*W平面上取块，然后堆叠，主要用于CV中的patch提取
-- **`F.grid_sample()`**：
+- **`F.unfold(input, kernel_size)`**：在N\*C*H\*W的H\*W平面上取块，然后堆叠，主要用于CV中的patch提取
+- [**`F.grid_sample(input, grid, ...)`**](https://pytorch.org/docs/master/generated/torch.nn.functional.grid_sample.html)：通常用在光流、体素流等地方，基本原理是双线性插值 or 三线性插值。grid是用来告诉。以4维的输入为例，input大小为 $(N,C,H_{in},W_{in})$，grid大小为$(N,H_{out},W_{out},2)$，output大小为$(N,C,H_{out},W_{out})$。grid中每个位置$(H_{out},W_{out})$的2个元素，表示在input上面取值的位置（x、y），然后填到output上对应位置。还可以是5维度的输入，多了一个D维度（猜测是depth）
+- [**`F.affine_grid(theta, size, ...)`**](https://pytorch.org/docs/master/generated/torch.nn.functional.affine_grid.html#torch.nn.functional.affine_grid)：
+
+## torch.nn.Module
+
+- 
 
 # 参考资料
 
