@@ -26,12 +26,12 @@
 
     <img src="images/v2-88bd6e9ab498a92847a6bada18f37ee2_720w.jpg" alt="img" style="zoom:67%;" />
     
-- 输入层（$l$层）的$\delta$误差：$\delta^{l}=\delta^{l+1} * Rotate 180\left(w^{l+1}\right)$，即把卷积核旋转180°后与后一层（$l+1$层）的$\delta$误差卷积
-  
-
-<img src="images/image-20201209211717228.png" alt="image-20201209211717228" style="zoom:67%;" />
-    
+    - 输入层（$l$层）的$\delta$误差：$\delta^{l}=\delta^{l+1} * Rotate 180\left(w^{l+1}\right)$，即把卷积核旋转180°后与后一层（$l+1$层）的$\delta$误差卷积
+      
+      <img src="images/image-20201209211717228.png" alt="image-20201209211717228" style="zoom:67%;" />
+      
     - 输入层与输出层之间**卷积核的导数**：$\frac{\partial C}{\partial w^{l}}=\delta^{l} * \sigma\left(z^{l-1}\right)$，即卷积核的每个位置，在输入层能影响到的像素与卷积结果进行卷积，上图。注意输入层需要先padding
+    
     - 输入层与输出层之间**bias的导数**：$\frac{\partial C}{\partial b^{l}}=\sum_{x} \sum_{y} \delta^{l}$
 
 # 各种操作
@@ -268,11 +268,11 @@ count_parameters(model)
 
 3. test阶段清除梯度：一般train阶段，会从正常图片上截取patch作为输入，而test阶段则会使用整张图片输入，这样导致test阶段可能会爆显存。通过清除test阶段的中间变量，可以节省大量显存，比如不保留梯度
 
-   ```
+   ```python
    with torch.no_grad():
    ```
 
-   
+   PS：[model.eval()和torch.no_grad()的区别](https://blog.csdn.net/qq_38410428/article/details/101102075)
 
 ## 估计模型显存
 
@@ -324,6 +324,10 @@ def modelsize(model, input, type_size=4):
 
 > 参考教程：[GPU 显存不足怎么办？](https://zhuanlan.zhihu.com/p/65002487)
 
+## 显存跟踪
+
+使用[Pytorch-Memory-Utils](https://github.com/Oldpan/Pytorch-Memory-Utils)工具
+
 ## Debug时将Tensor转为图片
 
 ```python
@@ -335,15 +339,27 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 
 > 参考：[Pytorch中Tensor与各种图像格式的相互转化](https://oldpan.me/archives/pytorch-tensor-image-transform)
 
+## 设置model的模式：train or eval
+
+- `model.eval()`：设置为测试模式，不启用 Batch Normalization 和 Dropout，不会取平均，而是用训练好的值。不然的话，一旦test的batch_size过小，很容易就会被BN层导致生成图片颜色失真极大。
+
+- `model.train()`：设置为训练模式，启用 Batch Normalization 和 Dropout，在训练过程中防止网络过拟合
+
+PS：[model.eval()和torch.no_grad()的区别](https://blog.csdn.net/qq_38410428/article/details/101102075)
+
 # 各种函数
 
 ## torch
 
-- [**`Torch.bmn()`**](https://blog.csdn.net/qq_40178291/article/details/100302375)：计算两个矩阵的矩阵乘法，两个矩阵的维度必须为3，If input is a (b \times n \times m)(b×n×m) tensor, mat2 is a (b \times m \times p)(b×m×p) tensor, out will be a (b \times n \times p)(b×n×p) tensor.
+- [**`Torch.bmn()`**](https://blog.csdn.net/qq_40178291/article/details/100302375)：计算两个矩阵的矩阵乘法，两个矩阵的维度必须为3。输入维度为 $(b \times n \times m)$和$(b \times m \times p)$，则输出维度为$(b \times n \times p)$
+
+## torch.cuda
+
+- [**`torch.cuda.empty_cache()`**](https://blog.csdn.net/qq_29007291/article/details/90451890)：释放不需要的显存，而且可以在`nvidia-smi`中看到
 
 ## torch.Tensor
 
-- **`Tensor.grad_fn`**[^1][^2]：反向传播时，用来计算梯度的函数，即指示梯度函数是哪种类型。Tensor类属性方法。叶子节点通常为None，只有结果节点的grad_fn才有效
+- **`Tensor.grad_fn`**[^1][^2]：反向传播时，用来计算梯度的函数，即指示梯度函数是哪种类型。Tensor类属性方法。叶子节点通常为None，只有结果节点的`grad_fn`才有效
 
 - **`Tensor.is_leaf`**[^2]：标记该tensor是否为叶子节点。Tensor类变量，布尔值。
 
@@ -403,7 +419,7 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 
 - [**`nn.ZeroPad2d(padding)`**](https://www.cnblogs.com/wanghui-garcia/p/11265843.html)：使用0填充输入tensor的边界。参数如下：
 
-  padding（int, tuple）：指定填充的大小。如果是一个整数值a，则所有边界都使用相同的填充数，等价于输入(a,a,a,a)。如果是大小为4的元组，则表示 (padding_left, padding_right, padding_top, padding_bottom)
+  - padding（int, tuple）：指定填充的大小。如果是一个整数值a，则所有边界都使用相同的填充数，等价于输入(a,a,a,a)；如果是大小为4的元组，则表示 (padding_left, padding_right, padding_top, padding_bottom)
 
 ## torch.nn.functional
 
@@ -413,9 +429,15 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 - [**`F.grid_sample(input, grid, ...)`**](https://pytorch.org/docs/master/generated/torch.nn.functional.grid_sample.html)：通常用在光流、体素流等地方，基本原理是双线性插值 or 三线性插值。grid是用来告诉。以4维的输入为例，input大小为 $(N,C,H_{in},W_{in})$，grid大小为$(N,H_{out},W_{out},2)$，output大小为$(N,C,H_{out},W_{out})$。grid中每个位置$(H_{out},W_{out})$的2个元素，表示在input上面取值的位置（x、y），然后填到output上对应位置。还可以是5维度的输入，多了一个D维度（猜测是depth）
 - [**`F.affine_grid(theta, size, ...)`**](https://pytorch.org/docs/master/generated/torch.nn.functional.affine_grid.html#torch.nn.functional.affine_grid)：
 
-## torch.nn.Module
+## torch.utils.data
 
-- 
+- **`torch.utils.data.Dataloader()`**
+
+  - [`pin_memory`]([Pytorch中多GPU训练指北 - Oldpan的个人博客](https://oldpan.me/archives/pytorch-to-use-multiple-gpus))：锁页内存，创建Data Loader时，设置pin_memory=True，则意味着生成的Tensor数据最开始是属于内存中的锁页内存，这样将内存的Tensor转义到GPU的显存就会更快一些。
+
+    主机中的内存，有两种存在方式，一是锁页，二是不锁页，锁页内存存放的内容在任何情况下都不会与主机的虚拟内存进行交换（注：虚拟内存就是硬盘），而不锁页内存在主机内存不足时，数据会存放在虚拟内存中。显卡中的显存全部是锁页内存,当计算机的内存充足的时候，可以设置pin_memory=True。当系统卡住，或者交换内存使用过多的时候，设置pin_memory=False。因为pin_memory与电脑硬件性能有关，pytorch开发者不能确保每一个炼丹玩家都有高端设备，因此pin_memory默认为False。
+
+    **总结一句就是，如果机子的内存比较大，建议开启pin_memory=Ture，如果开启后发现有卡顿现象或者内存占用过高，此时建议关闭。**
 
 # 参考资料
 
@@ -426,10 +448,14 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 [^5]:[Pytorch使用Tensorboard可视化网络结构_sunqiande88的博客-CSDN博客](https://blog.csdn.net/sunqiande88/article/details/80155925)
 [^6]:[卷积神经网络(CNN)反向传播算法推导](https://zhuanlan.zhihu.com/p/61898234)
 [^7]:[卷积神经网络(CNN)Python的底层实现——以LeNet为例](https://zhuanlan.zhihu.com/p/62303214)
-
 [^8]:[Pytorch 中的反向传播](https://zhuanlan.zhihu.com/p/212748204)
 [^9]:[探讨Pytorch中nn.Module与nn.autograd.Function的backward()函数](https://oldpan.me/archives/pytorch-nn-module-functional-backward)
 [^10]:[Pytorch： 自定义网络层](https://blog.csdn.net/xholes/article/details/81478670)
 [^11]:[Extending `torch.autograd`](https://pytorch.org/docs/stable/notes/extending.html#extending-torch-autograd)
 [^12]: [扩展 torch.autograd](https://pytorch-cn.readthedocs.io/zh/latest/notes/extending/#torchautograd)
 [^13]: [pytroch中ctx和self的区别](https://blog.csdn.net/littlehaes/article/details/103828130)
+
+- [Oldpan的个人博客](https://oldpan.me/)
+  - [浅谈深度学习:如何计算模型以及中间变量的显存占用大小](https://oldpan.me/archives/how-to-calculate-gpu-memory)
+  - [如何在Pytorch中精细化利用显存](https://oldpan.me/archives/how-to-use-memory-pytorch)
+  - [再次浅谈Pytorch中的显存利用问题(附完善显存跟踪代码)](https://oldpan.me/archives/pytorch-gpu-memory-usage-track)

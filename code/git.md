@@ -312,3 +312,11 @@ git clone ssh://git@主机名:端口号/用户名/仓库名.git
 git clone ssh://git@hostname.com:2333/user1/test.git
 ```
 
+## 同步远程仓库的有所分支
+
+```shell
+git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+git fetch --all
+git pull --all
+```
+

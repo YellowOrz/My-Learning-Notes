@@ -26,7 +26,7 @@ ffmpeg [全局参数] [输入文件参数] -i [输入文件] [输出文件参数
 
 - `-c`：指定编码器
   - `-c copy`：直接复制，不经过重新编码（这样比较快）
-  - `-c:v`：指定视频编码器，例如`-c:v libx264`、`-c:v libopenh264`。等价于`-codec:video`？？？
+  - `-c:v`：指定视频编码器，例如`-c:v libx264`、`-c:v libopenh264`。[等价于](https://ffmpeg.org/pipermail/ffmpeg-user/2017-February/035335.html)`-codec:video`、`code:v`、`vcodec`
   - `-c:a`：指定音频编码器
 - `-i`：指定输入文件。视频、图片、音频等
 - `-an`：去除音频流。a表示视频，n表示删除

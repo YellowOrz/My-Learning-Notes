@@ -318,7 +318,7 @@ make -j7 install
 
 ```bash
 conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
-conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c conda-forge
+conda install pytorch torchvision cudatoolkit=11.1 -c pytorch -c conda-forge
 pip install opencv-contrib-python torch-summary tensorboardX tensorflow tensorflow-datasets mmcv mmedit
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
 conda install cupy -c anaconda	# 这个跟cuda=9.2 & pytorch=0.4兼容
