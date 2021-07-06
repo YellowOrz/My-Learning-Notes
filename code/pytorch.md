@@ -232,6 +232,18 @@ count_parameters(model)
 
 # 技巧
 
+## 节省时间
+
+1. **transforms的顺序**：将crop放在color jitter啥的前面，否则会有很多无用的计算
+
+2. **数据放在SSD或者内存里**：将[内存变成硬盘的方式](https://www.jianshu.com/p/6f9b200671bb)为
+
+   ```shell
+   mount tmpfs /opt/datasets/ -t tmpfs -o size=16G
+   ```
+
+3. 使用GPU加载数据：
+
 ## 节省显存
 
 1. **`ReLu`的`inplace`参数**。使用下面的代码可以将model中的`ReLu`全部设置为`inplace=True`
@@ -453,6 +465,7 @@ PS：[model.eval()和torch.no_grad()的区别](https://blog.csdn.net/qq_38410428
 [^10]:[Pytorch： 自定义网络层](https://blog.csdn.net/xholes/article/details/81478670)
 [^11]:[Extending `torch.autograd`](https://pytorch.org/docs/stable/notes/extending.html#extending-torch-autograd)
 [^12]: [扩展 torch.autograd](https://pytorch-cn.readthedocs.io/zh/latest/notes/extending/#torchautograd)
+
 [^13]: [pytroch中ctx和self的区别](https://blog.csdn.net/littlehaes/article/details/103828130)
 
 - [Oldpan的个人博客](https://oldpan.me/)
