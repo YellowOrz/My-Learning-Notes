@@ -1,9 +1,14 @@
-## 获取指定目录下所有子目录的完整路径
+## 获取指定目录下子目录的路径
 
 ```shell
+# 相对路径，所有子目录
 #递归			筛选出目录  删除最后的冒号
 ls -R ./ | grep / | sed 's/://g'
+# 当前子目录的最大深度以及最深路径
+find ./ -type d | awk -F'/' '{print NF-1" "$0}' | sort | tail -1
 ```
+
+> [得到当前目录的最大深度以及最深路径](https://blog.csdn.net/topgun_chenlingyun/article/details/8152046)
 
 ## 从路径中提取文件名or目录
 

@@ -52,10 +52,34 @@ ffmpeg [全局参数] [输入文件参数] -i [输入文件] [输出文件参数
 - 将图片序列转为视频
 
   ```shell
-  ffmpeg [-r {帧率}] %05d.png [-c:v libx265] test.mp4
+  ffmpeg [-r {帧率}] -i %05d.png [-c:v libx265] test.mp4
   ```
 
   > 注意：
   >
   > 1. 参数`-r`不能放在`-i`后面，否则不起作用
-  > 2. 如果视频要插入PPT，需要使用编码器libx265，否则插入的时候会卡死
+  > 2. 如果视频要插入PPT，需要使用编码器libx265，否则插入的时候会卡
+  
+  如果要**[无损转换](https://qastack.cn/video/7903/how-to-losslessly-encode-a-jpg-image-sequence-to-a-video-in-ffmpeg)**
+  
+  ```shell
+  ffmpeg [-framerate {帧率}] -i %05d.png -codec copy test.mkv
+  # .mkv 指定帧率不能使用-r参数
+  ```
+  
+  然后可以比较每个帧的哈希值，以确保结果是真正的无损
+  
+  ```shell
+  ffmpeg -i %05d.png -f framehash -
+  #stream_index, packet_dts, packet_pts, packet_duration, packet_size, hash
+  #0,          0,          0,        1,   460800, 29bcc2db3726c7dfec1826c5740f603f
+  #0,          1,          1,        1,   460800, b5fdc23d93cbd043dc2b9290dc8378f0
+  #0,          2,          2,        1,   460800, ee0709942f24b458fd2380d134dcb59d
+  ffmpeg -i test.mkv -map 0:v -f framehash -
+  #stream_index, packet_dts, packet_pts, packet_duration, packet_size, hash
+  #0,          0,          0,        1,   460800, 29bcc2db3726c7dfec1826c5740f603f
+  #0,          1,          1,        1,   460800, b5fdc23d93cbd043dc2b9290dc8378f0
+  #0,          2,          2,        1,   460800, ee0709942f24b458fd2380d134dcb59d
+  ```
+  
+  

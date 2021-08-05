@@ -259,7 +259,7 @@ count_parameters(model)
 
    > 参考教程：[Pytorch有什么节省显存的小技巧？ - 郑哲东的回答](https://www.zhihu.com/question/274635237/answer/573633662) 
 
-2. ☆**梯度累加**：即不是每个batch都更新 权重&超参，而是隔几个再更新，这样可以扩大batch_size：
+2. **梯度累加**：即不是每个batch都更新 权重&超参，而是隔几个再更新，这样可以扩大batch_size：
    $$
    \text{真正的batch_size}  = \text{batch_size} * \text{accumulation_steps}
    $$
@@ -285,6 +285,8 @@ count_parameters(model)
    ```
 
    PS：[model.eval()和torch.no_grad()的区别](https://blog.csdn.net/qq_38410428/article/details/101102075)
+   
+4. 输入不要以一次性都转移到GPU上，用到了再转移
 
 ## 估计模型显存
 
@@ -450,6 +452,12 @@ PS：[model.eval()和torch.no_grad()的区别](https://blog.csdn.net/qq_38410428
     主机中的内存，有两种存在方式，一是锁页，二是不锁页，锁页内存存放的内容在任何情况下都不会与主机的虚拟内存进行交换（注：虚拟内存就是硬盘），而不锁页内存在主机内存不足时，数据会存放在虚拟内存中。显卡中的显存全部是锁页内存,当计算机的内存充足的时候，可以设置pin_memory=True。当系统卡住，或者交换内存使用过多的时候，设置pin_memory=False。因为pin_memory与电脑硬件性能有关，pytorch开发者不能确保每一个炼丹玩家都有高端设备，因此pin_memory默认为False。
 
     **总结一句就是，如果机子的内存比较大，建议开启pin_memory=Ture，如果开启后发现有卡顿现象或者内存占用过高，此时建议关闭。**
+
+# NVIDIA DALI
+
+## [Getting  started tutorial](https://docs.nvidia.com/deeplearning/dali/user-guide/docs/examples/getting_started.html)
+
+- 打印结果的时候，需要将`TensorList`对象转换成`NumPy`。但是不是所有的的`TensorList`都能转换，使用`.is_dense_tensor()`查看其能否转换成`NumPy`。labels可以使用`.as_tensor()`直接转成tensor，但是imgs不行，因为其中包含了多张img（数量=batch size），需要遍历图像中的每一张图像（`.at()`）
 
 # 参考资料
 
