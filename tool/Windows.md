@@ -37,6 +37,7 @@
     + 通过**压缩包解压**的（比如PdgCntEditor、OfficeBox）
     + **库软件**（比如OpenCV，Anaconda）：==如果可以全部装在WSL里面==
 + 所有的软件都**安装在C盘**，软件包安装的放在`Program Files`或者`Program Files (x86)`文件夹，压缩包解压的放在`Soft`文件夹，库软件放在`Library`文件夹。库文件的源码可以放在其他地方，如果可以的话不要删掉。
++ WSL安装在其他盘：从[官网](https://docs.microsoft.com/en-us/windows/wsl/install-manual#downloading-distributions)上下载安装包，然后将后缀改为.zip，挪到其他盘后解压，运行`ubuntu.exe`即可
 ## 软件包安装
 1. 不做介绍的软件：[TIM](https://tim.qq.com/download.html)、[微信](https://pc.weixin.qq.com/)、[网易云音乐](https://music.163.com/download)、[网易有道词典](https://cidian.youdao.com/index.html)、[钉钉](https://www.dingtalk.com/download)、[福昕阅读器](https://www.foxitsoftware.cn/downloads/PDF)、[阿里旺旺](https://wangwang.taobao.com/)、[百度网盘](https://pan.baidu.com/download)、[GitHub Desktop](https://help.github.com/cn/desktop/getting-started-with-github-desktop/installing-github-desktop)、[OneDrive](https://www.microsoft.com/zh-cn/microsoft-365/onedrive/online-cloud-storage)、[VSCode](https://code.visualstudio.com/download)、[Bandizip](https://cn.bandisoft.com/bandizip/)、[Edge](https://www.microsoft.com/zh-cn/edge/)、[PotPlayer](https://daumpotplayer.com/download/)、[IDM](./Material/IDM.6.38.Build.2.Final.Retail.zip) 、[按键精灵](http://download.myanjian.com/)、[Mendeley](https://www.mendeley.com/download-desktop/)、[向日葵](https://sunlogin.oray.com/personal/download/)、[Foxmail](https://www.foxmail.com/)、[Everything](https://www.voidtools.com/zh-cn/downloads/)、[欧路词典](https://www.eudic.net/v4/en/app/download)
 2. 稍作介绍的软件：

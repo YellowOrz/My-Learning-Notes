@@ -195,6 +195,8 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     Add-AppxPackage .\Ubuntu_1804.2019.522.0_x64.appx
     ```
 
+    **PS**：如果想要安装到其他分区，在[这里](https://docs.microsoft.com/zh-cn/windows/wsl/install-manual#downloading-distributions)下载安装包，拷贝到其他分区想要存放的地方，将文件后缀的.appx改成.zip，然后解压，然后运行ubuntu.exe即可
+
 - WSL1升级为WSL2：参考[教程](https://www.liumingye.cn/archives/326.html)or官网
 
 - 与Clion连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
@@ -249,4 +251,11 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 
     <img src="images/image-20201018111355994.png" alt="image-20201018111355994" style="zoom:80%;" />
 
-- 
+- **监控远程服务器的GPU**：在win中安装软件**[ wsl-notify-send](https://github.com/stuartleeks/wsl-notify-send)**，然后使用如下脚本。显存占用量低于{显存大小}的GPU会被认定为空，然后在windows中发送通知
+
+    ```shell
+    ./tool/Material/monitor_GPU.sh {服务器代号} {显存大小}
+    ```
+
+    ![image-20211103134943564](images/image-20211103134943564.png)
+

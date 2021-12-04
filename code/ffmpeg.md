@@ -52,7 +52,7 @@ ffmpeg [全局参数] [输入文件参数] -i [输入文件] [输出文件参数
 - 将图片序列转为视频
 
   ```shell
-  ffmpeg [-r {帧率}] -i %05d.png [-c:v libx265] test.mp4
+  ffmpeg [-r {帧率}] -i %05d.png [-c:v libx265] [-b:v 300000k] test.mp4
   ```
 
   > 注意：

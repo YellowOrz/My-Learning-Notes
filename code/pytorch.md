@@ -361,6 +361,16 @@ img=(tensor[0].detach().cpu().numpy().transpose(1, 2, 0)*255.0).astype(np.uint8)
 
 PS：[model.eval()和torch.no_grad()的区别](https://blog.csdn.net/qq_38410428/article/details/101102075)
 
+## 打印宽度增加
+
+可以不换行显示更多的内容，方便对比矩阵内容
+
+```python
+torch.set_printoptions(linewidth=1600)
+```
+
+> [SET_PRINTOPTIONS官方文档](https://pytorch.org/docs/stable/generated/torch.set_printoptions.html)
+
 # 各种函数
 
 ## torch
@@ -467,6 +477,7 @@ PS：[model.eval()和torch.no_grad()的区别](https://blog.csdn.net/qq_38410428
 [^4]:[Pytorch入门学习（八）-----自定义层的实现（甚至不可导operation的backward写法）](https://blog.csdn.net/Hungrier/article/details/78346304)
 [^5]:[Pytorch使用Tensorboard可视化网络结构_sunqiande88的博客-CSDN博客](https://blog.csdn.net/sunqiande88/article/details/80155925)
 [^6]:[卷积神经网络(CNN)反向传播算法推导](https://zhuanlan.zhihu.com/p/61898234)
+
 [^7]:[卷积神经网络(CNN)Python的底层实现——以LeNet为例](https://zhuanlan.zhihu.com/p/62303214)
 [^8]:[Pytorch 中的反向传播](https://zhuanlan.zhihu.com/p/212748204)
 [^9]:[探讨Pytorch中nn.Module与nn.autograd.Function的backward()函数](https://oldpan.me/archives/pytorch-nn-module-functional-backward)
