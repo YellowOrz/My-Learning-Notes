@@ -371,6 +371,12 @@ torch.set_printoptions(linewidth=1600)
 
 > [SET_PRINTOPTIONS官方文档](https://pytorch.org/docs/stable/generated/torch.set_printoptions.html)
 
+## tensorboard
+
+- 排除指定字符串：`^(?!.*Loss).*$`
+
+  <img src="images/image-20211215144532866.png" alt="image-20211215144532866" style="zoom: 67%;" />
+
 # 各种函数
 
 ## torch

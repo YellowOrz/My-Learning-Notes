@@ -11,6 +11,20 @@ n = 123
 s = "%05d" % n	# "00123"
 ```
 
+- [二维列表转置](https://blog.csdn.net/chichu261/article/details/102847030)
+
+  ```python
+  a = [[1, 2, 3], [4, 5, 6]]
+  b = tuple(zip(*a))
+  c = list(zip(*a))
+  d = list(map(list, zip(*a)))
+  print(b)  # ((1, 4), (2, 5), (3, 6))
+  print(c)  # [(1, 4), (2, 5), (3, 6)]
+  print(d)  # [[1, 4], [2, 5], [3, 6]]
+  ```
+
+  
+
 # 库
 
 ## EasyDict

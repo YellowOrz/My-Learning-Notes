@@ -187,7 +187,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 
 # WSL
 
-- 安装：现在BIOS打开虚化，然后控制面板 -> 启用或关闭Windows功能 中，打开虚拟机平台、适用于Linux的Windows子系统、Hyper-V，重启。
+- **安装**：现在BIOS打开虚化，然后控制面板 -> 启用或关闭Windows功能 中，打开虚拟机平台、适用于Linux的Windows子系统、Hyper-V，重启。
 
     可以到微软商店直接安装。或者到[这里](https://docs.microsoft.com/zh-cn/windows/wsl/install-manual#installing-your-distro)安装，（如果是用IDM下载，格式可能会变为.zip，需要改为.appx），然后在PowerShell运行
 
@@ -197,14 +197,22 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 
     **PS**：如果想要安装到其他分区，在[这里](https://docs.microsoft.com/zh-cn/windows/wsl/install-manual#downloading-distributions)下载安装包，拷贝到其他分区想要存放的地方，将文件后缀的.appx改成.zip，然后解压，然后运行ubuntu.exe即可
 
-- WSL1升级为WSL2：参考[教程](https://www.liumingye.cn/archives/326.html)or官网
+- **WSL1升级为WSL2**：参考[教程](https://www.liumingye.cn/archives/326.html)or官网
 
-- 与Clion连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
+- **与CLion连接**：参考CLion的官方教程[WSL | CLion (jetbrains.com)](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-product.html)
 
-- 图形界面：在WLS安装xfce4
+- **图形界面**：在WLS安装图像界面，例如xfce4
 
     ```shell
     apt install xfce4
+    ```
+
+    然后在`~/.bashrc`中添加如下[内容](https://zhuanlan.zhihu.com/p/151853503)
+
+    ```shell
+    export DISPLAY=`cat /etc/resolv.conf | grep nameserver | awk '{print $2}'`:0.0
+    # 或者这个？
+    # export DISPLAY=localhost:0.0
     ```
 
     Windows安装[MobaXTerm](https://mobaxterm.mobatek.net/download.html)。然后运行MobaXTerm，保证其X server为开启状态，即左上角的“X”为彩色，为灰色的话，按一下就彩色了
@@ -217,17 +225,9 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     startxfce4
     ```
 
-    **PS**：如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
+    如果只是想查看运行结果（比如OpenCV的imshow），可以不执行`startxfce4`，直接执行代码就会自动打开窗口。
 
-    如果报错，则在环境变量中添加
-
-    ```shell
-    IP=localhost
-    PortOffset=2222.0
-    export DISPALY=${IP}:${PortOffeset}
-    ```
-
-    其中，PortOffset需与MobaXTerm中的X11设置保持一致
+    **注意：**环境变量DISPLAY中的`0.0`需与MobaXTerm中的X11设置保持一致
 
     <img src="images/MobaXTerm_offset.png" alt="MobaXTerm_offset" style="zoom: 80%;" />
 
@@ -235,9 +235,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 
     ![image-20201002190701696](images/image-20201002190701696.png)
 
-- 安装cuda：参考NIVIDIA官网[CUDA on WSL User Guide](https://docs.nvidia.com/cuda/wsl-user-guide/index.html#abstract)
-
-    - 在Win上安装[相关驱动](https://developer.nvidia.com/cuda/wsl/download)，win会自动为wsl安装nvidia驱动
+- **安装NVIDIA GPU驱动**：将win10升级至版本≥21H2 或者使用win11，然后给win[安装NVIDIA驱动](https://developer.nvidia.com/cuda/wsl)，不需要给WSL安装驱动。具体参考[微软官方教程](https://docs.microsoft.com/en-us/windows/ai/directml/gpu-cuda-in-wsl)或者更加详细的[NIVIDIA官方教程官网](https://docs.nvidia.com/cuda/wsl-user-guide/index.html)
 
 - `updatedb`排除文件夹`/mnt`：
 
