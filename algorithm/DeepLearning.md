@@ -18,7 +18,7 @@
 
   <img src="images/image-20211005220014114.png" alt="image-20211005220014114" style="zoom:50%;" />
 
-- NAS：自动搜索网络结构
+- **NAS**：自动搜索网络结构
 
   - [神经网络结构搜索 (1/3): 基本概念和随机搜索 Neural Architecture Search: Basics & Random Search_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV14q4y177gQ)
   - [神经网络结构搜索 (2/3): RNN + RL Neural Architecture Search: RNN + RL_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV15K4y1A7hq)
@@ -35,3 +35,14 @@
 
   - [Gumbel softmax在可微NAS的作用是什么？](https://www.cnblogs.com/marsggbo/p/13227992.html)
   - [Gumbel-Softmax Trick和Gumbel分布 - initial_h - 博客园 (cnblogs.com)](https://www.cnblogs.com/initial-h/p/9468974.html#二、gumbel分布采样效果)
+
+- **Hard Negative Mining**
+
+    - 在目标检测中我们会事先标记好ground_truth，接下来在图片中随机提取一些列sample，与ground_truth重叠率IOU超过一定阈值的（比如0.5）, 则认为它是positive sample（正样本），否则为negative sample（负样本）
+    - hard negative：难以正确分类的样本，也就是说在对负样本分类时候，loss比较大(label与prediction相差较大)的那些样本，也可以说是容易将负样本看成正样本的那些样本，即假正例（false positive）
+    - 判断困难负样本：先用初始样本集去训练，再用训练好的网络模型去预测负样本集中的负样本，选择其中**得分最高**（即最容易被判断为正样本的负样本）为困难样本，加入负样本集中，重新训练网络。循环往复，然后会发现网络的分类性能越来越强了！假阳性负样本与正样本间也越来约相似了！（因为此时只有这些妖怪区域能迷惑我们的分类器了）
+    - [什么是hard negative mining - 重大的小鸿 - 博客园 (cnblogs.com)](https://www.cnblogs.com/elitphil/p/12714479.html)
+
+- **主动学习（Active Learning）**：大致思路，通过机器学习的方法获取到那些比较“难”分类的样本，让人工再次审核，然后用于训练，逐步提升模型的效果，将人工经验融入机器学习的模型中。
+
+    - [主动学习(Active learning)算法的原理是什么，有哪些比较具体的应用？ - 张戎的回答 - 知乎](https://www.zhihu.com/question/265479171/answer/1474978784) 
