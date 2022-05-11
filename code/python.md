@@ -104,4 +104,19 @@ config.TRAIN.lr = 0.0001
   json.load(fp, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw)
   ```
 
+## 并行
+
+- `concurrent.futures`
+
+  ```python
+  def 【操作函数】(【形参】)：
+  	...
+  input=[...]
+  output=[]
+  with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
+      futures = [executor.submit(【操作函数】, 【第一个参数】, 【第二个参数】, 【...参数】) for 【参数】 in enumerate(input)]
+      for future in concurrent.futures.as_completed(futures):
+          output.append(future.result())
+  ```
+
   

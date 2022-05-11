@@ -65,6 +65,19 @@ bool GetFilesPath(const string& father_dir, vector<string> &files ){
 }
 ```
 
+## 获得文件格式
+
+```c++
+std::string fn = "filename.conf";
+if(fn.substr(fn.find_last_of(".") + 1) == "conf") {
+	std::cout << "Yes..." << std::endl;
+} else {
+	std::cout << "No..." << std::endl;
+}
+```
+
+
+
 # 字符串操作
 
 ## 提取字符串最后一个字符
