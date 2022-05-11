@@ -49,7 +49,7 @@
 |[MobaXTerm](https://mobaxterm.mobatek.net/download.html)|远程连接linux的好工具|[Typora](https://typora.io/#download)|Markdown编辑器|
 |[cloc](https://github.com/AlDanial/cloc)|代码行数统计|[AIDA64](https://www.aida64.com/downloads)|显示电脑详细信息|
 |  [Mathpix Snip](https://mathpix.com/#downloads)  |     数学公式识别神器      |[clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases)|ShadowsocksR的替代品。更好用。<br/>[教程](https://merlinblog.xyz/wiki/cfw.html)，[汉化补丁](https://github.com/BoyceLig/Clash_Chinese_Patch/releases)，[ssr订阅链接转clash](https://bianyuan.xyz/)|
-|    [Microsoft To Do](https://to-do.microsoft.com/tasks/)     |        任务管理        | PdgCntEditor | 编辑PDF目录                        |
+|    [Microsoft To Do](https://to-do.microsoft.com/tasks/)     |        任务管理        | [PdgCntEditor](https://www.jianshu.com/p/498b0f8bb650) | 编辑PDF目录                        |
 | [DiskGenius](https://www.diskgenius.cn/download.php)  | 管理磁盘     | [Scrcpy_GUI](https://github.com/Tomotoes/scrcpy-gui/releases) | 手机投屏到电脑（可以媲美华为的投屏） |
 | [哔哩哔哩动画](https://www.microsoft.com/zh-cn/p/%e5%93%94%e5%93%a9%e5%93%94%e5%93%a9%e5%8a%a8%e7%94%bb/9nblggh5q5fv?activetab=pivot:overviewtab) | 官方渠道下载b站视频 | [ShadowsocksR](https://github.com/shadowsocksrr/shadowsocksr-csharp) | 必备工具                       |
 | [万彩办公大师](http://www.wofficebox.com/) | 办公工具~~箱~~ | [wsl-notify-send](https://github.com/stuartleeks/wsl-notify-send)                    |                        WSL给win发通知                        |
@@ -59,7 +59,7 @@
 |Guitar Pro|吉他神器|[ImageMagick](https://imagemagick.org/script/download.php)|图像处理软件|
 |[ventoy](https://www.lanzoui.com/b01bd54gb)|系统盘制作|[MulimgViewer](https://github.com/nachifur/MulimgViewer/releases)|同时查看多张图|
 |uTools|好用工具集合|[Zotero](https://www.zotero.org/download/)|跨平台文献查看工具|
-|Geomagic Wrap|三维模型处理工具|||
+|Geomagic Wrap|三维模型处理工具|[Mellow Multi Player](http://mellow.official.jp/blog/archives/3081)|同时播放多个视频|
 
 3. 大型软件：[Lightroom Classic](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Photoshop](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Microsoft Office](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[WLS（Ubuntu 20.04 LTS）](https://docs.microsoft.com/zh-cn/windows/wsl/install-win10)、[Visio](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[CLion](https://www.jetbrains.com/clion/download/#section=windows)、PyCharm、[SolidWorks](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、Matlab
 

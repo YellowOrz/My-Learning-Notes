@@ -9,11 +9,14 @@
     - [Collamark](https://chrome.google.com/webstore/detail/collamark/kbpjikgngikhhpbjddnenemoonpbfikm)：网页批注
     - [Forest](https://chrome.google.com/webstore/detail/forest-stay-focused-be-pr/kjacjjdnoddnpbbcjilcajfhhbdhkpgk)：浏览器种树
     - [Tampermonkey（油猴）](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)：脚本使用平台
-    - [沙拉查词-聚合词典划词翻译](https://chrome.google.com/webstore/detail/%E6%B2%99%E6%8B%89%E6%9F%A5%E8%AF%8D-%E8%81%9A%E5%90%88%E8%AF%8D%E5%85%B8%E5%88%92%E8%AF%8D%E7%BF%BB%E8%AF%91/cdonnmffkdaoajfknoeeecmchibpmkmg?hl=zh-CN)：划词翻译
+    - [沙拉查词](https://chrome.google.com/webstore/detail/%E6%B2%99%E6%8B%89%E6%9F%A5%E8%AF%8D-%E8%81%9A%E5%90%88%E8%AF%8D%E5%85%B8%E5%88%92%E8%AF%8D%E7%BF%BB%E8%AF%91/cdonnmffkdaoajfknoeeecmchibpmkmg?hl=zh-CN)：划词翻译
     - [Grammarly](https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen?hl=zh-CN)：英语语法纠正和校对工具
     - [Browse Manager](https://chrome.google.com/webstore/detail/browse-manager/fibpimjmadkibpjkhlngcapnkkhhikpf)：网址/域名黑名单、访问次数统计
     - [Vimium](https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb)：通过键盘控制网页
     - [browse-manager](https://github.com/ZDL-Git/browse-manager)：实现网址/域名拉黑
+    - [AdGuard 广告拦截器](https://adguard.com/zh_cn/adguard-browser-extension/overview.html)：广告拦截
+    - [uBlacklist](https://chrome.google.com/webstore/detail/ublacklist/pncfbmialoiaghdehhbnbhkkgmjanfhe)：可以屏蔽内容农场，黑名单来自[Github](https://github.com/cobaltdisco/Google-Chinese-Results-Blocklist)
+    - [Dark Reader](https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh)：网页变成深色模式
 
 # VS Code
 
@@ -225,94 +228,11 @@ pip install --upgrade flake8
 
 
 
-# Mendeley
 
-<img src="images/image-20201005112508339.png" alt="image-20201005112508339" style="zoom:70%;" />
 
-# Libraries
 
-## 各种库
 
-| 库名称   | 说明             | 安装方法                                                     |
-| -------- | ---------------- | ------------------------------------------------------------ |
-| Eigen    | 矩阵处理         | apt install libeigen3-dev                                    |
-| Pangolin | 可视化           | 依赖：apt install libgl1-mesa-dev libglew-dev <br>(可选，用于生成html/pdf文档) apt install Doxygen <br>[git](https://github.com/stevenlovegrove/Pangolin)后用cmake编译安装 |
-| Sophus   | 李代数           | [git](https://github.com/strasdat/Sophus)后用cmake编译（无需安装） |
-| Ceres    | 求解最小二乘问题 | 依赖：apt install liblapack-dev libsuitesparse-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev<br>[git](https://github.com/ceres-solver/ceres-solver)后用cmake编译安装 |
-| g2o      | 基于图优化       | 依赖：apt install cmake libeigen3-dev libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3<br>[git](https://github.com/RainerKuemmerle/g2o)后用cmake编译安装 |
-| FLANN    | 最邻近算法       | [git](https://github.com/mariusmuja/flann)后用cmake编译安装  |
-| PCL      | 点云处理         | 依赖：要先装FLANN<br>(必装) apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev <br> (可选) apt install libopenni-dev libqhull-dev libusb-1.0-0-dev <br> [git](https://github.com/PointCloudLibrary/pcl)后用cmake编译安装 |
-| OctoMap  | 八叉树建图       | 方法一：apt install liboctomap-dev<br>方法二：[git](https://github.com/OctoMap/octomap)后用cmake编译安装 |
-| OpenMesh | 三维网格处理     | 依赖：opengl、qt5、glew？？？<br>[git](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh)or[下载release](https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/releases)后用cmake编译安装 |
-
-**注**：1. OpenMesh官网说依赖项只有qt5，但是我在有两个WSL上面安装的时候会报错大概`Not Find OpenGL(missing: OPENGL_opengl_LIBRARY, OPENGL_glx_LIBRARY)`和`Not Find QT5`，网上找了一些教程安装了几个，报错依旧存在。于是，我就找了另一台已经安装好的WSL（不记得当时怎么装的了），把ta上面的opengl和qt5的安装列表都copy下来了，然后就不报错了
-
-```shell
-# opengl
-apt install libqglviewer-dev-qt5 libqglviewer2-qt5 libqt5concurrent5 libqt5core5a libqt5dbus5 libqt5gui5 libqt5network5 libqt5opengl5 libqt5opengl5-dev libqt5positioning5 libqt5printsupport5 libqt5qml5 libqt5quick5 libqt5quickparticles5 libqt5quicktest5 libqt5quickwidgets5 libqt5sensors5 libqt5sql5 libqt5sql5-sqlite libqt5svg5 libqt5test5 libqt5webchannel5 libqt5webkit5 libqt5widgets5 libqt5x11extras5 libqt5xml5 libvtk7.1-qt qt5-default qt5-gtk-platformtheme qt5-qmake qt5-qmake-bin qt5-qmltooling-plugins qtbase5-dev qtbase5-dev-tools qtchooser qtdeclarative5-dev qttranslations5-l10n
-# qt5
-apt install libgl1 libgl1-mesa-dev libgl1-mesa-dri libgl1-mesa-glx libgl2ps-dev libgl2ps1.4 libglade2-0 libglapi-mesa libgles1 libgles2 libgles2-mesa-dev libglew-dev libglew2.0 libglib2.0-0 libglib2.0-bin libglib2.0-data libglib2.0-dev libglib2.0-dev-bin libglibmm-2.4-1v5 libglu1-mesa libglu1-mesa-dev libglvnd-core-dev libglvnd-dev libglvnd0 libglx-mesa0 libglx0
-# glew
-apt install libglew-dev libglew2.0
-# 有教程说还要装glue，但是已经装好OpenMesh的WSL上面并没有装
-```
-
-整理成.sh如下：
-
-```bash
-#安装这些依赖的时候好像会安装python2.7，我也不知道为啥。而且安装完后运行python会自动运行python2.7。  
-#不过重新注入环境变量了以后再运行python用的就是anaconda里面的python，所以我也就没有管它了。
-apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libgtest-dev cmake libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3 libgl1-mesa-dev libglew-dev build-essential libboost-all-dev libvtk7-dev
-#如果安装Pangolin出现‘No package ‘xkbcommon’ found’
-apt install libxkbcommon-x11-dev
-# OpenMesh
-git clone https://www.graphics.rwth-aachen.de:9000/OpenMesh/OpenMesh.git
-cd OpenMesh && mkdir build && cd build && cmake ..
-make -j7 install
-cd ../..
-# octomap
-git clone https://github.com/OctoMap/octomap.git
-cd octomap && mkdir build && cd build && cmake ..
-make -j7 install
-cd ../..
-# Pangolin
-git clone https://github.com/stevenlovegrove/Pangolin.git
-cd Pangolin && mkdir build && cd build && cmake ..
-make -j7 install
-cd ../..
-# Sophus
-git clone https://github.com/strasdat/Sophus.git
-cd Sophus && mkdir build && cd build && cmake ..
-make -j7
-make install #可以不安装，但是我还是装了
-cd ../..
-# ceres
-git clone https://github.com/ceres-solver/ceres-solver.git
-cd ceres-solver && mkdir build && cd build && cmake ..
-make -j7 install
-cd ../..
-# g2o
-git clone https://github.com/RainerKuemmerle/g2o.git
-cd g2o && mkdir build && cd build && cmake ..
-make -j7 install
-cd ../..
-# flann
-git clone https://github.com/mariusmuja/flann.git
-cd flann && mkdir build && cd build && cmake ..
-make -j7 install
-cd ../..
-
-# PCL
-git clone https://github.com/PointCloudLibrary/pcl.git # 或者tar xvfj pcl-pcl-1.7.2.tar.gz
-cd pcl && mkdir build && cd build && cmake .. # 如果想要安装Release版本，运行命令cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j7 install
-```
-
-## OpenCV
-
-参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/104040394)
-
-## miniconda
+# Miniconda
 
 [官网](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)。安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改 [Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/) 和 [pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/) (可选)为清华镜像，并安装如下包
 
