@@ -30,7 +30,17 @@
     fp.close();
     ```
 
-    
+## 读取整个文件到string
+
+```c++
+#include <string>
+#include <fstream>
+
+std::ifstream file("file.txt");
+std::string str((std::istreambuf_iterator<char>(file)),
+                std::istreambuf_iterator<char>());
+
+```  
 
 ## 递归读取某一文件夹下文件/子目录的完整路径
 

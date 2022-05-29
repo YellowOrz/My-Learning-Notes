@@ -270,3 +270,7 @@ mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramDa
 <img src="images/image-20210228102553533.png" alt="image-20210228102553533" style="zoom: 80%;" />
 
 解决方案：降低pip版本。比如我的pip版本为20.3.3，降低到20.2后就好了
+
+# 杂
+
+- clash for windows[自动选择路线](https://lancellc.gitbook.io/clash/clash-config-file/proxy-groups/auto)

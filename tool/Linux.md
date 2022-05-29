@@ -11,6 +11,23 @@
 ```shell
 apt install vim openssh-server tmux net-tools htop unzip zip rar unrar git cmake-curses-gui gedit clang tree lrzsz samba smbclient cifs-utils tightvncserver xrdp vlc -y
 apt install gcc g++ cmake gdb build-essential make libpng-dev libboost-all-dev -y 
+
+# Razer驱动
+sudo apt install software-properties-gtk
+sudo add-apt-repository ppa:openrazer/stable
+sudo apt update
+sudo apt install openrazer-meta
+sudo gpasswd -a $USER plugdev
+# Razer GUI
+sudo add-apt-repository ppa:polychromatic/stable
+sudo apt update
+sudo apt install polychromatic  # Full installation
+
+# deepin-wine
+wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
+# sudo apt-get install com.qq.weixin.deepin
+# sudo apt-get install com.qq.office.deepin
+
 ```
 
 | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                        |
@@ -26,7 +43,8 @@ apt install gcc g++ cmake gdb build-essential make libpng-dev libboost-all-dev -
 | [vscode](https://code.visualstudio.com/download)             | linux最好用的文本显示工具                                    | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                |
 | [onedrive](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) | 第三方onedrive软件                                           | [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app |
 | [微信](https://blog.csdn.net/OTZ_2333/article/details/122368735) | 官方微信（从优麒麟镜像安装）                                 | [ToDesk](https://www.todesk.com/download.html)               | 远程控制软件                |
-
+|[openrazer-meta](https://openrazer.github.io/#ubuntu)|第三方Razer驱动|[polychromatic](https://github.com/polychromatic/polychromatic)|第三方Razer GUI|
+|(deepin-wine](https://github.com/zq1997/deepin-wine)|deepin-wine环境与应用在Ubuntu上的移植仓库|[XDM](https://xtremedownloadmanager.com/#downloads)|下载软件。[插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)|
 ## 库
 
 | 库名称   | 说明             | 安装方法      |
@@ -118,7 +136,7 @@ make -j4 install
 
 ## PCL 
 
-1. 安装依赖以及第三方库：Boost，Eigen，FlANN，VTK，（OpenNI，QHull）
+- 安装依赖以及第三方库：Boost，Eigen，FlANN，VTK，（OpenNI，QHull）
    ```shell
    # 必装：其中eigen和vtk一直在更新，安装名称中的数字可能会发生变化
    apt install build-essential libboost-all-dev libeigen3-dev libvtk7-dev
@@ -143,7 +161,7 @@ make -j4 install
 
      ![image-20220411121423922](images/image-20220411121423922.png)
 
-2. **从[GitHub](https://github.com/PointCloudLibrary/pcl)克隆源码**
+- **从[GitHub](https://github.com/PointCloudLibrary/pcl)克隆源码**
 
     ```shell
     git clone -b pcl-1.12.1 https://github.com/PointCloudLibrary/pcl.git
@@ -249,14 +267,15 @@ apt install libgtk-3-dev
 
 # 通用配置
 
-1. 更改镜像为[清华镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)or[阿里镜像源](https://developer.aliyun.com/mirror/ubuntu?spm=a2c6h.13651102.0.0.3e221b119vwOjw)
-2. 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
+- 更改镜像为[清华镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)or[阿里镜像源](https://developer.aliyun.com/mirror/ubuntu?spm=a2c6h.13651102.0.0.3e221b119vwOjw)
+
+- 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
 
 ```bash
 PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ " 
 ```
 
-3. 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
+- 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
     ```shell
     # 在WSL为下面那个
@@ -297,7 +316,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     }
     ```
     
-4. Tmux：在配置文件`~/.tmux.conf `中加入如下内容，然后重启tmux，或者按`ctrl+b`后输入`:source-file ~/.tmux.conf`
+- Tmux：在配置文件`~/.tmux.conf `中加入如下内容，然后重启tmux，或者按`ctrl+b`后输入`:source-file ~/.tmux.conf`
 
     ```shell
     # 启用鼠标
@@ -318,11 +337,11 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     4. 选择完成后按`enter`退出，完成复制
     5. `ctrl+b` ，然后按`]`粘贴
 
-5. 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字`history-search`找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
+- 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字`history-search`找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
 
     <img src="images/image-20200923101318000.png" alt="image-20200923101318000" style="zoom:90%;" />
 
-6. 自动进行git操作脚本`gitauto.sh`：
+- 自动进行git操作脚本`gitauto.sh`：
 
     ```shell
     #!/bin/bash
@@ -390,7 +409,27 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     alias gitauto="bash ~/gitauto.sh"
 	```
 
+- 给应用添加代理：基于electron的软件，例如microsoft-edge、AO等
+    - 编辑文件`/usr/share/applications/*.desktop`，在`Exec=`后面的内容中加上`--proxy-server="http://127.0.0.1:7890"`，例如
+    ```bash
+    # before
+    Exec=/usr/bin/microsoft-edge-stable %U
+    # after
+    Exec=/usr/bin/microsoft-edge-stable --proxy-server="http://127.0.0.1:7890" %U
+    ```
 
+- deepin-wine安装windows软件：
+    ```bash
+    # .msi installer
+    deepin-wine6-stable msiexec /i $PATH_TO_MSI_INSTALL
+    ```
+
+- [设置桌面为默认.descktop路径](https://unix.stackexchange.com/questions/391915/where-is-the-path-to-the-current-users-desktop-directory-stored)
+    ```bash
+    # .msi installer
+    xdg-user-dir DESKTOP
+    ```
+    
 
 # WSL
 
