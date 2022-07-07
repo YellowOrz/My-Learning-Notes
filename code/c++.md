@@ -1,3 +1,24 @@
+# 基础
+
+## pair
+
+- [`std::pair`](https://www.cnblogs.com/nimeux/archive/2010/10/05/1844191.html)主要的作用是将两个数据组合成一个数据，两个数据可以是同一类型或者不同类型
+
+    - 例如std::pair<int,float> 。
+
+    - pair`实质上是一个结构体，其主要的两个成员变量是first和second，这两个变量可以直接使用。初
+
+    - 始化一个pair可以使用构造函数，也可以使用std::make_pair函数，
+
+    - make_pair函数的定义如下：
+
+        ```c++
+        template pair make_pair(T1 a, T2 b) { return pair(a, b); }
+        ```
+
+    - 一般make_pair都使用在需要pair做参数的位置，可以直接调用make_pair生成pair对象。 
+    - pair可以接受隐式的类型转换，这样可以获得更高的灵活度
+
 # 文件操作
 
 ## 文件读写
@@ -40,7 +61,7 @@ std::ifstream file("file.txt");
 std::string str((std::istreambuf_iterator<char>(file)),
                 std::istreambuf_iterator<char>());
 
-```  
+```
 
 ## 递归读取某一文件夹下文件/子目录的完整路径
 
@@ -168,6 +189,19 @@ vector<string> split(const string &str, const string &delim) {
 cout << RED << "I am RED. " << RESET << "I am normal. " << YELLOW << "I am YELLOW" << endl; 
 ```
 
+## 多次重复一个字符
+
+在python中可以使用`"="*10`得到`"=========="` 的效果，c++中则使用`std::string(10, '=')`
+
+# STL
+
+## vector
+
+- vector.push_back中完成的是值拷贝，而不仅仅是地址的复制。
+- [vector中使用emplace_back代替push_back](http://c.biancheng.net/view/6826.html)，因为emplace_back的效率更高
+    - push_back() 向容器尾部添加元素时，首先会创建这个元素，然后再将这个元素拷贝或者移动到容器中（如果是拷贝的话，事后会自行销毁先前创建的这个元素）
+    - emplace_back() 在实现时，则是直接在容器尾部创建这个元素，省去了拷贝或移动元素的过程。
+
 # 其他
 
 ## 使用PCL解析命令行参数
@@ -183,4 +217,14 @@ int main(int argc, char **argv) {
     ...
 }
 ```
+
+## 使用宏定义来定义“函数”
+
+如果需要多次用到某个小操作，可以使用宏定义来定义一个临时的"函数"，而不是定义专门的函数（有调用时间）or 内联函数（太复杂了）
+
+例如在ORBSLAM2中使用宏定义给二维向量进行旋转
+
+![image-20220601164910355](images/image-20220601164910355.png)
+
+
 
