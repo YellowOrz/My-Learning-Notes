@@ -39,7 +39,7 @@
 - **Anaconda Extension Pack**：可以切换Anaconda的虚拟环境
 - **Chinese (Simplified) Language Pack for Visual Studio Code**：中文有时候还是用得到的吧
 
-## 配置
+## ~~配置~~
 
 - **python代码格式化**：使用库`Autopep8`。
 
@@ -53,8 +53,7 @@ pip install --upgrade autopep8
 pip install --upgrade flake8
 ```
 
-- 
-- **配置C++运行环境**：主要参考[知乎上的一个回答](https://www.zhihu.com/question/30315894/answer/154979413)。但是要说的是，如果要**引用其他的库**（比如OpenCV），需要在**C_Cpp.default.includePath**中添加头文件路径（前面那个知乎的回答说还要填browse的）  
+- ~~**配置C++运行环境**：主要参考[知乎上的一个回答](https://www.zhihu.com/question/30315894/answer/154979413)。但是要说的是，如果要**引用其他的库**（比如OpenCV），需要在**C_Cpp.default.includePath**中添加头文件路径（前面那个知乎的回答说还要填browse的）~~  
 - **整体settings.json**
 
 ```JSON
@@ -225,8 +224,6 @@ pip install --upgrade flake8
     ```
 
 > [官方教程](https://docs.github.com/cn/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
-
-
 
 
 
