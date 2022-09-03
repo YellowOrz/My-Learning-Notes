@@ -19,6 +19,53 @@
     - 一般make_pair都使用在需要pair做参数的位置，可以直接调用make_pair生成pair对象。 
     - pair可以接受隐式的类型转换，这样可以获得更高的灵活度
 
+# 多线程
+
+## thread
+
+- [函数**形参为引用**时](https://stackoverflow.com/questions/65358028/c-thread-error-static-assert-failed-due-to-requirement)，需要将实参使用`std::ref()`转换成`reference_wrapper`后再传入，例如
+
+    ```c++
+    void foo(int &args){
+    	// something
+    }
+    int main(){
+        int args;
+        std::thread worker(foo, std::ref(args));
+        worker.join();
+    }
+    ```
+
+- [调用**重载的类成员函数**](https://blog.csdn.net/OTZ_2333/article/details/125736959)
+
+    ```c++
+    #include<iostream>
+    #include<thread>
+    using namespace std;
+    
+    class Print{
+     public:
+      void print() { cout << "void print()" << 0 << endl; }
+      void print(int i) { cout << "void print(int i)" << i << endl; }
+      int print(float i) { cout << "void print(float i)" << i << endl; return 0; }
+      void print(int i, float j) { cout << "void print(int i, float j)" << i << " " << j << endl; }
+      void print(const int& i) { cout << "void print(const int& i)" << i << endl; }
+    };
+    int main() {
+      Print p1, p2;
+      thread t1(static_cast<void(Print::*)()>(&Print::print), &p1);
+      thread t2(static_cast<void(Print::*)(int)>(&Print::print), &p1, 1);
+      thread t3(static_cast<int(Print::*)(float)>(&Print::print), &p1, 2.0);
+      thread t4(static_cast<void(Print::*)(int, float)>(&Print::print), &p1, 3, 4.0);
+      thread t5(static_cast<void(Print::*)(const int&)>(&Print::print), &p2, 5); // 不能去掉&，否则调用的是void print(int i)
+    
+      t1.join();t2.join();t3.join();t4.join();t5.join();
+      return 0;
+    }
+    ```
+
+- [函数的形参即使有**默认值**，在thread中调用时仍然需要给那个参数赋值](https://stackoverflow.com/a/65182257/11271721)，因为正常调用函数时，编译器其实是将默认参数填进去了；而thread是一个标准库中的函数，不会多加一个参数，必须要求找到参数数量相同的函数
+
 # 文件操作
 
 ## 文件读写

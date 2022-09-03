@@ -9,7 +9,7 @@
 ## 软件
 
 ```shell
-apt install vim openssh-server tmux net-tools htop unzip zip rar unrar git cmake-curses-gui gedit clang tree lrzsz samba smbclient cifs-utils tightvncserver xrdp vlc-l10n copyq texstudio-l10n -y
+apt install vim openssh-server tmux net-tools htop unzip zip rar unrar git cmake-curses-gui gedit clang tree lrzsz samba smbclient cifs-utils tightvncserver xrdp vlc-l10n copyq texstudio-l10n ncdu -y
 apt install gcc g++ cmake gdb build-essential make libpng-dev libboost-all-dev -y 
 
 # Razer驱动
@@ -32,6 +32,7 @@ wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
 
 | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
+| [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    |  |  |
 | [钉钉](https://alidocs.dingtalk.com/i/p/nb9XJlJ7QbxN8GyA/docs/ROGpvEna5YQWmaPgQ156W4ykmK3zoB27) | 官方钉钉                                                     | [clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases) | 代理软件                    |
 | [搜狗输入法](https://pinyin.sogou.com/linux/?r=pinyin)       | [参考教程](https://blog.csdn.net/lupengCSDN/article/details/80279177) | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器            |
 | [Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm) | 下载工具。暂时没找到更好的                                   | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                |
@@ -47,7 +48,7 @@ wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
 |[deepin-wine](https://github.com/zq1997/deepin-wine)|deepin-wine环境与应用在Ubuntu上的移植仓库|[XDM](https://xtremedownloadmanager.com/#downloads)|下载软件。[浏览器插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)|
 |[utools](https://u.tools/)|小工具集合|[zotero](https://www.zotero.org/download/)|文献管理|
 |[texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/)|latex工具集|[腾讯会议](https://source.meeting.qq.com/download/)|官方|
-|                                                              |                                                              |||
+| [diskusage](https://github.com/chenquan/diskusage) | 磁盘使用情况查看 |                                                              |                                                              |
 ## 库
 
 | 库名称   | 说明             | 安装方法      |
@@ -191,11 +192,11 @@ pip install opencv-contrib-python
 
 ### C++
 
-以下不保证最新，最新的内容可以看[我的博客](https://blog.csdn.net/OTZ_2333/article/details/104040394)
+~~以下不保证最新，最新的内容可以看[我的博客](https://blog.csdn.net/OTZ_2333/article/details/104040394)~~
 
 安装前一定先看一遍**官方教程**（[Installation in Linux](https://docs.opencv.org/4.2.0/d7/d9f/tutorial_linux_install.html)，[opencv_contrib](https://github.com/opencv/opencv_contrib)）和**以下全文**，尤其是最后的**问题**
 
-以opencv 4.2.0版本为例，我`home`下的`Downloads`文件夹里有`opencv-4.2.0`、`opencv_contrib-master`和`opencv_need`三个文件夹，分别存放着opencv 4.2.0的源码、opencv contrib的源码和问题三中自己手动下载的所有文件  
+~~以opencv 4.2.0版本为例，我`home`下的`Downloads`文件夹里有`opencv-4.2.0`、`opencv_contrib-master`和`opencv_need`三个文件夹，分别存放着opencv 4.2.0的源码、opencv contrib的源码和问题三中自己手动下载的所有文件~~  
 
 ```shell
 #安装所有必须的软件和依赖项。如果显示E: Unable to locate package xxxx，把镜像源更换为清华的应该就能解决。
@@ -203,9 +204,12 @@ apt install libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-d
 #可选项。若libjasper-dev不能安装,参考问题一。除了python的两个，其他的我全装了（都是处理各种图片格式的库），libjasper-dev找不到的话就算了吧（解决方法见下面问题一）
 apt install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
 
-#获取源文件，git或者用IDM直接下载后传给linux解压
+#获取源代码，git或者直接下载（推荐xdm）后传给linux解压
 git clone -b 4.5.5 --depth=1 https://github.com/opencv/opencv.git
 git clone -b 4.5.5 --depth=1 https://github.com/opencv/opencv_contrib.git
+# 安装3.x版本类似如下
+# git clone -b 3.4.9 --depth=1 https://github.com/opencv/opencv.git
+# git clone -b 3.4.9 --depth=1 https://github.com/opencv/opencv_contrib.git
 
 #进入opencv的文件夹
 cd opencv
@@ -219,7 +223,8 @@ cd build
 cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules -DBUILD_opencv_java=OFF -DBUILD_opencv_python=OFF ..
 #若显示	-- Configuring done
 #		-- Generating done
-#则进行下一步，-j7表示多线程
+#则进行下一步，-j7表示多线程（7为线程数）
+#如果内存不是很大or编译的时候卡死，可以不开启多线程，或者把线程数减少
 make -j7 
 make install
 ```
@@ -278,7 +283,7 @@ apt install libgtk-3-dev
 PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ " 
 ```
 
-- 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
+- ~~添加代理~~：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
     ```shell
     # 在WSL为下面那个
@@ -344,7 +349,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 
     <img src="images/image-20200923101318000.png" alt="image-20200923101318000" style="zoom:90%;" />
 
-- 自动进行git操作脚本`gitauto.sh`：
+- ~~自动进行git操作脚本`gitauto.sh`：~~
 
     ```shell
     #!/bin/bash
@@ -405,9 +410,8 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     proxyoff
     ```
 
-
     然后添加到环境变量文件`~/.bashrc`中添加如下内容
-    
+
     ```shell
     alias gitauto="bash ~/gitauto.sh"
     ```
@@ -439,7 +443,33 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     ProxyCommand nc -X 5 -x 192.168.1.108:7891 %h %p
     ```
 
-    
+- 让mv和cp显示进度：[advcpmv](https://github.com/jarun/advcpmv)
+
+    ```shell
+    curl https://raw.githubusercontent.com/jarun/advcpmv/master/install.sh --create-dirs -o ./advcpmv/install.sh && (cd advcpmv && sh install.sh)
+    sudo mv ./advcpmv/advcp /usr/local/bin/
+    sudo mv ./advcpmv/advmv /usr/local/bin/
+    sudo echo alias cp=\"/usr/local/bin/advcp -g\" >> /etc/bash.bashrc
+    sudo echo alias mv=\"/usr/local/bin/advmv -g\" >> /etc/bash.bashrc
+    ```
+
+- 命令行删除文件到回收站
+
+    ```shell
+    sudo apt install trash-cli
+    ```
+
+- linux版本的钉钉和腾讯会议 语音时如果别人讲话有**杂音**，执行下面命令
+
+    ```
+    sudo apt install pulseaudio*
+    ```
+
+    > 参考[链接](https://bbs.archlinuxcn.org/viewtopic.php?id=12535)
+
+- 英伟达显卡驱动安装：[我的博客](https://blog.csdn.net/OTZ_2333/article/details/108604064)
+
+- 
 
 # WSL
 

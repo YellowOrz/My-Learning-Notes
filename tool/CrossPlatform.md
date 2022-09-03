@@ -198,6 +198,16 @@ pip install --upgrade flake8
 
 - 远程调试代码转发图形界面：在`Configuration`中的`Environment variables`添加内容`DISPLAY=localhost:0`。`0`为MobaXterm的X11设置的端口。
 
+- [行号栏变窄](https://blog.csdn.net/SW_LCC/article/details/93163533)：`File-Setting->Editor->General->Gutter Icons`取消勾选`show gutter icons`，然后保存。断点将以整行变红的方式显示（但是不知道怎么快速调出断点的配置）
+
+- 横向滚屏快捷键：`setting->keymap`，搜索scroll，设置成如下
+
+    ![image-20220826095647068](images/image-20220826095647068.png) 
+
+- 设置注释高亮关键词：`Setting->Editor->TODO`
+
+    ![image-20220828100633309](images/image-20220828100633309.png)
+
 # Git
 
 - 添加账号信息
