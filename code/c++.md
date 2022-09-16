@@ -17,7 +17,19 @@
         ```
 
     - 一般make_pair都使用在需要pair做参数的位置，可以直接调用make_pair生成pair对象。 
+
     - pair可以接受隐式的类型转换，这样可以获得更高的灵活度
+
+## static
+
+- [类中的**静态成员变量**](http://c.biancheng.net/view/2227.html)：
+    - 实现多个对象 <u>共享数据</u>的目标。
+    - 静态成员变量 是<u>全局变量</u>，不占用对象的内存，而是在所有<u>对象之外开辟内存</u>，即使<u>不创建对象也可以访问</u>，到程序结束时才释放
+    - 静态成员变量必须初始化，<u>不能在类定义里边初始化</u>，只能在class body外初始化
+    - 静态成员变量可以<u>通过 对象名 or 类名 访问</u>，但要遵循 private、protected 和 public 关键字的访问权限限制
+- [类中的**静态成员函数**](http://c.biancheng.net/view/2228.html)：
+    - 静态成员函数 <u>没有this指针</u>，编译器不会为它增加形参 this，不能调用普通成员函数，<u>只能访问静态成员（主要目的）</u>
+- 
 
 # 多线程
 
@@ -273,5 +285,17 @@ int main(int argc, char **argv) {
 
 ![image-20220601164910355](images/image-20220601164910355.png)
 
+## 获取屏幕分辨率
 
+- Linux：头文件不需要在CMake中进行任何设置
+
+    ```c++
+    #include <X11/Xlib.h>	// 直接include
+    
+    Display* d = XOpenDisplay(NULL);
+    Screen* s = DefaultScreenOfDisplay(d);
+    cout << "Witdh = " << s->width << ", height = " << s->height << endl;
+    ```
+
+    
 
