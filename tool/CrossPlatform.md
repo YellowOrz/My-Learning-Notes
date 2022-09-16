@@ -206,7 +206,11 @@ pip install --upgrade flake8
 
 - 设置注释高亮关键词：`Setting->Editor->TODO`
 
-    ![image-20220828100633309](images/image-20220828100633309.png)
+    <img src="images/image-20220828100633309.png" alt="image-20220828100633309" style="zoom:67%;" />
+    
+- [设置谷歌代码风格](https://jasonkayzk.github.io/2022/07/05/%E9%85%8D%E7%BD%AEClion%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/)：`Setting`=>`Editor` => `Code Style` => `C/C++` => `Set From`，选择 `Google` 保存即可！
+
+- [关闭参数提示（parameters hints）](https://blog.csdn.net/Geeker_boy/article/details/105127321)：`Setting`=>`Editor` => `Inlay Hints`，取消勾选`Parameter names`
 
 # Git
 
@@ -235,9 +239,21 @@ pip install --upgrade flake8
 
 > [官方教程](https://docs.github.com/cn/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
 
+- 多账号配置：编辑~/.ssh/config文件，添加如下内容
 
+    ```
+    Host gitlab.com
+     hostname gitlab.com
+     User git
+     IdentityFile /home/orz/.ssh/gitlab
+    Host github.com
+     hostname github.com
+     User git
+     IdentityFile /home/orz/.ssh/github
+    ProxyCommand nc -X 5 -x 192.168.1.108:7891 %h %p
+    ```
 
-
+    
 
 # Miniconda
 

@@ -2,15 +2,21 @@
 
 [TOC]
 
-# 必装软件&库
+
 
 ==root身份==
 
-## 软件
+# 软件
 
 ```shell
-apt install vim openssh-server tmux net-tools htop unzip zip rar unrar git cmake-curses-gui gedit clang tree lrzsz samba smbclient cifs-utils tightvncserver xrdp vlc-l10n copyq texstudio-l10n ncdu -y
-apt install gcc g++ cmake gdb build-essential make libpng-dev libboost-all-dev -y 
+apt install vim openssh-server tmux net-tools htop unzip zip rar unrar tree
+apt install git gedit vlc-l10n copyq ncdu flameshot tldr 
+apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
+
+# 可选
+apt install lrzsz samba smbclient cifs-utils	# 远程传输
+apt install tightvncserver xrdp		# win自带远程
+apt install texstudio-l10n			# latex
 
 # Razer驱动
 sudo apt install software-properties-gtk
@@ -32,24 +38,28 @@ wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
 
 | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
-| [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    |  |  |
-| [钉钉](https://alidocs.dingtalk.com/i/p/nb9XJlJ7QbxN8GyA/docs/ROGpvEna5YQWmaPgQ156W4ykmK3zoB27) | 官方钉钉                                                     | [clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases) | 代理软件                    |
-| [搜狗输入法](https://pinyin.sogou.com/linux/?r=pinyin)       | [参考教程](https://blog.csdn.net/lupengCSDN/article/details/80279177) | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器            |
-| [Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm) | 下载工具。暂时没找到更好的                                   | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                |
-| [网易云音乐](https://music.163.com/#/download)               | 网易云音乐                                                   | ~~[qq](https://im.qq.com/linuxqq/download.html)~~            | 官方qq                      |
-| [WPS](https://linux.wps.cn/)                                 | linux最好用的office工具                                      | [XMind](https://www.xmind.cn/download/)                      | 思维导图                    |
+| [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    | [flameshot](https://flameshot.org/) | 截图软件<br>`apt install flameshot` |
+| [钉钉](https://alidocs.dingtalk.com/i/p/nb9XJlJ7QbxN8GyA/docs/ROGpvEna5YQWmaPgQ156W4ykmK3zoB27) | 官方钉钉                                                     | [clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases) | 代理软件（跨平台）               |
+| [搜狗输入法](https://pinyin.sogou.com/linux/?r=pinyin)       | [参考教程](https://blog.csdn.net/lupengCSDN/article/details/80279177)，我的教程 | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器            |
+| ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具。暂时没找到更好的                               | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                |
+| [网易云音乐](https://music.163.com/#/download)               | 网易云音乐（跨平台）                                              | ~~[qq](https://im.qq.com/linuxqq/download.html)~~            | 官方qq                      |
+| [WPS](https://linux.wps.cn/)                                 | linux最好用的office工具（跨平台）                                 | [XMind](https://www.xmind.cn/download/)                      | 思维导图                    |
 | [Typora](https://typora.io/#download)                        |Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html) | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE                         |
-| [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件                                                 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                    |
-| [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器                                                   | ~~[福昕阅读器](https://www.foxitsoftware.cn/downloads/)~~ | pdf阅读器                   |
-| [vscode](https://code.visualstudio.com/download)             | linux最好用的文本显示工具                                    | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                |
-| [onedrive](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) | 第三方onedrive软件                                           | [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app |
-| [微信](https://blog.csdn.net/OTZ_2333/article/details/122368735) | 官方微信（从优麒麟镜像安装）                                 | [ToDesk](https://www.todesk.com/download.html)               | 远程控制软件                |
+| [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件（跨平台）                                            | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                    |
+| [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                              | [福昕阅读器](https://www.foxitsoftware.cn/downloads/) | pdf阅读器                   |
+| [VSCode](https://code.visualstudio.com/download)          | linux最好用的文本显示工具                                | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                |
+| [OneDrive](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) | 第三方onedrive软件                                           | [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app |
+| ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装）                                 | [ToDesk](https://www.todesk.com/download.html)               | 远程控制软件                |
 |[openrazer-meta](https://openrazer.github.io/#ubuntu)|第三方Razer驱动|[polychromatic](https://github.com/polychromatic/polychromatic)|第三方Razer GUI|
-|[deepin-wine](https://github.com/zq1997/deepin-wine)|deepin-wine环境与应用在Ubuntu上的移植仓库|[XDM](https://xtremedownloadmanager.com/#downloads)|下载软件。[浏览器插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)|
-|[utools](https://u.tools/)|小工具集合|[zotero](https://www.zotero.org/download/)|文献管理|
+|[deepin-wine](https://github.com/zq1997/deepin-wine)|deepin-wine环境与应用在Ubuntu上的移植仓库|[XDM](https://xtremedownloadmanager.com/#downloads)|下载软件。[浏览器插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)（跨平台）|
+|[UTools](https://u.tools/)|小工具集合，**强力推荐**！|[zotero](https://www.zotero.org/download/)|文献管理|
 |[texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/)|latex工具集|[腾讯会议](https://source.meeting.qq.com/download/)|官方|
-| [diskusage](https://github.com/chenquan/diskusage) | 磁盘使用情况查看 |                                                              |                                                              |
-## 库
+| [diskusage](https://github.com/chenquan/diskusage) | 磁盘使用情况查看 | [百度网盘](https://pan.baidu.com/download#linux) | 官方 |
+| [ncdu](https://dev.yorhel.nl/ncdu) | 磁盘使用分析查看工具 | [Thunderbird](https://www.thunderbird.net/zh-CN/) | 邮箱 |
+| [tldr](https://tldr.sh/) | 命令快速查询工具，**强力推荐**！ | [Steam](https://store.steampowered.com/about/) | 官方 |
+| [XnView](https://www.xnview.com/en/xnviewmp/#downloads)      | 图片查看软件（跨平台） | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/) | 远程控制软件 |
+| [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机 | [CopyQ](https://hluk.github.io/CopyQ/) | 剪切板管理，**强力推荐**！ |
+# 库
 
 | 库名称   | 说明             | 安装方法      |
 | -------- | ---------------- | --------------------------------------------- |
@@ -138,7 +148,7 @@ cmake ..
 make -j4 install
 ```
 
-### PCL
+## PCL
 
 - 安装依赖以及第三方库：Boost，Eigen，FlANN，VTK，（OpenNI，QHull）
    ```shell
@@ -178,7 +188,7 @@ make -j4 install
 
 
 
-### OpenCV
+## OpenCV
 
 ### python
 
@@ -231,6 +241,7 @@ make install
 PS：如果cmake的时候，输出说`Could NOT find xxx`之类的，不要担心，只要不是让cmake终止的`error`都没问题。cmake成功后会显示`Configuring done`和`Generating done`  
 
 **问题一**：安装可选依赖包libjasper-dev的时候，显示`E: Unable to locate package libjasper-dev`  
+
 ```shell
 add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
 apt update
@@ -270,6 +281,17 @@ apt install libgtk-3-dev
 | `ctrl + a` | 移动光标至的字符头               | `ctrl + e` | 移动光标至的字符尾 |
 | `ctrl + c` |                                  | `ctrl + z` |                    |
 |            |                                  |            |                    |
+
+## 图形界面快捷键设置
+
+以gnome为例
+
+| 名称          | 命令          | 快捷键               |
+| ------------- | ------------- | -------------------- |
+| flameshot截图 | flameshot gui | `shift + prtsc`      |
+| htop          | htop          | `ctrl + shift + esc` |
+| nautilus      | nautilus      | `windows + e`        |
+| copyq主界面   | copyq toggle  | `windows + v`        |
 
 
 
@@ -417,7 +439,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     ```
 
 - 给应用添加代理：基于electron的软件，例如microsoft-edge、AO等
-    - 编辑文件`/usr/share/applications/*.desktop`，在`Exec=`后面的内容中加上`--proxy-server="http://127.0.0.1:7890"`，例如
+    - 编辑文件`/usr/share/applications/*.desktop`（或者在路径`~/.local/share/applications/`下），在`Exec=`后面的内容中加上`--proxy-server="http://127.0.0.1:7890"`，例如
     ```bash
     # before
     Exec=/usr/bin/microsoft-edge-stable %U
@@ -437,13 +459,13 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     xdg-user-dir DESKTOP
     ```
 
-- ssh代理：只支持sock5代理，在`.ssh/config`中添加如下内容
+- ssh代理：只支持sock5代理，在`.ssh/config`中添加如下内容，7891为sock5端口
 
     ```sh
-    ProxyCommand nc -X 5 -x 192.168.1.108:7891 %h %p
+    ProxyCommand nc -X 5 -x 127.0。0.1:7891 %h %p
     ```
 
-- 让mv和cp显示进度：[advcpmv](https://github.com/jarun/advcpmv)
+- 让mv和cp显示进度：[advcpmv](https://github.com/jarun/advcpmv)，操作如下
 
     ```shell
     curl https://raw.githubusercontent.com/jarun/advcpmv/master/install.sh --create-dirs -o ./advcpmv/install.sh && (cd advcpmv && sh install.sh)
@@ -469,7 +491,19 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 
 - 英伟达显卡驱动安装：[我的博客](https://blog.csdn.net/OTZ_2333/article/details/108604064)
 
-- 
+- `gnome`开启屏幕共享：
+
+    <img src="images/image-20220908101428087.png" alt="image-20220908101428087" style="zoom: 67%;" />
+
+    若共享下面没有“屏幕共享选项”，则安装
+
+    ```bash
+    sudo apt install vino
+    ```
+
+- 设置nautilus自带终端：参考[nautilus-terminal](https://github.com/flozz/nautilus-terminal)，注意必须要用apt安装的python，不能用conda安装的python
+
+    <img src="images/image-20220916141444464.png" alt="image-20220916141444464" style="zoom:67%;" />
 
 # WSL
 
