@@ -44,7 +44,7 @@ wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
 | ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具。暂时没找到更好的                               | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                |
 | [网易云音乐](https://music.163.com/#/download)               | 网易云音乐（跨平台）                                              | ~~[qq](https://im.qq.com/linuxqq/download.html)~~            | 官方qq                      |
 | [WPS](https://linux.wps.cn/)                                 | linux最好用的office工具（跨平台）                                 | [XMind](https://www.xmind.cn/download/)                      | 思维导图                    |
-| [Typora](https://typora.io/#download)                        |Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html) | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE                         |
+| [Typora](https://typora.io/#download)                        |Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html) | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，推荐使用JetBrain Tools下载        |
 | [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件（跨平台）                                            | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                    |
 | [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                              | [福昕阅读器](https://www.foxitsoftware.cn/downloads/) | pdf阅读器                   |
 | [VSCode](https://code.visualstudio.com/download)          | linux最好用的文本显示工具                                | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                |
@@ -454,15 +454,15 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     ```
 
 - [设置桌面为默认.descktop路径](https://unix.stackexchange.com/questions/391915/where-is-the-path-to-the-current-users-desktop-directory-stored)
+    
     ```bash
-    # .msi installer
     xdg-user-dir DESKTOP
     ```
 
-- ssh代理：只支持sock5代理，在`.ssh/config`中添加如下内容，7891为sock5端口
+- ssh代理：只支持sock5代理，在`~/.ssh/config`中添加如下内容，7891为sock5端口
 
     ```sh
-    ProxyCommand nc -X 5 -x 127.0。0.1:7891 %h %p
+    ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p
     ```
 
 - 让mv和cp显示进度：[advcpmv](https://github.com/jarun/advcpmv)，操作如下
