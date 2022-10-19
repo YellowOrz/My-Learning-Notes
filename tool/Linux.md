@@ -10,13 +10,24 @@
 
 ```shell
 apt install vim openssh-server tmux net-tools htop unzip zip rar unrar tree
-apt install git gedit vlc-l10n copyq ncdu flameshot tldr 
+apt install git gedit vlc-l10n copyq ncdu flameshot tldr guake 
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
 
-# 可选
-apt install lrzsz samba smbclient cifs-utils	# 远程传输
-apt install tightvncserver xrdp		# win自带远程
-apt install texstudio-l10n			# latex
+# deepin-wine
+wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
+# sudo apt-get install com.qq.weixin.deepin
+# sudo apt-get install com.qq.office.deepin
+
+# 以下可选
+
+# 远程传输
+apt install lrzsz samba smbclient cifs-utils
+# win自带远程
+apt install tightvncserver xrdp
+# latex	
+apt install texstudio-l10n
+# 主题
+apt install yaru-theme-*
 
 # Razer驱动
 sudo apt install software-properties-gtk
@@ -28,12 +39,6 @@ sudo gpasswd -a $USER plugdev
 sudo add-apt-repository ppa:polychromatic/stable
 sudo apt update
 sudo apt install polychromatic  # Full installation
-
-# deepin-wine
-wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
-# sudo apt-get install com.qq.weixin.deepin
-# sudo apt-get install com.qq.office.deepin
-
 ```
 
 | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                        |
@@ -59,6 +64,7 @@ wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
 | [tldr](https://tldr.sh/) | 命令快速查询工具，**强力推荐**！ | [Steam](https://store.steampowered.com/about/) | 官方 |
 | [XnView](https://www.xnview.com/en/xnviewmp/#downloads)      | 图片查看软件（跨平台） | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/) | 远程控制软件 |
 | [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机 | [CopyQ](https://hluk.github.io/CopyQ/) | 剪切板管理，**强力推荐**！ |
+| [guake](http://guake-project.org/) | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | yaru | ubuntu黑暗主题 |
 # 库
 
 | 库名称   | 说明             | 安装方法      |
@@ -454,7 +460,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     ```
 
 - [设置桌面为默认.descktop路径](https://unix.stackexchange.com/questions/391915/where-is-the-path-to-the-current-users-desktop-directory-stored)
-    
+  
     ```bash
     xdg-user-dir DESKTOP
     ```
