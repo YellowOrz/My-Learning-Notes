@@ -7,10 +7,11 @@
 ==root身份==
 
 # 软件
+## apt安装
 
 ```shell
-apt install vim openssh-server tmux net-tools htop unzip zip rar unrar tree
-apt install git gedit vlc-l10n copyq ncdu flameshot tldr guake 
+apt install vim openssh-server tmux net-tools htop unzip zip rar unrar tree libssl-dev curl
+apt install git gedit vlc-l10n copyq ncdu flameshot tldr guake gnome-shell-extensions trash-cli
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
 
 # deepin-wine
@@ -18,16 +19,23 @@ wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
 # sudo apt-get install com.qq.weixin.deepin
 # sudo apt-get install com.qq.office.deepin
 
-# 以下可选
-
+### 以下可选 ###
 # 远程传输
 apt install lrzsz samba smbclient cifs-utils
-# win自带远程
-apt install tightvncserver xrdp
-# latex	
+# win自带远程	
+apt install tightvncserver xrdp		
+# latex
 apt install texstudio-l10n
-# 主题
+# 录屏
+apt-add-repository ppa:maarten-baert/simplescreenrecorder
+apt install simplescreenrecorder
+# 黑暗主题
+# ubuntu 20.04及以上
 apt install yaru-theme-*
+# ubuntu 18.04
+snap install communitheme
+# gnome插件
+apt install gnome-shell-extensions
 
 # Razer驱动
 sudo apt install software-properties-gtk
@@ -39,32 +47,49 @@ sudo gpasswd -a $USER plugdev
 sudo add-apt-repository ppa:polychromatic/stable
 sudo apt update
 sudo apt install polychromatic  # Full installation
+
+### 舍弃 ###
+apt install indicator-cpufreq
 ```
+
+| 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                                      |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------- |
+| [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                          | 截图软件<br>`apt install flameshot`       |
+| [SimpleScreenRecorder](https://github.com/MaartenBaert/ssr)  | 录屏软件，apt安装                                            | gnome-shell-extensions                                       | GNOME的插件                               |
+| [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                                     | 命令快速查询工具，**强力推荐**！          |
+| [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | yaru/[communitheme](https://ubuntuhandbook.org/index.php/2018/07/install-new-ubuntu-theme-yaru-ubuntu-18-04/) | ubuntu黑暗主题                            |
+| [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine)         | deepin-wine环境与应用在Ubuntu上的移植仓库 |
+| [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                         | ~~indicator-cpufreq~~                                        | ~~CPU性能调节~~                           |
+| [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                                    | 命令行删除文件到回收站                    |
+
+## 手动安装
 
 | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
-| [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    | [flameshot](https://flameshot.org/) | 截图软件<br>`apt install flameshot` |
+| [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    | [indicator-sysmonitor](https://github.com/fossfreedom/indicator-sysmonitor) | 性能指示器，位于状态栏（GNOME, MATE） |
 | [钉钉](https://alidocs.dingtalk.com/i/p/nb9XJlJ7QbxN8GyA/docs/ROGpvEna5YQWmaPgQ156W4ykmK3zoB27) | 官方钉钉                                                     | [clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases) | 代理软件（跨平台）               |
-| [搜狗输入法](https://pinyin.sogou.com/linux/?r=pinyin)       | [参考教程](https://blog.csdn.net/lupengCSDN/article/details/80279177)，我的教程 | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器            |
-| ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具。暂时没找到更好的                               | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                |
+| [搜狗输入法](https://pinyin.sogou.com/linux/?r=pinyin)       | [我的教程](https://blog.csdn.net/OTZ_2333/article/details/126673641) | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器            |
+|                                                              |                                                              |                                                              |                                                              |
 | [网易云音乐](https://music.163.com/#/download)               | 网易云音乐（跨平台）                                              | ~~[qq](https://im.qq.com/linuxqq/download.html)~~            | 官方qq                      |
 | [WPS](https://linux.wps.cn/)                                 | linux最好用的office工具（跨平台）                                 | [XMind](https://www.xmind.cn/download/)                      | 思维导图                    |
 | [Typora](https://typora.io/#download)                        |Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html) | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，推荐使用JetBrain Tools下载        |
 | [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件（跨平台）                                            | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                    |
-| [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                              | [福昕阅读器](https://www.foxitsoftware.cn/downloads/) | pdf阅读器                   |
+| [XnView](https://www.xnview.com/en/xnviewmp/#downloads)      | 图片查看软件（跨平台）                                       | [福昕阅读器](https://www.foxitsoftware.cn/downloads/) | pdf阅读器                   |
 | [VSCode](https://code.visualstudio.com/download)          | linux最好用的文本显示工具                                | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                |
 | [OneDrive](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) | 第三方onedrive软件                                           | [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app |
-| ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装）                                 | [ToDesk](https://www.todesk.com/download.html)               | 远程控制软件                |
-|[openrazer-meta](https://openrazer.github.io/#ubuntu)|第三方Razer驱动|[polychromatic](https://github.com/polychromatic/polychromatic)|第三方Razer GUI|
-|[deepin-wine](https://github.com/zq1997/deepin-wine)|deepin-wine环境与应用在Ubuntu上的移植仓库|[XDM](https://xtremedownloadmanager.com/#downloads)|下载软件。[浏览器插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)（跨平台）|
+|                                                              |                                                              | [ToDesk](https://www.todesk.com/download.html)               | 远程控制软件                |
+| [advcpmv](https://github.com/jarun/advcpmv)                  | 让mv和cp显示进度                                             |                                                              |                                                              |
+| [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机                                                       |[XDM](https://xtremedownloadmanager.com/#downloads)|下载软件。[浏览器插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)（跨平台）|
 |[UTools](https://u.tools/)|小工具集合，**强力推荐**！|[zotero](https://www.zotero.org/download/)|文献管理|
 |[texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/)|latex工具集|[腾讯会议](https://source.meeting.qq.com/download/)|官方|
 | [diskusage](https://github.com/chenquan/diskusage) | 磁盘使用情况查看 | [百度网盘](https://pan.baidu.com/download#linux) | 官方 |
-| [ncdu](https://dev.yorhel.nl/ncdu) | 磁盘使用分析查看工具 | [Thunderbird](https://www.thunderbird.net/zh-CN/) | 邮箱 |
-| [tldr](https://tldr.sh/) | 命令快速查询工具，**强力推荐**！ | [Steam](https://store.steampowered.com/about/) | 官方 |
-| [XnView](https://www.xnview.com/en/xnviewmp/#downloads)      | 图片查看软件（跨平台） | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/) | 远程控制软件 |
-| [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机 | [CopyQ](https://hluk.github.io/CopyQ/) | 剪切板管理，**强力推荐**！ |
-| [guake](http://guake-project.org/) | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | yaru | ubuntu黑暗主题 |
+|                                                              |                                                              | [Thunderbird](https://www.thunderbird.net/zh-CN/) | 邮箱 |
+| **[cpupower](https://github.com/deinstapel/cpupower)**       | GNOME的CPU性能调节插件                                       | [Steam](https://store.steampowered.com/about/) | 官方 |
+|                                                              |                                                              | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/) | 远程控制软件 |
+|                                                              |                                                              |                                                              |                                                              |
+|                                                              |                                                              |                                                              |                                                              |
+| ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装） |                                                              |                                                              |
+| ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具 | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具 |
 # 库
 
 | 库名称   | 说明             | 安装方法      |
@@ -96,6 +121,19 @@ apt install gcc g++ cmake build-essential make libpng-dev libboost-all-dev -y
 apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glog-dev libatlas-base-dev libgtest-dev cmake libsuitesparse-dev qtdeclarative5-dev qt5-qmake qt5-default libqglviewer-dev-qt5 libcxsparse3 libcholmod3 libgl1-mesa-dev libglew-dev liblz4-dev libfmt-dev -y 
 # 安装Pangolin出现‘No package ‘xkbcommon’ found’
 apt install libxkbcommon-x11-dev
+
+# eigen：推荐先用apt装一下，因为很多apt装的三方库依赖apt版本的eigen
+git clone -b v0.8 --depth=1 https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin
+mkdir build
+cd build
+cmake ..
+make -j4 install
+mv /usr/include/eigen3 /usr/include/eigen3_backup
+ldconfig -v
+cp -r /usr/local/include/eigen3 /usr/include/eigen3 
+ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
+cd ../..
 
 # Pangolin
 git clone -b v0.8 --depth=1 https://github.com/stevenlovegrove/Pangolin.git
@@ -178,8 +216,6 @@ make -j4 install
    - cmake的时候报错`No SOURCES given to target: flann`，参考[这个链接](https://stackoverflow.com/questions/50763621/building-flann-with-cmake-fails)
 
    - make的时候，报错undefined reference to 'LZ4_resetStreamHC'啥的，且后面出现了matlab字样，则在cmake后面加个`-DBUILD_MATLAB_BINDINGS=OFF`
-
-     ![image-20220411121423922](images/image-20220411121423922.png)
 
 - **从[GitHub](https://github.com/PointCloudLibrary/pcl)克隆源码**
 
@@ -292,12 +328,13 @@ apt install libgtk-3-dev
 
 以gnome为例
 
-| 名称          | 命令          | 快捷键               |
-| ------------- | ------------- | -------------------- |
-| flameshot截图 | flameshot gui | `shift + prtsc`      |
-| htop          | htop          | `ctrl + shift + esc` |
-| nautilus      | nautilus      | `windows + e`        |
-| copyq主界面   | copyq toggle  | `windows + v`        |
+| 名称          | 命令                   | 快捷键               | shifouchongtu |
+| ------------- | ---------------------- | -------------------- | ------------- |
+| flameshot截图 | /usr/bin/flameshot gui | `shift + prtsc`      | shi           |
+| htop          | htop                   | `ctrl + shift + esc` |               |
+| nautilus      | /usr/bin/nautilus      | `windows + e`        |               |
+| copyq主界面   | /usr/bin/copyq toggle  | `windows + v`        | shi           |
+| Guake         | /usr/bin/guake         | `Alt + F2`           | shi           |
 
 
 
@@ -320,10 +357,10 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     Port=7890
     #默认不开启代理。否则git可能会连不上，无论git有没有设置代理。
     #export http_proxy="http://${IP}:${Port}"
-    #export https_proxy="https://${IP}:${Port}"
+    #export https_proxy="http://${IP}:${Port}"
     proxyon(){
     	export http_proxy="http://${IP}:${Port}"
-    	export https_proxy="https://${IP}:${Port}"
+    	export https_proxy="http://${IP}:${Port}"
     	#    export http_proxy="socks5://${IP}:${Port}"
     	#    export https_proxy="socks5://${IP}:${Port}"
     	echo "proxy on, and IP is $(curl ip.sb)"
@@ -460,36 +497,20 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     ```
 
 - [设置桌面为默认.descktop路径](https://unix.stackexchange.com/questions/391915/where-is-the-path-to-the-current-users-desktop-directory-stored)
-  
+
     ```bash
     xdg-user-dir DESKTOP
     ```
 
 - ssh代理：只支持sock5代理，在`~/.ssh/config`中添加如下内容，7891为sock5端口
 
-    ```sh
+    ```bash
     ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p
-    ```
-
-- 让mv和cp显示进度：[advcpmv](https://github.com/jarun/advcpmv)，操作如下
-
-    ```shell
-    curl https://raw.githubusercontent.com/jarun/advcpmv/master/install.sh --create-dirs -o ./advcpmv/install.sh && (cd advcpmv && sh install.sh)
-    sudo mv ./advcpmv/advcp /usr/local/bin/
-    sudo mv ./advcpmv/advmv /usr/local/bin/
-    sudo echo alias cp=\"/usr/local/bin/advcp -g\" >> /etc/bash.bashrc
-    sudo echo alias mv=\"/usr/local/bin/advmv -g\" >> /etc/bash.bashrc
-    ```
-
-- 命令行删除文件到回收站
-
-    ```shell
-    sudo apt install trash-cli
     ```
 
 - linux版本的钉钉和腾讯会议 语音时如果别人讲话有**杂音**，执行下面命令
 
-    ```
+    ```bash
     sudo apt install pulseaudio*
     ```
 
@@ -510,6 +531,22 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 - 设置nautilus自带终端：参考[nautilus-terminal](https://github.com/flozz/nautilus-terminal)，注意必须要用apt安装的python，不能用conda安装的python
 
     <img src="images/image-20220916141444464.png" alt="image-20220916141444464" style="zoom:67%;" />
+
+- [swap扩容](https://blog.csdn.net/wdwangye/article/details/109371782)
+
+    ```bash
+    dd if=/dev/zero of=/mnt/swap bs=1G count=6
+    mkswap /mnt/swap
+    chmod 0600 /mnt/swap
+    swapon /mnt/swap
+    vim /etc/fstab
+    # 加入如下一行
+    /mnt/swap                                 none            swap    sw              0       0
+    ```
+
+- GNOME shell插件教程：https://linux.cn/article-9447-1.html
+
+    - [GNOME顶部栏的图标隐藏](https://blog.csdn.net/hwh295/article/details/113733884)：使用GNOME shell的插件——[Icon Hider](https://extensions.gnome.org/extension/351/icon-hider/)
 
 # WSL
 

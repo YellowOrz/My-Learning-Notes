@@ -22,7 +22,7 @@
 
 ## 扩展
 
-- ~~[**Markdown All in One**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)：超级好用的快捷键、自动补全~~
+- [**Markdown All in One**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)：超级好用的快捷键、自动补全
 - ~~**Markdown PDF**：将Markdown转为PDF（也可以转为jpg、HTML），但是生成的中文字体有点奇怪，而且生成的目录无法跳转~~
 - ~~**Markdown TOC**：生成目录。简洁而且可以在Markdown PDF生成的PDF中也可以使用。~~
 - ~~[**Markdown Preview Enhanced**](https://shd101wyy.github.io/markdown-preview-enhanced/#/zh-cn/)：可以生成目录、转换为PDF、以及有漂亮的预览~~
@@ -39,13 +39,31 @@
 - **Anaconda Extension Pack**：可以切换Anaconda的虚拟环境
 - **Chinese (Simplified) Language Pack for Visual Studio Code**：中文有时候还是用得到的吧
 
-## ~~配置~~
+## 配置
+
+- [显示限宽提示线or修改限宽]( https://www.zhihu.com/question/61341938/answer/186940141)：`setting=>editor.rulers`，内容设置成[80]
+
+- 使用谷歌代码风格：`setting=>Clang_format_fallback Style`，内容改成`Google`
+
+- 终端字体间隔过大：`setting=>Terminal.integrated.fontFamily`，填入`consolas`或者`monospace`
+
+- 编辑器空格太小：首先[安装FiraCode](https://github.com/tonsky/FiraCode/wiki/Installing)（ubuntu 17.04及以上使用命令`sudo apt install fonts-firacode`），然后[在vscode的settings.json加入如下内容](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions)
+    ```json
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": true,
+    // （可选）字体粗细调节
+    "editor.fontWeight": "300" // Light
+    "editor.fontWeight": "400" // Regular
+    "editor.fontWeight": "450" // Retina !! Only works with FiraCode-VF.ttf installed, see below when using separated font files (the normal case).
+    "editor.fontWeight": "500" // Medium
+    "editor.fontWeight": "600" // Bold
+    ```
 
 - **python代码格式化**：使用库`Autopep8`。
 
-```bash
-pip install --upgrade autopep8
-```
+    ```bash
+    pip install --upgrade autopep8
+    ```
 
 - **python代码检查**：使用库`Flake8`。
 
@@ -211,6 +229,8 @@ pip install --upgrade flake8
 - [设置谷歌代码风格](https://jasonkayzk.github.io/2022/07/05/%E9%85%8D%E7%BD%AEClion%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/)：`Setting`=>`Editor` => `Code Style` => `C/C++` => `Set From`，选择 `Google` 保存即可！
 
 - [关闭参数提示（parameters hints）](https://blog.csdn.net/Geeker_boy/article/details/105127321)：`Setting`=>`Editor` => `Inlay Hints`，取消勾选`Parameter names`
+
+- 代码跳转回去的快捷键：`Setting=>Keymap`，找到Navigate的Back，设置成想要的快捷键即可（推荐`Alt`+`←`）
 
 # Git
 
