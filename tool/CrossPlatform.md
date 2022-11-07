@@ -59,20 +59,20 @@
     "editor.fontWeight": "600" // Bold
     ```
 
-- **python代码格式化**：使用库`Autopep8`。
+- ~~**python代码格式化**：使用库`Autopep8`。~~
 
     ```bash
     pip install --upgrade autopep8
     ```
 
-- **python代码检查**：使用库`Flake8`。
+- ~~**python代码检查**：使用库`Flake8`。~~
 
 ```bash
 pip install --upgrade flake8
 ```
 
 - ~~**配置C++运行环境**：主要参考[知乎上的一个回答](https://www.zhihu.com/question/30315894/answer/154979413)。但是要说的是，如果要**引用其他的库**（比如OpenCV），需要在**C_Cpp.default.includePath**中添加头文件路径（前面那个知乎的回答说还要填browse的）~~  
-- **整体settings.json**
+- ~~**整体settings.json**~~
 
 ```JSON
 {
@@ -231,6 +231,10 @@ pip install --upgrade flake8
 - [关闭参数提示（parameters hints）](https://blog.csdn.net/Geeker_boy/article/details/105127321)：`Setting`=>`Editor` => `Inlay Hints`，取消勾选`Parameter names`
 
 - 代码跳转回去的快捷键：`Setting=>Keymap`，找到Navigate的Back，设置成想要的快捷键即可（推荐`Alt`+`←`）
+
+- 修改限宽：`Setting=>Editor=>Code Style`，`Hard wrap at`设置成80
+
+- 中文输入法不跟随：[RikudouPatrickstar / JetBrainsRuntime-for-Linux-x64](https://github.com/RikudouPatrickstar/JetBrainsRuntime-for-Linux-x64)
 
 # Git
 

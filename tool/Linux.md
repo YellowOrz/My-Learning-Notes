@@ -7,6 +7,7 @@
 ==root身份==
 
 # 软件
+
 ## apt安装
 
 ```shell
@@ -83,9 +84,9 @@ apt install indicator-cpufreq
 |[UTools](https://u.tools/)|小工具集合，**强力推荐**！|[zotero](https://www.zotero.org/download/)|文献管理|
 |[texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/)|latex工具集|[腾讯会议](https://source.meeting.qq.com/download/)|官方|
 | [diskusage](https://github.com/chenquan/diskusage) | 磁盘使用情况查看 | [百度网盘](https://pan.baidu.com/download#linux) | 官方 |
-|                                                              |                                                              | [Thunderbird](https://www.thunderbird.net/zh-CN/) | 邮箱 |
+| [TeamViewer](https://www.teamviewer.cn/cn/download/linux/) | 远程控制软件 | [Thunderbird](https://www.thunderbird.net/zh-CN/) | 邮箱 |
 | **[cpupower](https://github.com/deinstapel/cpupower)**       | GNOME的CPU性能调节插件                                       | [Steam](https://store.steampowered.com/about/) | 官方 |
-|                                                              |                                                              | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/) | 远程控制软件 |
+|                                                              |                                                              |                                                              |                                                              |
 |                                                              |                                                              |                                                              |                                                              |
 |                                                              |                                                              |                                                              |                                                              |
 | ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装） |                                                              |                                                              |
@@ -308,8 +309,6 @@ apt install libgtk-3-dev
 因为*版本不匹配*！！！opencv contrib也是分版本的！！！在从github上下载opencv contrib的时候，需要选择banch。`master`指的是最新的版本，即opencv 4.x，`3.4`应该指的是opencv 3.4.x的（不懂了，那3.4.x之前的版本咋办？)，如图：
 <img src="images/opencv_contrib_branch.jpg" alt="opencv_contrib_branch" style="zoom:67%;" />
 
-
-
    
 
 # 快捷键
@@ -328,13 +327,13 @@ apt install libgtk-3-dev
 
 以gnome为例
 
-| 名称          | 命令                   | 快捷键               | shifouchongtu |
-| ------------- | ---------------------- | -------------------- | ------------- |
-| flameshot截图 | /usr/bin/flameshot gui | `shift + prtsc`      | shi           |
-| htop          | htop                   | `ctrl + shift + esc` |               |
-| nautilus      | /usr/bin/nautilus      | `windows + e`        |               |
-| copyq主界面   | /usr/bin/copyq toggle  | `windows + v`        | shi           |
-| Guake         | /usr/bin/guake         | `Alt + F2`           | shi           |
+| 名称          | 命令                   | 快捷键               | 是否跟系统冲突 |
+| ------------- | ---------------------- | -------------------- | -------------- |
+| flameshot截图 | /usr/bin/flameshot gui | `shift + prtsc`      | 是             |
+| htop          | htop                   | `ctrl + shift + esc` |                |
+| nautilus      | /usr/bin/nautilus      | `windows + e`        |                |
+| copyq主界面   | /usr/bin/copyq toggle  | `windows + v`        | 是             |
+| Guake         | /usr/bin/guake         | `Alt + F2`           | 是             |
 
 
 
@@ -345,7 +344,7 @@ apt install libgtk-3-dev
 - 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
 
 ```bash
-PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ " 
+PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 ```
 
 - ~~添加代理~~：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
