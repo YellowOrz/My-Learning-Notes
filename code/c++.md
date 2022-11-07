@@ -299,3 +299,17 @@ int main(int argc, char **argv) {
 
     
 
+# CMake
+
+- 设置c++版本
+
+    ```cmake
+    # 方法一
+    add_compile_options(-std=c++11)
+    # 方法二: 从CMake v3.1开始
+    set(CMAKE_CXX_STANDARD 14)
+    # 方法三
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    ```
+
+    
