@@ -71,7 +71,7 @@ apt install indicator-cpufreq
 | [钉钉](https://alidocs.dingtalk.com/i/p/nb9XJlJ7QbxN8GyA/docs/ROGpvEna5YQWmaPgQ156W4ykmK3zoB27) | 官方钉钉                                                     | [clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases) | 代理软件（跨平台）               |
 | [搜狗输入法](https://pinyin.sogou.com/linux/?r=pinyin)       | [我的教程](https://blog.csdn.net/OTZ_2333/article/details/126673641) | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器            |
 |                                                              |                                                              |                                                              |                                                              |
-| [网易云音乐](https://music.163.com/#/download)               | 网易云音乐（跨平台）                                              | ~~[qq](https://im.qq.com/linuxqq/download.html)~~            | 官方qq                      |
+| [网易云音乐](https://music.163.com/#/download)               | 网易云音乐（跨平台）                                              |                                                              |                                                              |
 | [WPS](https://linux.wps.cn/)                                 | linux最好用的office工具（跨平台）                                 | [XMind](https://www.xmind.cn/download/)                      | 思维导图                    |
 | [Typora](https://typora.io/#download)                        |Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html) | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，推荐使用JetBrain Tools下载        |
 | [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件（跨平台）                                            | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                    |
@@ -89,7 +89,7 @@ apt install indicator-cpufreq
 |                                                              |                                                              |                                                              |                                                              |
 |                                                              |                                                              |                                                              |                                                              |
 |                                                              |                                                              |                                                              |                                                              |
-| ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装） |                                                              |                                                              |
+| ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装） | ~~[qq](https://im.qq.com/linuxqq/download.html)~~ | 官方qq |
 | ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具 | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具 |
 # 库
 
@@ -124,8 +124,8 @@ apt install libeigen3-dev liblapack-dev libcxsparse3 libgflags-dev libgoogle-glo
 apt install libxkbcommon-x11-dev
 
 # eigen：推荐先用apt装一下，因为很多apt装的三方库依赖apt版本的eigen
-git clone -b v0.8 --depth=1 https://github.com/stevenlovegrove/Pangolin.git
-cd Pangolin
+git clone -b 3.3.9 --depth=1 https://gitlab.com/libeigen/eigen.git
+cd eigen
 mkdir build
 cd build
 cmake ..
@@ -543,9 +543,21 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     /mnt/swap                                 none            swap    sw              0       0
     ```
 
-- GNOME shell插件教程：https://linux.cn/article-9447-1.html
+- GNOME shell插件
 
+    - 教程：[通过浏览器插件安装](https://linux.cn/article-9447-1.html)，[手动安装](https://www.debugpoint.com/manual-installation-gnome-extension/)
     - [GNOME顶部栏的图标隐藏](https://blog.csdn.net/hwh295/article/details/113733884)：使用GNOME shell的插件——[Icon Hider](https://extensions.gnome.org/extension/351/icon-hider/)
+    
+- [修改键盘小红点灵敏度](https://blog.csdn.net/weixin_36242811/article/details/88808015)：
+
+    ```shell
+    id=$(xinput --list |grep TrackPoint| awk '{printf $6"\n"}'|cut -d "=" -f 2)
+    num=$(xinput list-props $id| grep Speed|head -1|awk '{printf $4 "\n"}'|
+          cut -d"(" -f2|cut -d")" -f1)
+    xinput set-prop $id $num -1.0 
+    ```
+
+    
 
 # WSL
 

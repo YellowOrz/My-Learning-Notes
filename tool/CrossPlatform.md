@@ -208,8 +208,20 @@ pip install --upgrade flake8
 
 # CLion
 
+- 快捷键
+
+    | 快捷键                       | 作用                                                         | 说明                                                       |
+    | ---------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
+    | `ctrl+{`或者`ctrl+}`         | [快速跳转花括号匹配的另一个](https://blog.csdn.net/qq_45311792/article/details/110469026) | 对于很长的函数、循环等，可以快速跳到开头or结尾             |
+    | `alt+左键`or`alt+shift+左键` | [多行同时输入](https://blog.csdn.net/qq_33637730/article/details/115375349) | 在输入doxygon的param的in还是out的时候，可以一起输入        |
+    | `ctrl + shift +enter`        | [自动补全当前代码](https://blog.csdn.net/reoak/article/details/79895832) | 在输入括号或者双引号的内容后，自动补全最后的分号或者花括号 |
+
+    
+
 - 与WSL连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
+
 - 设置自动补全提示不区分大小写：File -> Settings -> Editor -> General -> Code Completion -> Match case **打开**，并选择 All letters
+
 - 设置提示无延迟：File -> Settings -> Editor -> General -> Code Completion -> Show the documentation ... 关闭
 
 >[Clang-Format Style Options](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
@@ -230,11 +242,13 @@ pip install --upgrade flake8
 
 - [关闭参数提示（parameters hints）](https://blog.csdn.net/Geeker_boy/article/details/105127321)：`Setting`=>`Editor` => `Inlay Hints`，取消勾选`Parameter names`
 
-- 代码跳转回去的快捷键：`Setting=>Keymap`，找到Navigate的Back，设置成想要的快捷键即可（推荐`Alt`+`←`）
+- 代码跳转回去的快捷键：`Setting=>Keymap`，找到Navigate的Back，设置成想要的快捷键即可（推荐`Alt + -`）
 
 - 修改限宽：`Setting=>Editor=>Code Style`，`Hard wrap at`设置成80
 
-- 中文输入法不跟随：[RikudouPatrickstar / JetBrainsRuntime-for-Linux-x64](https://github.com/RikudouPatrickstar/JetBrainsRuntime-for-Linux-x64)
+- 中文输入法不跟随光标：[RikudouPatrickstar / JetBrainsRuntime-for-Linux-x64](https://github.com/RikudouPatrickstar/JetBrainsRuntime-for-Linux-x64)
+
+- **[官方性能调优技巧](https://jetbrains.com.zh.xy2401.com/help/clion/performance-tuning-tips.html)**：针对内存、CPU等问题
 
 # Git
 
