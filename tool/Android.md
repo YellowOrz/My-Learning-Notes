@@ -26,7 +26,7 @@
 |米家| 远程控制插座（远程开电脑） | Forest | 种树 |
 |[调音器和节拍器](https://play.google.com/store/apps/details?id=com.soundcorset.client.android&hl=zh&gl=US)| 练吉他好帮手 | [MX播放器](https://play.google.com/store/apps/details?id=com.mxtech.videoplayer.ad&hl=zh&gl=US) | 视频播放器 |
 |全民K歌极速版| 练吉他伴奏 | [Clash for Android](https://github.com/Kr328/ClashForAndroid/releases) | 代理 |
-|YOYI| 拍摄定格动画 |  |  |
+|YOYI| 拍摄定格动画 | iShredder | 删除软件 |
 
 ## Termux
 
