@@ -12,7 +12,8 @@
 
 ```shell
 apt install vim openssh-server tmux net-tools htop unzip zip rar unrar tree libssl-dev curl
-apt install git gedit vlc-l10n copyq ncdu flameshot tldr guake gnome-shell-extensions trash-cli
+apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli
+snap install flameshot vlc
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
 
 # deepin-wine
