@@ -419,20 +419,413 @@
 
 ## [3.2 理解线程束执行的本质（Part I）](http://www.face2ai.com/CUDA-F-3-2-理解线程束执行的本质-P1/)
 
+### 线程束和线程块
+
+- 一个线程束为32个线程
+- 线程块（block）是个逻辑产物，当编号使用三维编号时，x位于最内层，y位于中层，z位于最外层，那么(threadIdx.x,threadIdx.y,threadIdx.z)表示为`t[z][y][x]`
+
+### 线程束分化
+
+- 线程束的分化：一个线程束内部执行相同的指令，处理各自私有的数据；但是如果一个线程束中的不同线程包含不同的控制条件，那么执行到这个控制条件是就会面临不同的选择，从而产生相悖
+
+- 解决方法：
+
+    - 每个线程都执行所有的if和else部分：造成性能下降
+
+        ![img](images/3_12.png) 
+
+    - 把都执行if的线程塞到一个线程束中，或者让一个线程束中的线程都执行if，另外线程都执行else：效率提高很多
+
+- 核函数分支效率计算方法
+    $$
+    Branch Efficiency=\frac{Branches − DivergentBranches}{Branches}
+    $$
+
+- nvcc编译器会自动对某些线程束的分化进行优化
+
+    ```c++
+    __global__ void warmup(float *c) {
+    	int tid = blockIdx.x* blockDim.x + threadIdx.x;
+    	float a = 0.0, b = 0.0;
+        // 会进行优化
+    	if ((tid/warpSize) % 2 == 0)
+    		a = 100.0f;
+        /* 不会进行优化
+        bool ipred = (tid % 2 == 0);
+    	if (ipred)
+    		a = 100.0f;*/
+    	else
+    		b = 200.0f;
+    	c[tid] = a + b;
+    }
+    ```
+
+    
 
 ## [3.2 理解线程束执行的本质（Part II）](http://www.face2ai.com/CUDA-F-3-2-理解线程束执行的本质-P2/)
 
+### 资源分配
+
+- 每个SM上执行的基本单位是线程束
+
+- 未执行的线程束有2种状态：
+
+    - 阻塞：已经激活的，即这类线程束其实已经在SM上准备就绪了，只是没轮到他执行
+    - 未激活：可能分配到SM了，但是还没上到片上
+
+- 处于激活态的线程束数量取决于程序计数器、寄存器（下图一）、共享内存（下图二）
+
+    ![img](images/3_13.png) 
+
+    ![img](images/3_14.png)
+
+    > 当SM内的资源没办法处理一个完整块，那么程序将无法启动
+
+- 线程束一旦被激活来到片上，那么他就不会再离开SM直到执行结束。
+
+- **活跃线程束**分成3类：
+
+    - 选定的线程束：SM要执行的线程束
+    - 阻塞的线程束：线程束不符合条件还没准备好
+    - 符合条件的线程束：准备要执行的，即32个CUDA核心可以用于执行、执行所需要的资源全部就位
+
+### 延迟隐藏
+
+- 利用率与常驻线程束直接相关。
+
+- 延迟隐藏：硬件中线程调度器负责调度线程束调度，当每时每刻都有可用的线程束供其调度，这时候可以达到计算资源的完全利用，以此来保证通过其他常驻线程束中发布其他指令的，可以隐藏每个指令的延迟。
+
+    - 说人话，将硬件（计算资源&&内存带宽）利用率最大化
+
+    - 活动的线程束的数量越多，隐藏的越好，但又收到上面资源分配的影响。计算方法
+        $$
+        利用率最大的最少线程数 = SM的计算核心数*单条指令的延迟
+        $$
+        比如32个单精度浮点计算器，每次计算延迟20个时钟周期，那么我需要最少 32x20 =640 个线程使设备处于忙碌状态
+
+- 指令的延迟 分2类
+
+    - 算术指令：一个算术操作从开始，到产生结果之间的时间，这个时间段内只有某些计算单元处于工作状态，而其他逻辑计算单元处于空闲。延迟大概10~20 个时钟周期
+    - 内存指令：产生内存访问的时候，计算单元要等数据从内存拿到寄存器。延迟大概400~800 个时钟周期
+
+- 保证最小化延迟的线程束
+    $$
+    所需线程束=延迟×吞吐量
+    $$
+
+    > 延迟：感觉像是单位时间内处理的指令数量？？
+    >
+    > 吞吐量：感觉像是并发执行的指令数量？？
+    >
+    > 注意：带宽一般指的是理论峰值，最大每个时钟周期能执行多少个指令，吞吐量是指实际操作过程中每分钟处理多少个指令。
+
+    ![img](images/3_3.png)
+
+- 提高并行的2种方法：
+
+    - 指令级并行(ILP): 一个线程中有很多独立的指令
+    - 线程级并行(TLP): 很多并发地符合条件的线程
+
+### 占用率
+
+- 占用率：一个SM中，活跃的线程束的数量，占SM最大支持线程束数量的比
+- nvcc的编译选项支持手动控制寄存器的使用，因为内核使用寄存器的数量会影响SM内线程束的数量
+- 也可以调整线程块内线程的多少来提高占用率，但是要合理
+    - 对于小的线程块：若每个线程块中线程太少，会在所有资源没用完就达到了线程束的最大要求
+    - 对于大的线程块：若每个线程块中太多线程，会导致每个SM中每个线程可用的硬件资源较少
+- CUDA同步
+    - 块级别：线程块内同步，使用`__syncthread()`
+    - 系统级别
+
 ## [3.3 并行性表现](http://www.face2ai.com/CUDA-F-3-3-并行性表现/)
 
+- 用nvprof查看活跃线程束
+
+    ```shell
+    nvprof --metrics achieved_occupancy {program}
+    ```
+
+    $$
+    活跃线程束比例=\frac{每个周期活跃的线程束的平均值}{一个sm支持的线程束最大值}
+    $$
+
+    
+
+- 活跃线程束比例高，未必执行速度快，因为还受到其他因素制约。
+
+- 用nvprof查看内存利用率
+
+    ```sh
+    nvprof --metrics gld_throughput {program}
+    ```
+
+- 用nvprof查看全局加载效率
+
+    ```sh
+    nvprof --metrics gld_efficiency {program}
+    ```
+
+    $$
+    全局加载效率 = \frac{被请求的全局加载吞吐量}{所需的全局加载吞吐量}
+    $$
+
+    
 
 ## [3.4 避免分支分化](http://www.face2ai.com/CUDA-F-3-4-避免分支分化/)
 
+### 并行规约问题
+
+- 适合的计算问题带有 结合性、交换性
+
+- 理解：归约的归有递归的意思，约就是减少
+
+- 归约的步骤：
+
+    1. 将输入向量划分到更小的数据块中
+    2. 用一个线程计算一个数据块的部分和
+    3. 对每个数据块的部分和再求和得到最终的结果（一般在CPU上）
+
+- 数据划分方式：
+
+    - 相邻配对：元素与他们相邻的元素配对
+        <img src="images/xianglin.png" alt="img" style="zoom:50%;" />
+    - 交错配对：元素与一定距离的元素配对
+        <img src="images/jiaocuo-16688452801898.png" alt="img" style="zoom:50%;" />  
+
+- 用nvporf查看分支指令数量：用来衡量分化程度，正比关系
+
+    ```bash
+    nvprof --metrics inst_per_warp {programfile}
+    ```
+
+### 改善并行规约的分支分化
+
+- 相邻配对的原始实现方法
+
+    ```c++
+    __global__ void reduceNeighbored(int *g_idata, int *g_odata, unsigned int n){
+      int tid = threadIdx.x;
+      if(tid>=n) return;
+      // 每个block负责数据块的起点
+      int *idata = g_idata + blockIdx.x * blockDim.x;
+      // 逐步增大步长将每个block负责的数据汇总
+      for(int stride = 1; stride<blockDim.x;stride*=2){
+        if (tid % (2 * stride) == 0) {
+          idata[tid] += idata[tid + stride];
+        }
+        __syncthreads();
+      }
+      // 每个block的第一个thread输出汇总后的数据结果
+      if (tid == 0) {
+        g_odata[blockIdx.x] = idata[0];
+      }
+    }
+    ```
+
+    ![img](images/3_22.png)
+
+- 原始方法的缺点：大量浪费，因为给每一个数字都分配了一个thread
+
+    第一轮 有 1212 的线程没用
+    第二轮 有 3434 的线程没用
+    第三轮 有 7878 的线程没用
+
+    <img src="images/3_21.png" alt="img" style="zoom:50%;" /> 
+
+- **优化一**：相对配对，每两个数字分配一个线程，注意下图橙色圆圈，表示thread id
+
+    <img src="images/3_23.png" alt="img" style="zoom:40%;" /> 
+
+    ```c++
+    __global__ void reduceNeighboredOptimized(int *g_idata, int *g_odata, unsigned int n){
+      int tid = threadIdx.x;
+      int idx = threadIdx.x + blockIdx.x * blockDim.x;
+      // 每个block负责数据块的起点
+      int *idata = g_idata + blockDim.x * blockIdx.x;
+      if(idx&gt;n) return;
+      // 逐步增大步长将每个block负责的数据汇总
+      for(int stride = 1; stride&lt;blockDim.x;stride*=2){
+        // 找到每个thread负责的数据位置
+        int index = tid * 2 * stride;
+        if (index &lt; blockDim.x) 
+          idata[index] += idata[index + stride];
+        __syncthreads();
+      }
+      // 每个block的第一个thread输出汇总后的数据结果
+      if (tid == 0) 
+        g_odata[blockIdx.x] = idata[0];
+    }
+    ```
+
+    > 但其实还是分配了n个线程，只是真正起作用的是前$n/2$的线程，后面的线程所属的线程束中都没有上，就没有调度，从而节省了资源
+
+- **优化二**：使用交错配对，书上说优势在内存读取，而非线程束分化；但是博主经过实验发现结果相反
+
+    ```c++
+    __global__ void reduceInterleaved(int *g_idata, int *g_odata, int n){
+      int tid = threadIdx.x;
+      // 每个block负责数据块的起点
+      int *idata = g_idata + blockIdx.x * blockDim.x;
+      for (int stride = blockDim.x / 2; stride > 0; stride >>=1) {
+        if (tid<stride)	 // 只对前半线程进行处理
+          idata[tid] += idata[tid + stride];
+        __syncthreads();
+      }
+      if (tid == 0)
+        g_odata[blockIdx.x] = idata[0];
+    }
+    ```
+
+    <img src="images/3_24.png" alt="img" style="zoom: 33%;" /> 
+
+    > 这里也同样，其实还是分配了n个线程，只是真正起作用的是前$n/2$的线程，后面的线程所属的线程束中都没有上，就没有调度，从而节省了资源
 
 ## [3.5 循环展开](http://www.face2ai.com/CUDA-F-3-5-展开循环/)
 
+以下优化方法可以同时使用？？
 
-## [3.6 动态并行](http://www.face2ai.com/CUDA-F-3-6-动态并行/)
+### 优化三：展开的规约
 
+- key idea：让每个block负责多块数据（一块数据量=一个block中thread数量）
+
+    - 之前是一个block负责一块数据
+
+- 在之前reduceInterleaved()的基础上修改：以一个block负责4块为例
+
+    ```c++
+    __global__ void reduceUnroll4(int *g_idata, int *g_odata, int n){
+      int tid = threadIdx.x;
+      if (tid>n) return;
+      int *idata = g_idata + blockIdx.x * blockDim.x * 4;	// 注意：多乘了个4
+      /* 下面是新增的 */
+      int idx = threadIdx.x + blockDim.x * blockIdx.x * 4;
+      if(idx+blockDim.x<n){
+        g_idata[idx]+=g_idata[idx+blockDim.x];
+    	g_idata[idx]+=g_idata[idx+blockDim.x*2];
+    	g_idata[idx]+=g_idata[idx+blockDim.x*3];
+      }
+      __syncthreads();
+      /* 上面是新增的 */
+      for (int stride = blockDim.x / 2; stride > 0; stride >>=1) {
+        if (tid<stride)
+          idata[tid] += idata[tid + stride];
+        __syncthreads();
+      }
+      if (tid == 0)
+        g_odata[blockIdx.x] = idata[0];
+    }
+    ```
+
+    下面这张图是“一个block负责2块”
+
+    <img src="images/image-20221120143047881.png" alt="image-20221120143047881" style="zoom:50%;" /> 
+
+### 优化四：完全展开的归约
+
+- key idea：让归约时的倒金字塔<32时，手动展开计算（不用循环）
+
+    - 32是因为以GPU线程束为单位（包含32个线程）进行计算
+
+- 在之前reduceInterleaved()的基础上修改
+
+    ```c++
+    __global__ void reduceInterleavedWarp(int *g_idata, int *g_odata, int n) {
+      int tid = threadIdx.x;
+      int *idata = g_idata + blockIdx.x * blockDim.x;
+      for (int stride = blockDim.x / 2; stride > 32; stride >>= 1) {	// 注意：变成32了
+        if (tid < stride)
+          idata[tid] += idata[tid + stride];
+        __syncthreads();
+      }/* 下面是新增的 */
+      if (tid < 32) {
+        volatile int *vmem = idata;
+        vmem[tid] += vmem[tid + 32];
+        vmem[tid] += vmem[tid + 16];
+        vmem[tid] += vmem[tid + 8];
+        vmem[tid] += vmem[tid + 4];
+        vmem[tid] += vmem[tid + 2];
+        vmem[tid] += vmem[tid + 1];
+      }/* 上面是新增的 */
+      if (tid == 0) {
+        g_odata[blockIdx.x] = idata[0];
+      }
+    }
+    ```
+
+- **解释**：
+
+    - **回顾**：原先的归约过程如下图绿色框内所示，是一个倒金字塔的形状。每计算一层，都会有更多的thread闲置，而当某个线程束中所有的thread都闲置后该线程束就会停止调用从而节省硬件资源
+
+        ![img](images/3_22.png)
+
+    - **前提**：单个线程束中，所有thread的指令是同步的（不过可以选择不执行）。即，一个thread执行到第n行代码，其他所有thread也同步执行到n行代码。所以，内存的读取和数据的计算等操作都是同步的，**不会有竞争**
+
+    - volatile int类型变量是控制变量结果写回到内存，而不是存在共享内存，或者缓存中
+
+    - （上面代码第11行）当剩下64个数字时，则让32个thread，以步长=32，将后面的数字加到前面
+
+        <img src="images/image-20221120151813236.png" alt="image-20221120151813236" style="zoom:50%;" /> 
+
+    - （上面代码第12行）然后让32个thread，以步长=16，再将后面的数字加到前面。**前16个thread**是在做真正的计算，**后16个thread**是做无用功
+
+        - 注意上面的前提：线程束中所有线程的指令是同步的，第12行代码有2个操作：内存读取 和 加法。0号和16号线程同时读取了16号和32号的内存，即便16号内存接下来马上要修改了也没关系
+
+        <img src="images/image-20221120152701841.png" alt="image-20221120152701841" style="zoom:70%;" /> 
+
+    - （上面代码第13-16行）重复上面过程，不断缩小步长即可
+
+    > 这个展开还减少了5个线程束同步指令 __syncthreads()
+
+- 用nvporf查看阻塞
+
+    ```bash
+    nvprof --metrics stall_sync {programfile}
+    ```
+
+### 优化五：模板函数的归约
+
+- key idea：将整个倒金字塔都展开，即完全去掉for循环
+
+- 在之前reduceInterleavedWarp()的基础上修改：假设blockdim为1024
+
+    ```c++
+    __global__ void reduceInterleavedCompleteWarp(int *g_idata, int *g_odata, int n) {
+      int tid = threadIdx.x;
+      int *idata = g_idata + blockIdx.x * blockDim.x;
+      /* 下面是新增的 */  // 注意for循环没有了
+      if(blockDim.x>=1024 && tid <512) idata[tid]+=idata[tid+512]; __syncthreads();
+      if(blockDim.x>=512 && tid <256) idata[tid]+=idata[tid+256]; __syncthreads();
+      if(blockDim.x>=256 && tid <128) idata[tid]+=idata[tid+128]; __syncthreads();
+      if(blockDim.x>=128 && tid <64) idata[tid]+=idata[tid+64]; __syncthreads();
+      /* 上面是新增的 */
+      if (tid < 32) {
+        volatile int *vmem = idata;
+        vmem[tid] += vmem[tid + 32];
+        vmem[tid] += vmem[tid + 16];
+        vmem[tid] += vmem[tid + 8];
+        vmem[tid] += vmem[tid + 4];
+        vmem[tid] += vmem[tid + 2];
+        vmem[tid] += vmem[tid + 1];
+      }
+      if (tid == 0) {
+        g_odata[blockIdx.x] = idata[0];
+      }
+    }
+    ```
+
+- 解释
+
+    - 跟后面tid<32的不同，前面的可以避免一半的thread浪费，因为即使<32还是会全都运行（线程束是最小运行单位）
+    - 如果blockdim比1024小的话，新增内容中前面的部分其实没用的。这个时候**模板函数**就起作用了，编译时编译器会去检查blockDim.x 是否固定，如果固定，会自动删除不可能的部分（新增内容中前面的部分）
+
+## [3.6 动态并行](http://www.face2ai.com/CUDA-F-3-6-动态并行/)（用处不大）
+
+- 动态并行：核函数调用核函数。相当于串行编程的中的递归调用
+- 内核中启动内核，就会有 父 和 子 的区别<img src="images/3_26.png" alt="img" style="zoom:50%;" /> 
+
+- 可以通过设置**栅格**的方式，**显式同步** 父网格和子网格（上图就是）；没有显示同步，则**隐式同步**（所有子网格全执行完后，父网格才退出）
+- 父网格中的不同线程启动的不同子网格，这些子网格拥有相同的父线程块，他们之间是可以同步的。
+- 
 
 ## [4.0 全局内存](http://www.face2ai.com/CUDA-F-4-0-全局内存/)
 
@@ -499,7 +892,6 @@
     - \- 增加一些延迟和芯片面积
     - 流水线长度：Alleged Pipeline Length
     - Bypassing旁路：将之前的数据临时开一个小路先送到后面去
-
 
 5.GPU编程模型
 6.CUDA编程（1）
