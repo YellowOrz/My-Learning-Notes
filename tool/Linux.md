@@ -344,9 +344,12 @@ apt install libgtk-3-dev
 
 - 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
 
-```bash
-PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
-```
+    ```bash
+    PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
+    PS1='\[\033[0;31m\]\342\224\214\342\224\200$([[ $? != 0 ]] && echo "[\[\033[1;31m\]\342\234\227\[\033[0;31m\]]\342\224\200")[\[\033[0;9m\]\u@\h\[\033[0;31m\]]\342\224\200[\[\033[0;32m\]\w\[\033[0;31m\]]\n\[\033[0;31m\]\342\224\224\342\224\200\342\224\200\342\225\274 \[\033[0m\]\[\e[01;33m\]\$\[\e[0m\] '
+    ```
+
+    > [最好看的Bash美化——打造ParrotOS风格的Bash](https://blog.csdn.net/u011145574/article/details/105160496)
 
 - ~~添加代理~~：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
@@ -528,6 +531,8 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     sudo apt install vino
     ```
 
+    若使用客户端连接时报错类似“No security types sypported”或者“vnc连接提示不支持安全类型”，则打开`dconf-editor`（可以用`apt`安装），找到`org=>gnome=>desktop=>remote-access=>require-encryptyion`，关闭即可
+
 - 设置nautilus自带终端：参考[nautilus-terminal](https://github.com/flozz/nautilus-terminal)，注意必须要用apt安装的python，不能用conda安装的python
 
     <img src="images/image-20220916141444464.png" alt="image-20220916141444464" style="zoom:67%;" />
@@ -548,7 +553,7 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
 
     - 教程：[通过浏览器插件安装](https://linux.cn/article-9447-1.html)，[手动安装](https://www.debugpoint.com/manual-installation-gnome-extension/)
     - [GNOME顶部栏的图标隐藏](https://blog.csdn.net/hwh295/article/details/113733884)：使用GNOME shell的插件——[Icon Hider](https://extensions.gnome.org/extension/351/icon-hider/)
-    
+
 - [修改键盘小红点灵敏度](https://blog.csdn.net/weixin_36242811/article/details/88808015)：
 
     ```shell
@@ -558,7 +563,11 @@ PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
     xinput set-prop $id $num -1.0 
     ```
 
-    
+- 笔记本触控板多指功能失效：安装fusuma（[18.04](https://hirosht.medium.com/gestures-on-ubuntu-18-04-xorg-2fe05efb05fc)）
+
+- 关闭fcitix的中文简体繁体切换快捷键：![image-20221209145039632](images/image-20221209145039632.png)
+
+- alt+tab切换窗口而非应用（即不要将同应用的不同窗口折叠）：apt安装dconf-editor，进入org/gnome/desktop/wm/keybindings下，把switch-applications中的'\<Alt\>Tab'删去，在switch-windows中加入'\<Alt\>Tab'
 
 # WSL
 

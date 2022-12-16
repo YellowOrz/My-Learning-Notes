@@ -216,7 +216,7 @@ pip install --upgrade flake8
     | `alt+左键`or`alt+shift+左键` | [多行同时输入](https://blog.csdn.net/qq_33637730/article/details/115375349) | 在输入doxygon的param的in还是out的时候，可以一起输入        |
     | `ctrl + shift +enter`        | [自动补全当前代码](https://blog.csdn.net/reoak/article/details/79895832) | 在输入括号或者双引号的内容后，自动补全最后的分号或者花括号 |
 
-    
+- 推荐使用2021.2.2版本（[官网下载连接](https://download.jetbrains.com.cn/cpp/CLion-2021.2.2.tar.gz)），因为可以延长试用时间
 
 - 与WSL连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
 
@@ -246,9 +246,11 @@ pip install --upgrade flake8
 
 - 修改限宽：`Setting=>Editor=>Code Style`，`Hard wrap at`设置成80
 
-- 中文输入法不跟随光标：[RikudouPatrickstar / JetBrainsRuntime-for-Linux-x64](https://github.com/RikudouPatrickstar/JetBrainsRuntime-for-Linux-x64)
+- 中文输入法不跟随光标：[RikudouPatrickstar / JetBrainsRuntime-for-Linux-x64](https://github.com/RikudouPatrickstar/JetBrainsRuntime-for-Linux-x64) （ubuntu 18.04等老系统需要使用老版本）
 
 - **[官方性能调优技巧](https://jetbrains.com.zh.xy2401.com/help/clion/performance-tuning-tips.html)**：针对内存、CPU等问题
+
+- [Jetbrains 试用期重置](https://youwu.today/blog/jetbrains-evaluate-reset/)：可以使用插件[RisesunStudios](https://github.com/RisesunStudios)/**[ide-eval-resetter](https://github.com/RisesunStudios/ide-eval-resetter)**
 
 # Git
 
