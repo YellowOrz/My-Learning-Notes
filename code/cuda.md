@@ -844,13 +844,13 @@
 
 - 现代计算机内存模型
 
-    ![img](images/1-3.png)
+    <img src="images/1-3.png" alt="img" style="zoom: 33%;" />
 
 - GPU和CPU的内存设计有相似的准则和模型。但，CUDA编程模型将内存层次结构更好的呈献给开发者，可以显示地控制其行为。
 
 ### CUDA内存模型
 
-![img](images/1-5.png)
+<img src="images/1-5.png" alt="img" style="zoom:50%;" />
 
 - CUDA内存模型包含：寄存器、共享内存、本地内存、常量内存、纹理内存、全局内存
 - 对于一个应用来说，全局内存，常量内存和纹理内存有相同的生命周期
@@ -995,8 +995,136 @@
         - CPU读写过程都有可能被缓存
 - 只读常量缓存和只读纹理缓存的作用：用于设备内存中提高来自于各自内存空间内的读取性能
 
+#### ☆总结
+
+|  存储器  |      修饰符      |    变量名称    | 片上/片外 |   缓存    | 存取 |     范围      | 生命周期 |
+| :------: | :--------------: | :------------: | :-------: | :-------: | :--: | :-----------: | :------: |
+|  寄存器  |                  |   float var    |   片上    |    n/a    | R/W  |   一个线程    |   线程   |
+| 本地内存 |                  | float var[100] |   片外    | 1.0以上有 | R/W  |   一个线程    |   线程   |
+| 共享内存 |  \_\_share\_\_   |   float var*   |   片上    |    n/a    | R/W  | 块内所有线程  |    块    |
+| 全局内存 |  \_\_device\_\_  |   float var*   |   片外    | 1.0以上有 | R/W  | 所有线程+主机 | 应用程序 |
+| 常量内存 | \_\_constant\_\_ |   float var*   |   片外    |    Yes    |  R   | 所有线程+主机 | 应用程序 |
+| 纹理内存 |                  |   float var*   |   片外    |    Yes    |  R   | 所有线程+主机 | 应用程序 |
+
+### 静态内存和动态内存
+
+- 内存位置：动态分配在**堆**上进行，静态分配在**栈**上进行
+
+- 动态分配使用new、malloc等类似函数，然后用delete和free来释放
+
+- 静态分配：例如
+
+    ```c++
+    __device__ float devData;
+    ```
+
+    如果想要赋值的话，需要用函数cudaMemcpyFromSymbol，不能用cudaMemcpy（因为这是动态分配的函数），例如
+
+    ```c++
+    float value=3.14f;
+    cudaMemcpyToSymbol(devData,&value,sizeof(float));
+    // 定义如下
+    template<class T>
+    static __inline__ __host__ cudaError_t cudaMemcpyFromSymbol(
+            void                *dst,
+      const T                   &symbol,
+            size_t               count,
+            size_t               offset = 0,
+            enum cudaMemcpyKind  kind   = cudaMemcpyDeviceToHost
+    )
+    ```
+
+    注意：如果静态分配的变量devData本质上是个指针。由于这个指针对于host来说不知道指向哪里，因此想要知道内容的话，比如显示地传过来：
+
+    ```c++
+    cudaMemcpyFromSymbol(&value,devData,sizeof(float));
+    ```
+
+- 获取静态分配的内存地址：主机端不可以直接对设备变量进行取地址操作
+
+    ```c++
+    float *dptr=NULL;
+    cudaGetSymbolAddress((void**)&dptr,devData);
+    ```
+
+    注意：例外，CUDA固定内存可以直接从主机引用GPU内存
+
+
+
 ## [4.2 内存管理](http://www.face2ai.com/CUDA-F-4-2-内存管理/)
 
+### 内存管理
+
+- 内存分配：
+
+    ```c
+    cudaError_t cudaMalloc(void ** devPtr,size_t count)
+    ```
+
+    一般的用法：先申明一个指针变量，再调用函数
+
+    ```c++
+    float * devMem=NULL;	// 指向NULL可以避免出现野指针
+    cudaMalloc((float**) devMem, count)
+    ```
+
+    函数执行失败返回：`cudaErrorMemoryAllocation`
+
+- 内存初始化：在分配之后，操作的内存都在GPU上
+
+    ```c
+    cudaError_t cudaMemset(void * devPtr,int value,size_t count)
+    ```
+
+- 内存释放：在分配之后
+
+    ```c
+    cudaError_t cudaFree(void * devPtr)
+    ```
+
+    如果 输入非法指针参数 or 重复释放一个空间，返回`cudaErrorInvalidDevicePointer`的错误
+
+- 内存传输：对于异构计算，不能像C语言那样分配完内存直接读写，∵host线程不能访问device内存（反过来同理）。需要传送数据
+
+    ```c
+    cudaError_t cudaMemcpy(void *dst,const void * src,size_t count,enum cudaMemcpyKind kind)
+    ```
+
+    注意：前两个形参是指针，不是指针的指针；传输类型有
+
+    - cudaMemcpyHostToHost
+
+    - cudaMemcpyHostToDevice
+
+    - cudaMemcpyDeviceToHost
+
+    - cudaMemcpyDeviceToDevice
+
+        <img src="images/4-3.png" alt="4-3" style="zoom:33%;" /> 
+
+### 固定内存
+
+- 来源：
+
+    - 操作系统采用分页式内存管理（将物理内存分成“页”），给应用分配的内存可能在不连续的页上
+
+    - 应用只能看到虚拟的内存地址（它觉得是连续的？），而操作系统可能会随时更换页（从一个地方复制到另一个地方），不过应用察觉不到
+
+    - 然而，在cudaMemcpy传输数据的时候**不能**发生页的移动，否则传输会出错
+
+    - 所以数据传输之前，开辟固定的主机内存，将主机源数据复制到固定内存上，然后从固定内存传输数据到设备上（下图左边）
+
+    - 当然也可以直接分配固定内存，直接传输到device上，这样传输带宽变得高很多（下图右边）
+
+        <img src="images/4-4.png" alt="4-4" style="zoom:50%;" /> 
+
+- 分配固定内存：
+
+    ```c++
+    cudaError_t cudaMallocHost(void ** devPtr,size_t count)
+    ```
+
+    
 
 ## [4.3 内存访问模式](http://www.face2ai.com/CUDA-F-4-3-内存访问模式/)
 

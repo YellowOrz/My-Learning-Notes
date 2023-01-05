@@ -1,25 +1,5 @@
 # 基础
 
-## pair
-
-- [`std::pair`](https://www.cnblogs.com/nimeux/archive/2010/10/05/1844191.html)主要的作用是将两个数据组合成一个数据，两个数据可以是同一类型或者不同类型
-
-    - 例如std::pair<int,float> 。
-
-    - pair`实质上是一个结构体，其主要的两个成员变量是first和second，这两个变量可以直接使用。初
-
-    - 始化一个pair可以使用构造函数，也可以使用std::make_pair函数，
-
-    - make_pair函数的定义如下：
-
-        ```c++
-        template pair make_pair(T1 a, T2 b) { return pair(a, b); }
-        ```
-
-    - 一般make_pair都使用在需要pair做参数的位置，可以直接调用make_pair生成pair对象。 
-
-    - pair可以接受隐式的类型转换，这样可以获得更高的灵活度
-
 ## static
 
 - [类中的**静态成员变量**](http://c.biancheng.net/view/2227.html)：
@@ -29,6 +9,20 @@
     - 静态成员变量可以<u>通过 对象名 or 类名 访问</u>，但要遵循 private、protected 和 public 关键字的访问权限限制
 - [类中的**静态成员函数**](http://c.biancheng.net/view/2228.html)：
     - 静态成员函数 <u>没有this指针</u>，编译器不会为它增加形参 this，不能调用普通成员函数，<u>只能访问静态成员（主要目的）</u>
+- 
+
+## 指针
+
+- `void * `表示void类型的指针，可以指向任意类型的数据，或者叫做**无类型指针**，它只记录地址。
+    - 支持的操作：
+        - 与另一个指针进行比较；
+        - 向函数传递void\*指针或从函数返回void\*指针；
+        - 给另一个void*指针赋值
+        - 任何类型的指针都可以直接赋值给void*指针
+    - 不支持：
+        - 操作void *指针所指向的对象（经过强制类型转换就可以了）
+        - 直接给其他非void *指针赋值（经过强制类型转换就可以了）
+    - 示例： malloc 函数返回的指针就是 void \* 型
 - 
 
 # 多线程
@@ -260,6 +254,26 @@ cout << RED << "I am RED. " << RESET << "I am normal. " << YELLOW << "I am YELLO
 - [vector中使用emplace_back代替push_back](http://c.biancheng.net/view/6826.html)，因为emplace_back的效率更高
     - push_back() 向容器尾部添加元素时，首先会创建这个元素，然后再将这个元素拷贝或者移动到容器中（如果是拷贝的话，事后会自行销毁先前创建的这个元素）
     - emplace_back() 在实现时，则是直接在容器尾部创建这个元素，省去了拷贝或移动元素的过程。
+
+## pair
+
+- [`std::pair`](https://www.cnblogs.com/nimeux/archive/2010/10/05/1844191.html)主要的作用是将两个数据组合成一个数据，两个数据可以是同一类型或者不同类型
+
+    - 例如std::pair<int,float> 。
+
+    - pair`实质上是一个结构体，其主要的两个成员变量是first和second，这两个变量可以直接使用。初
+
+    - 始化一个pair可以使用构造函数，也可以使用std::make_pair函数，
+
+    - make_pair函数的定义如下：
+
+        ```c++
+        template pair make_pair(T1 a, T2 b) { return pair(a, b); }
+        ```
+
+    - 一般make_pair都使用在需要pair做参数的位置，可以直接调用make_pair生成pair对象。 
+
+    - pair可以接受隐式的类型转换，这样可以获得更高的灵活度
 
 # 其他
 
