@@ -63,6 +63,7 @@ apt install indicator-cpufreq
 | [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine)         | deepin-wine环境与应用在Ubuntu上的移植仓库 |
 | [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                         | ~~indicator-cpufreq~~                                        | ~~CPU性能调节~~                           |
 | [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                                    | 命令行删除文件到回收站                    |
+| btop                                                         | top、htop的替代品<br/>功能更强大                             |                                                              |                                           |
 
 ## 手动安装
 

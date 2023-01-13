@@ -251,9 +251,25 @@ cout << RED << "I am RED. " << RESET << "I am normal. " << YELLOW << "I am YELLO
 ## vector
 
 - vector.push_back中完成的是值拷贝，而不仅仅是地址的复制。
+
 - [vector中使用emplace_back代替push_back](http://c.biancheng.net/view/6826.html)，因为emplace_back的效率更高
     - push_back() 向容器尾部添加元素时，首先会创建这个元素，然后再将这个元素拷贝或者移动到容器中（如果是拷贝的话，事后会自行销毁先前创建的这个元素）
     - emplace_back() 在实现时，则是直接在容器尾部创建这个元素，省去了拷贝或移动元素的过程。
+
+- 删除vector中满足条件的元素
+
+    ```c++
+    std::vector<T> v;
+    auto iter = v.begin();
+    while (iter != v.end()) {
+        if(/*条件*/)
+            iter = v.erase(iter);
+        else
+            iter++;
+    }
+    ```
+
+    
 
 ## pair
 
