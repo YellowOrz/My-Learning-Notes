@@ -334,6 +334,11 @@ mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramDa
 
 解决方案：降低pip版本。比如我的pip版本为20.3.3，降低到20.2后就好了
 
+# Zotero
+
+- 安装[zotfile](http://zotfile.com/)：下载后是xpi格式。在zotero中，`工具`=>`附加组件`=>右上角齿轮=>`Install Add-on From File`，找到xpi文件，即可
+- 在zotero中，`工具`=>`ZotFile Preferences`=>`Renaming Rules`，取消勾选`Use Zotero to Rename`，将其下面两个空格填入`{%y_}{%t_}{%a}`
+
 # 杂
 
 - clash for windows[自动选择路线](https://lancellc.gitbook.io/clash/clash-config-file/proxy-groups/auto)
