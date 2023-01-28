@@ -570,6 +570,16 @@ apt install libgtk-3-dev
 
 - alt+tab切换窗口而非应用（即不要将同应用的不同窗口折叠）：apt安装dconf-editor，进入org/gnome/desktop/wm/keybindings下，把switch-applications中的'\<Alt\>Tab'删去，在switch-windows中加入'\<Alt\>Tab'
 
+# 技巧
+
+- [查看swap占用情况](https://blog.csdn.net/qq_21959403/article/details/117663424)：前10个
+
+  ```shell
+  for i in $( cd /proc;ls |grep "^[0-9]"|awk ' $0 >100') ;do awk '/Swap:/{a=a+$2}END{print '"$i"',a/1024"M"}' /proc/$i/smaps 2>/dev/null ; done | sort -k2nr | head -10
+  ```
+
+  
+
 # WSL
 
 - **安装**：现在BIOS打开虚化，然后控制面板 -> 启用或关闭Windows功能 中，打开虚拟机平台、适用于Linux的Windows子系统、Hyper-V，重启。
