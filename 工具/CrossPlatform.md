@@ -2,21 +2,26 @@
 
 
 
-# 浏览器
+# Edge
+
+- 开启多线程下载：地址栏输入`edge://flags/#enable-parallel-downloading`，选择Enable
 
 - 插件
-    - [EpubPress](https://chrome.google.com/webstore/detail/epubpress-read-the-web-of/pnhdnpnnffpijjbnhnipkehhibchdeok)：将网页转为电子书格式epub
-    - [Collamark](https://chrome.google.com/webstore/detail/collamark/kbpjikgngikhhpbjddnenemoonpbfikm)：网页批注
-    - [Forest](https://chrome.google.com/webstore/detail/forest-stay-focused-be-pr/kjacjjdnoddnpbbcjilcajfhhbdhkpgk)：浏览器种树
-    - [Tampermonkey（油猴）](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)：脚本使用平台
-    - [沙拉查词](https://chrome.google.com/webstore/detail/%E6%B2%99%E6%8B%89%E6%9F%A5%E8%AF%8D-%E8%81%9A%E5%90%88%E8%AF%8D%E5%85%B8%E5%88%92%E8%AF%8D%E7%BF%BB%E8%AF%91/cdonnmffkdaoajfknoeeecmchibpmkmg?hl=zh-CN)：划词翻译
-    - [Grammarly](https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen?hl=zh-CN)：英语语法纠正和校对工具
-    - [Browse Manager](https://chrome.google.com/webstore/detail/browse-manager/fibpimjmadkibpjkhlngcapnkkhhikpf)：网址/域名黑名单、访问次数统计
-    - [Vimium](https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb)：通过键盘控制网页
-    - [browse-manager](https://github.com/ZDL-Git/browse-manager)：实现网址/域名拉黑
-    - [AdGuard 广告拦截器](https://adguard.com/zh_cn/adguard-browser-extension/overview.html)：广告拦截
-    - [uBlacklist](https://chrome.google.com/webstore/detail/ublacklist/pncfbmialoiaghdehhbnbhkkgmjanfhe)：可以屏蔽内容农场，黑名单来自[Github](https://github.com/cobaltdisco/Google-Chinese-Results-Blocklist)
-    - [Dark Reader](https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh)：网页变成深色模式
+
+    | 插件名称            | 简介                                                         | chrome下载连接                                               | edge下载连接                                                 | 官网                                                         |
+    | ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | EpubPress           | 将网页转为电子书格式epub                                     | [EpubPress](https://chrome.google.com/webstore/detail/epubpress-read-the-web-of/pnhdnpnnffpijjbnhnipkehhibchdeok) |                                                              |                                                              |
+    | Collamark           | 网页批注                                                     | [Collamark](https://chrome.google.com/webstore/detail/collamark/kbpjikgngikhhpbjddnenemoonpbfikm) |                                                              |                                                              |
+    | Forest              | 浏览器种树                                                   | [Forest](https://chrome.google.com/webstore/detail/forest-stay-focused-be-pr/kjacjjdnoddnpbbcjilcajfhhbdhkpgk) |                                                              |                                                              |
+    | Tampermonkey        | 脚本使用平台                                                 | [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) | [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) |                                                              |
+    | 沙拉查词            | 划词翻译                                                     | [沙拉查词](https://chrome.google.com/webstore/detail/%E6%B2%99%E6%8B%89%E6%9F%A5%E8%AF%8D-%E8%81%9A%E5%90%88%E8%AF%8D%E5%85%B8%E5%88%92%E8%AF%8D%E7%BF%BB%E8%AF%91/cdonnmffkdaoajfknoeeecmchibpmkmg?hl=zh-CN) | [沙拉查词](https://microsoftedge.microsoft.com/addons/detail/%E6%B2%99%E6%8B%89%E6%9F%A5%E8%AF%8D%E8%81%9A%E5%90%88%E8%AF%8D%E5%85%B8%E5%88%92%E8%AF%8D%E7%BF%BB%E8%AF%91/idghocbbahafpfhjnfhpbfbmpegphmmp) |                                                              |
+    | Grammarly           | 英语语法纠正和校对工具                                       | [Grammarly](https://chrome.google.com/webstore/detail/grammarly-for-chrome/kbfnbcaeplbcioakkpcpgfkobkghlhen?hl=zh-CN) | [Grammarly](https://microsoftedge.microsoft.com/addons/detail/grammarly-grammar-checke/cnlefmmeadmemmdciolhbnfeacpdfbkd) |                                                              |
+    | Browse Manager      | 网址/域名黑名单、访问次数统计                                | [Browse Manager](https://chrome.google.com/webstore/detail/browse-manager/fibpimjmadkibpjkhlngcapnkkhhikpf) |                                                              | [browse-manager](https://github.com/ZDL-Git/browse-manager)  |
+    | Vimium              | 通过键盘控制网页                                             | [Vimium](https://chrome.google.com/webstore/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb) | [Vimium C](https://microsoftedge.microsoft.com/addons/detail/vimium-c-%E5%85%A8%E9%94%AE%E7%9B%98%E6%93%8D%E4%BD%9C%E6%B5%8F%E8%A7%88%E5%99%A8/aibcglbfblnogfjhbcmmpobjhnomhcdo) |                                                              |
+    | AdGuard 广告拦截器  | 广告拦截                                                     |                                                              | [AdGuard](https://microsoftedge.microsoft.com/addons/detail/adguard-%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E5%99%A8/pdffkfellgipmhklpdmokmckkkfcopbh) | [AdGuard 广告拦截器](https://adguard.com/zh_cn/adguard-browser-extension/overview.html) |
+    | uBlacklist          | 可以屏蔽内容农场，黑名单来自[Github](https://github.com/cobaltdisco/Google-Chinese-Results-Blocklist) | [uBlacklist](https://chrome.google.com/webstore/detail/ublacklist/pncfbmialoiaghdehhbnbhkkgmjanfhe) |                                                              |                                                              |
+    | Dark Reader         | 网页变成深色模式                                             | [Dark Reader](https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh) | [Dark Reader](https://microsoftedge.microsoft.com/addons/detail/dark-reader/ifoakfbpdcdoeenechcleahebpibofpc) |                                                              |
+    | XDM browser monitor | 下载软件XDM对应的浏览器插件                                  |                                                              | [XDM browser monitor](https://microsoftedge.microsoft.com/addons/detail/xdm-browser-monitor/plohkbgcfpdjhcnoahppkcffaijkadgf) |                                                              |
 
 # VS Code
 
@@ -258,20 +263,20 @@ pip install --upgrade flake8
 
     ```shell
     # 添加全局的账号信息
-    git config --global user.email "silence_33_@outlook.com"
-    git config --global user.name "YellowOrz"
+    git config --global user.email "orz@orz.orz"
+    git config --global user.name "orz"
     # 仅对当前项目添加账号信息
-    git config user.email "silence_33_@outlook.com"
-    git config user.name "YellowOrz"
+    git config user.email "orz@orz.orz"
+    git config user.name "orz"
     ```
 
 - 生成ssh密钥
 
     ```shell
-    ssh-keygen -t rsa -b 4096 -C "silence_33_@outlook.com"
+    ssh-keygen -t rsa -b 4096 -C "orz@orz.orz"
     ```
 
-    将生成的`.pub`文件的内容添加到Github设置的**SSH and GPG keys**里面。测试是否添加成功
+    将生成的`.pub`文件的内容添加到GitHub设置的**SSH and GPG keys**里面。测试是否添加成功
 
     ```shell
     ssh -T git@github.com
@@ -290,10 +295,10 @@ pip install --upgrade flake8
      hostname github.com
      User git
      IdentityFile /home/orz/.ssh/github
-    ProxyCommand nc -X 5 -x 192.168.1.108:7891 %h %p
+    ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p
     ```
 
-    
+    > 其中`127.0.0.1:7891`是socks5代理的IP和端口
 
 # Miniconda
 
@@ -337,7 +342,7 @@ mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramDa
 # Zotero
 
 - 安装[zotfile](http://zotfile.com/)：下载后是xpi格式。在zotero中，`工具`=>`附加组件`=>右上角齿轮=>`Install Add-on From File`，找到xpi文件，即可
-- 在zotero中，`工具`=>`ZotFile Preferences`=>`Renaming Rules`，取消勾选`Use Zotero to Rename`，将其下面两个空格填入`{%y_}{%t_}{%a}`
+- 修改文件命名方式：在zotero中，`工具`=>`ZotFile Preferences`=>`Renaming Rules`，取消勾选`Use Zotero to Rename`，将其下面两个空格填入`{%y_}{%t_}{%a}`
 
 # 杂
 
