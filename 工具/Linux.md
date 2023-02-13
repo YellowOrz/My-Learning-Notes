@@ -16,6 +16,7 @@ apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli fla
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
 snap install meshlab stretchly
 # apt装不了的就用snap
+apt install x2goserver x2goserver-xsession x2goclient
 
 # deepin-wine
 wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
@@ -48,17 +49,17 @@ sudo apt install polychromatic  # Full installation
 # apt install indicator-cpufreq
 ```
 
-| 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------- |
-| [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                          | 截图软件<br>`apt install flameshot`       |
-| [SimpleScreenRecorder](https://github.com/MaartenBaert/ssr)  | 录屏软件，apt安装                                            | gnome-shell-extensions                                       | GNOME的插件                               |
-| [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                                     | 命令快速查询工具，**强力推荐**！          |
-| [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | yaru/[communitheme](https://ubuntuhandbook.org/index.php/2018/07/install-new-ubuntu-theme-yaru-ubuntu-18-04/) | ubuntu黑暗主题                            |
-| [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine)         | deepin-wine环境与应用在Ubuntu上的移植仓库 |
-| [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                         | ~~indicator-cpufreq~~                                        | ~~CPU性能调节~~                           |
-| [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                                    | 命令行删除文件到回收站                    |
-| btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                              |
-| [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     |                                                              |                                           |
+| 软件名                                                       | 介绍                                                         | 软件名                                               | 介绍                                      |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | ----------------------------------------- |
+| [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                  | 截图软件<br>`apt install flameshot`       |
+| [SimpleScreenRecorder](https://github.com/MaartenBaert/ssr)  | 录屏软件，apt安装                                            | gnome-shell-extensions                               | GNOME的插件                               |
+| [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                             | 命令快速查询工具，**强力推荐**！          |
+| [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              |                                                      |                                           |
+| [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine) | deepin-wine环境与应用在Ubuntu上的移植仓库 |
+| [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                         | ~~indicator-cpufreq~~                                | ~~CPU性能调节~~                           |
+| [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                            | 命令行删除文件到回收站                    |
+| btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)              | 三维模型查看                              |
+| [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                          | 基于ssh的远程图形界面                     |
 
 ## 手动安装
 
@@ -66,12 +67,12 @@ sudo apt install polychromatic  # Full installation
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
 | [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    | [Typora](https://typora.io/#download)                        | Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html) |
 | [advcpmv](https://github.com/jarun/advcpmv)                  | 让mv和cp显示进度                                             | [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher) | 集成&运行AppImage（18.04之后共用）                           |
-| [OneDrive](https://github.com/abraunegg/onedrive) | 第三方onedrive软件，[20.04](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) \| [22.04](https://github.com/abraunegg/onedrive) | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器            |
-| [OneDriveGUI](https://github.com/bpozdena/OneDriveGUI) | 上面OneDrive的配套GUI                                        | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，下载2[021.2.2版](https://download.jetbrains.com.cn/cpp/CLion-2021.2.2.tar.gz) |
+| [OneDrive](https://github.com/abraunegg/onedrive) | 第三方onedrive软件，[20.04](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) \| [22.04](https://github.com/abraunegg/onedrive) | [Mathpix Snip](https://mathpix.com/desktop-downloads) | 数学公式识别神器            |
+| [OneDriveGUI](https://github.com/bpozdena/OneDriveGUI) | 上面OneDrive的配套GUI                                        | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，下载[2021.2.2版](https://download.jetbrains.com.cn/cpp/CLion-2021.2.2.tar.gz) |
 | [diskusage](https://github.com/chenquan/diskusage)           | 磁盘使用情况查看                                             | [texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/) | latex工具集 |
-| [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app                                  | [福昕阅读器](https://www.foxitsoftware.cn/downloads/)        | pdf阅读器                                                    |
+| [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app                                  |                                                              |                                                              |
 |                                                        |                                                              |                                                              |                                                              |
-|                                                              |                                                              |                                                              |                                                              |
+| ~~[福昕阅读器](https://www.foxitsoftware.cn/downloads/)~~ | pdf阅读器 |                                                              |                                                              |
 
 ## 星火商店
 
@@ -83,16 +84,24 @@ sudo apt install polychromatic  # Full installation
 | [linuxqq](https://im.qq.com/linuxqq/download.html)           | 官方qq                                                       | [百度网盘](https://pan.baidu.com/download#linux)             | 官方                                                         |
 | [钉钉](https://alidocs.dingtalk.com/i/p/nb9XJlJ7QbxN8GyA/docs/ROGpvEna5YQWmaPgQ156W4ykmK3zoB27) | 官方钉钉                                                     | [clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases) | 代理软件（跨平台）                                           |
 | [网易云音乐](https://music.163.com/#/download)               | 网易云音乐（跨平台）                                         | [Mathpix Snip](https://snapcraft.io/mathpix-snipping-tool)   | 数学公式识别神器                                             |
-| [UTools](https://u.tools/)                                   | 小工具集合，**强力推荐**！<br />如果打不开参考[这个链接](https://blog.csdn.net/bugpz/article/details/124686977) | [XMind](https://www.xmind.cn/download/)                      | 思维导图                                                     |
+| [UTools](https://u.tools/)                                   | 小工具集合，**强力推荐**！如果打不开参考[这个链接](https://blog.csdn.net/bugpz/article/details/124686977) | [XMind](https://www.xmind.cn/download/)                      | 思维导图                                                     |
 | [腾讯会议](https://source.meeting.qq.com/download/)          | 官方                                                         | [XDM](https://xtremedownloadmanager.com/#downloads)          | 下载软件。[浏览器插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)（跨平台） |
 | [Thunderbird](https://www.thunderbird.net/zh-CN/)            | 邮箱                                                         | [zotero](https://www.zotero.org/download/)                   | 文献管理                                                     |
 | [ToDesk](https://www.todesk.com/download.html)               | 远程控制软件                                                 | [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件（跨平台）                                       |
 | [XnView MP](https://www.xnview.com/en/xnviewmp/#downloads)   | 图片查看软件（跨平台）                                       | Pycharm                                                      | python IDE                                                   |
 | [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机                                                       | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/)   | 远程控制软件                                                 |
-| [PyCharm 社区版](https://www.jetbrains.com/zh-cn/pycharm/)   | python IDE                                                   | AppImage安装                                                 |                                                              |
+| [PyCharm 社区版](https://www.jetbrains.com/zh-cn/pycharm/)   | python IDE                                                   | VNC Viewer                                                   | VNC远程                                                      |
+| 微信(wine)                                                   | [双屏需将左屏作为主屏，否则图标显示异常](https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/135#issuecomment-530186788) |                                                              |                                                              |
+|                                                              |                                                              |                                                              |                                                              |
 | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                                                 | ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具                                                     |
 | ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装）                                 | ~~[Steam](https://store.steampowered.com/about/)~~           | 官方                                                         |
 | [UEngine运行器](https://gitee.com/gfdgd-xi/uengine-runner)   | 运行安卓应用                                                 |                                                              |                                                              |
+
+## 有意思的小工具
+
+| 软件名                                         | 介绍         | 软件名 | 介绍 |
+| ---------------------------------------------- | ------------ | ------ | ---- |
+| [carbonyl](https://github.com/fathyb/carbonyl) | 终端访问网页 |        |      |
 
 # 库
 
@@ -330,6 +339,14 @@ apt install libgtk-3-dev
 
 ## GNOME
 
+- 小工具：
+
+    ```bash
+    sudo apt install gnome-sushi
+    ```
+
+    
+
 - 黑暗主题
 
   ```bash
@@ -341,21 +358,36 @@ apt install libgtk-3-dev
 
 - gnome插件：`apt install gnome-shell-extensions`
 
+  - 查看gnome版本：系统设置=>关于=>GNOME版本
+
   - 使用教程：[通过浏览器插件安装](https://linux.cn/article-9447-1.html)，[手动安装](https://www.debugpoint.com/manual-installation-gnome-extension/)
+
+      - 如果插件网页显示“你的本地主机连接器不支持下列 API：v6。或许你可以升级本地主机连接器，或者安装用于缺失 API 的插件”，不用管，继续安装插件就好
+
   - **[cpupower](https://github.com/deinstapel/cpupower)** ：CPU性能调节插件
-  - [GNOME顶部栏的图标隐藏](https://blog.csdn.net/hwh295/article/details/113733884)：使用GNOME shell的插件——[Icon Hider](https://extensions.gnome.org/extension/351/icon-hider/)
 
-- 性能指示器：[indicator-sysmonitor](https://github.com/fossfreedom/indicator-sysmonitor)  ，显示于状态栏，支持GNOME和MATE
+      ```bash
+      sudo add-apt-repository ppa:fin1ger/cpupower
+      sudo apt-get update
+      sudo apt-get install gnome-shell-extension-cpupower
+      # 重新登录后
+      gnome-extensions enable cpupower@mko-sl.de
+      ```
 
-  ```bash
-  sudo add-apt-repository ppa:fin1ger/cpupower
-  sudo apt-get update
-  sudo apt-get install gnome-shell-extension-cpupower
-  # 重新登录后
-  gnome-extensions enable cpupower@mko-sl.de
-  # 程序里面设置开机自启
+  - ~~[GNOME顶部栏的图标隐藏](https://blog.csdn.net/hwh295/article/details/113733884)：[Icon Hider](https://extensions.gnome.org/extension/351/icon-hider/)~~
+
+  - ~~[时间挪到右上角](https://blog.csdn.net/ricolau/article/details/120853288)：[Frippery Move Clock](https://extensions.gnome.org/extension/2/move-clock/)~~
+
+  - [定制GNOME](https://www.reddit.com/r/gnome/comments/pb5y81/how_to_customize_the_top_bar_in_gnome/)：[Just Perfection](https://extensions.gnome.org/extension/3843/just-perfection/)
+
+      - ☆**修改顶栏时间位置**：找到Just Perfection的设置，定制=>时钟菜单位置=>右边
+
+- 性能指示器：[indicator-sysmonitor](https://github.com/fossfreedom/indicator-sysmonitor)  ，显示于状态栏，支持GNOME和MATE，程序里面设置**开机自启**，显示格式为
+
   ```
-
+  {netcomp} {cpu} {nvgpu} {mem}
+  ```
+  
 - 快捷键设置
 
   | 名称          | 命令                             | 快捷键               | 系统默认                 |
@@ -384,7 +416,7 @@ apt install libgtk-3-dev
 - **开机自启**：打开gnome-tweaks（可以用apt安装，中文可能叫“优化”），在开机启动程序添加如下软件
 
     - 软件内设置：clash for windows、
-    - 手动添加：xdm、stretchly、utools、Guake、flameshot、thunderbird、钉钉
+    - 手动添加：xdm、stretchly、utools、Guake、flameshot、thunderbird、钉钉、indicator-sysmonitor
 
 
 # 通用配置
@@ -602,6 +634,35 @@ apt install libgtk-3-dev
 - **关闭fcitix的中文简体繁体切换快捷键：**
 
     <img src="images/image-20221209145039632.png" alt="image-20221209145039632" style="zoom: 80%;" />
+    
+- 字体配置：
+
+    - 命令行界面的中文字体：TODO
+
+    - [使用win字体](https://zhuanlan.zhihu.com/p/109083570)：
+
+        ```bash
+        cd /usr/share/fonts
+        mkdir win_fonts
+        chmod 755 win_fonts
+        # 进入win字体所在路径（C:/Windows/Fonts/）
+        cp *.ttf /usr/share/fonts/win_fonts/
+        cp *.TTF /usr/share/fonts/win_fonts/
+        cp *.otf /usr/share/fonts/win_fonts/
+        cp simsun.ttc /usr/share/fonts/win_fonts/
+        cd /usr/share/fonts/win_fonts/
+        chmod 644 *
+        mkfontscale
+        mkfontdir
+        fc-cache          #更新字体缓存
+        ```
+
+    - WPS缺少的字体可以去[这里](http://xiazaiziti.com/)下载，然后参考上面的方法添加到系统。
+
+        - 本文档同目录下`./Material/字体/`有3种下载好的字体，请注意使用范围
+    
+    
+    
 
 # 技巧
 
