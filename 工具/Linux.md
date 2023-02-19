@@ -425,6 +425,45 @@ apt install libgtk-3-dev
 
 - **[同步双系统时间](https://zhuanlan.zhihu.com/p/492885761)**：终端运行命令`timedatectl set-local-rtc 1`，然后到windows下面再更新一下时间
 
+- [双网卡设置流量](https://blog.csdn.net/cuiyuan605/article/details/113397856)：
+
+    - 假设网卡信息和原始的路由信息如下：
+
+        |      | 网卡1        | 网卡2       |
+        | ---- | ------------ | ----------- |
+        | 名称 | enp37s0      | wlp38s0     |
+        | IP   | 10.168.2.2   | 192.168.2.3 |
+        | 网关 | 10.168.2.254 | 192.168.2.1 |
+        | 掩码 | 23           | 24          |
+
+        ```bash
+        orz@orz:~$ ip route show
+        default via 10.168.2.254 dev enp37s0 proto dhcp metric 20100 
+        default via 192.168.2.1 dev wlp38s0 proto dhcp metric 20600 
+        10.168.1.0/23 dev enp37s0 proto kernel scope link src 10.168.2.2 metric 100 
+        169.254.0.0/16 dev enp37s0 scope link metric 1000 
+        192.168.2.0/24 dev wlp38s0 proto kernel scope link src 192.168.2.3 metric 600
+        ```
+
+    - 设置优先网卡：即将跃点改小即可，比如将网卡2设置优先，命令如下
+
+        ```bash
+        ip route del default via 192.168.2.1 dev wlp38s0 proto dhcp metric 20600
+        ip route add default via 192.168.2.1 dev wlp38s0 proto dhcp metric 1
+        ```
+
+    - 指定网段orIP走指定网卡：比如都走网卡1
+
+        ```bash
+        # 指定局域网网段
+        ip route add 10.168.1.0/24 dev enp37s0 proto kernel scope link src 10.168.2.2 metric 100
+        # 指定局域网IP
+        ip route add 10.168.1.3 dev enp37s0 proto kernel scope link src 10.168.2.2 metric 100
+        # 指定公网IP
+        ip route add 117.21.179.19 via 10.168.2.254 dev enp37s0 proto dhcp metric 10
+        ```
+        
+
 - 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
 
     ```bash
@@ -433,6 +472,126 @@ apt install libgtk-3-dev
     ```
 
     > [最好看的Bash美化——打造ParrotOS风格的Bash](https://blog.csdn.net/u011145574/article/details/105160496)
+
+- Tmux：在配置文件`~/.tmux.conf `中加入如下内容，然后重启tmux，或者按`ctrl+b`后输入`:source-file ~/.tmux.conf`
+
+    ```shell
+    # 启用鼠标
+    set -g mouse on
+    # set-option -g mouse on # 或者这个
+    # 复制模式
+    set-window-option -g mode-keys vi #可以设置为vi或emacs
+    # 开启256 colors支持
+    set -g default-terminal "screen-256color"
+    # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
+    ```
+
+    复制模式步骤：
+
+    1. `ctrl+b`，然后按`[`进入复制模式
+    2. 移动鼠标到要复制的区域，移动鼠标时可用vim的搜索功能"/","?"
+    3. 按空格键开始选择复制区域
+    4. 选择完成后按`enter`退出，完成复制
+    5. `ctrl+b` ，然后按`]`粘贴
+
+- 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字`history-search`找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
+
+    <img src="images/image-20200923101318000.png" alt="image-20200923101318000" style="zoom:90%;" />
+
+- 给应用添加代理：基于electron的软件，例如microsoft-edge、AO等
+
+    - 编辑文件`/usr/share/applications/*.desktop`（或者在路径`~/.local/share/applications/`下），在`Exec=`后面的内容中加上`--proxy-server="http://127.0.0.1:7890"`，例如
+    ```bash
+    # before
+    Exec=/usr/bin/microsoft-edge-stable %U
+    # after
+    Exec=/usr/bin/microsoft-edge-stable --proxy-server="http://127.0.0.1:7890" %U
+    ```
+
+- deepin-wine安装windows软件：
+    ```bash
+    # .msi installer
+    deepin-wine6-stable msiexec /i $PATH_TO_MSI_INSTALL
+    ```
+
+- [设置桌面为默认.descktop路径](https://unix.stackexchange.com/questions/391915/where-is-the-path-to-the-current-users-desktop-directory-stored)
+
+    ```bash
+    xdg-user-dir DESKTOP
+    ```
+
+- ssh代理：只支持sock5代理，在`~/.ssh/config`中添加如下内容，7891为sock5端口
+
+    ```bash
+    ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p
+    ```
+
+- linux版本的钉钉和腾讯会议 语音时如果别人讲话有**杂音**，执行下面命令
+
+    ```bash
+    sudo apt install pulseaudio*
+    ```
+
+    > 参考[链接](https://bbs.archlinuxcn.org/viewtopic.php?id=12535)
+
+- 英伟达显卡驱动安装：[我的博客](https://blog.csdn.net/OTZ_2333/article/details/108604064)
+
+- 设置nautilus自带终端：参考[nautilus-terminal](https://github.com/flozz/nautilus-terminal)，注意必须要用apt安装的python，不能用conda安装的python
+
+    <img src="images/image-20220916141444464.png" alt="image-20220916141444464" style="zoom:67%;" />
+
+- [swap扩容](https://blog.csdn.net/wdwangye/article/details/109371782)
+
+    ```bash
+    dd if=/dev/zero of=/mnt/swap bs=1G count=6
+    mkswap /mnt/swap
+    chmod 0600 /mnt/swap
+    swapon /mnt/swap
+    vim /etc/fstab
+    # 加入如下一行
+    /mnt/swap                                 none            swap    sw              0       0
+    ```
+
+- [修改键盘小红点灵敏度](https://blog.csdn.net/weixin_36242811/article/details/88808015)：
+
+    ```shell
+    id=$(xinput --list |grep TrackPoint| awk '{printf $6"\n"}'|cut -d "=" -f 2)
+    num=$(xinput list-props $id| grep Speed|head -1|awk '{printf $4 "\n"}'|
+          cut -d"(" -f2|cut -d")" -f1)
+    xinput set-prop $id $num -1.0 
+    ```
+
+- 笔记本触控板多指功能失效：安装fusuma（[18.04](https://hirosht.medium.com/gestures-on-ubuntu-18-04-xorg-2fe05efb05fc)）
+
+- **关闭fcitix的中文简体繁体切换快捷键：**
+
+    <img src="images/image-20221209145039632.png" alt="image-20221209145039632" style="zoom: 80%;" />
+
+- 字体配置：
+
+    - 命令行界面的中文字体：TODO
+
+    - [使用win字体](https://zhuanlan.zhihu.com/p/109083570)：
+
+        ```bash
+        cd /usr/share/fonts
+        mkdir win_fonts
+        chmod 755 win_fonts
+        # 进入win字体所在路径（C:/Windows/Fonts/）
+        cp *.ttf /usr/share/fonts/win_fonts/
+        cp *.TTF /usr/share/fonts/win_fonts/
+        cp *.otf /usr/share/fonts/win_fonts/
+        cp simsun.ttc /usr/share/fonts/win_fonts/
+        cd /usr/share/fonts/win_fonts/
+        chmod 644 *
+        mkfontscale
+        mkfontdir
+        fc-cache          #更新字体缓存
+        ```
+
+    - WPS缺少的字体可以去[这里](http://xiazaiziti.com/)下载，然后参考上面的方法添加到系统。
+
+        - 本文档同目录下`./Material/字体/`有3种下载好的字体，请注意使用范围
 
 - ~~添加代理~~：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
@@ -474,31 +633,6 @@ apt install libgtk-3-dev
         echo git config --global --get https.proxy $(git config --global --get https.proxy)
     }
     ```
-
-- Tmux：在配置文件`~/.tmux.conf `中加入如下内容，然后重启tmux，或者按`ctrl+b`后输入`:source-file ~/.tmux.conf`
-
-    ```shell
-    # 启用鼠标
-    set -g mouse on
-    # set-option -g mouse on # 或者这个
-    # 复制模式
-    set-window-option -g mode-keys vi #可以设置为vi或emacs
-    # 开启256 colors支持
-    set -g default-terminal "screen-256color"
-    # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
-    ```
-
-    复制模式步骤：
-
-    1. `ctrl+b`，然后按`[`进入复制模式
-    2. 移动鼠标到要复制的区域，移动鼠标时可用vim的搜索功能"/","?"
-    3. 按空格键开始选择复制区域
-    4. 选择完成后按`enter`退出，完成复制
-    5. `ctrl+b` ，然后按`]`粘贴
-
-- 终端根据历史补全命令：编辑`/etc/inputrc`，搜索关键字`history-search`找到如下两行，取消注释。保存退出后即可通过`PgUp`和`PgDn`根据历史补全命令
-
-    <img src="images/image-20200923101318000.png" alt="image-20200923101318000" style="zoom:90%;" />
 
 - ~~自动进行git操作脚本`gitauto.sh`：~~
 
@@ -567,102 +701,9 @@ apt install libgtk-3-dev
     alias gitauto="bash ~/gitauto.sh"
     ```
 
-- 给应用添加代理：基于electron的软件，例如microsoft-edge、AO等
-    - 编辑文件`/usr/share/applications/*.desktop`（或者在路径`~/.local/share/applications/`下），在`Exec=`后面的内容中加上`--proxy-server="http://127.0.0.1:7890"`，例如
-    ```bash
-    # before
-    Exec=/usr/bin/microsoft-edge-stable %U
-    # after
-    Exec=/usr/bin/microsoft-edge-stable --proxy-server="http://127.0.0.1:7890" %U
-    ```
+- 
 
-- deepin-wine安装windows软件：
-    ```bash
-    # .msi installer
-    deepin-wine6-stable msiexec /i $PATH_TO_MSI_INSTALL
-    ```
-
-- [设置桌面为默认.descktop路径](https://unix.stackexchange.com/questions/391915/where-is-the-path-to-the-current-users-desktop-directory-stored)
-
-    ```bash
-    xdg-user-dir DESKTOP
-    ```
-
-- ssh代理：只支持sock5代理，在`~/.ssh/config`中添加如下内容，7891为sock5端口
-
-    ```bash
-    ProxyCommand nc -X 5 -x 127.0.0.1:7891 %h %p
-    ```
-
-- linux版本的钉钉和腾讯会议 语音时如果别人讲话有**杂音**，执行下面命令
-
-    ```bash
-    sudo apt install pulseaudio*
-    ```
-
-    > 参考[链接](https://bbs.archlinuxcn.org/viewtopic.php?id=12535)
-
-- 英伟达显卡驱动安装：[我的博客](https://blog.csdn.net/OTZ_2333/article/details/108604064)
-
-- 设置nautilus自带终端：参考[nautilus-terminal](https://github.com/flozz/nautilus-terminal)，注意必须要用apt安装的python，不能用conda安装的python
-
-    <img src="images/image-20220916141444464.png" alt="image-20220916141444464" style="zoom:67%;" />
-
-- [swap扩容](https://blog.csdn.net/wdwangye/article/details/109371782)
-
-    ```bash
-    dd if=/dev/zero of=/mnt/swap bs=1G count=6
-    mkswap /mnt/swap
-    chmod 0600 /mnt/swap
-    swapon /mnt/swap
-    vim /etc/fstab
-    # 加入如下一行
-    /mnt/swap                                 none            swap    sw              0       0
-    ```
-
-- [修改键盘小红点灵敏度](https://blog.csdn.net/weixin_36242811/article/details/88808015)：
-
-    ```shell
-    id=$(xinput --list |grep TrackPoint| awk '{printf $6"\n"}'|cut -d "=" -f 2)
-    num=$(xinput list-props $id| grep Speed|head -1|awk '{printf $4 "\n"}'|
-          cut -d"(" -f2|cut -d")" -f1)
-    xinput set-prop $id $num -1.0 
-    ```
-
-- 笔记本触控板多指功能失效：安装fusuma（[18.04](https://hirosht.medium.com/gestures-on-ubuntu-18-04-xorg-2fe05efb05fc)）
-
-- **关闭fcitix的中文简体繁体切换快捷键：**
-
-    <img src="images/image-20221209145039632.png" alt="image-20221209145039632" style="zoom: 80%;" />
-    
-- 字体配置：
-
-    - 命令行界面的中文字体：TODO
-
-    - [使用win字体](https://zhuanlan.zhihu.com/p/109083570)：
-
-        ```bash
-        cd /usr/share/fonts
-        mkdir win_fonts
-        chmod 755 win_fonts
-        # 进入win字体所在路径（C:/Windows/Fonts/）
-        cp *.ttf /usr/share/fonts/win_fonts/
-        cp *.TTF /usr/share/fonts/win_fonts/
-        cp *.otf /usr/share/fonts/win_fonts/
-        cp simsun.ttc /usr/share/fonts/win_fonts/
-        cd /usr/share/fonts/win_fonts/
-        chmod 644 *
-        mkfontscale
-        mkfontdir
-        fc-cache          #更新字体缓存
-        ```
-
-    - WPS缺少的字体可以去[这里](http://xiazaiziti.com/)下载，然后参考上面的方法添加到系统。
-
-        - 本文档同目录下`./Material/字体/`有3种下载好的字体，请注意使用范围
-    
-    
-    
+  ​    
 
 # 技巧
 

@@ -312,13 +312,38 @@ pip install --upgrade flake8
 
     > 其中`127.0.0.1:7891`是socks5代理的IP和端口
 
+- 使用跳板机访问私有git服务
+
+    ```
+    Host jump						# 跳板机名称，可自定义
+    	HostName xxx.xxx.xxx.xxx	 # 跳板机IP
+    	User xxx
+    	IdentityFile xxxx			# 可选
+    Host gitlab					    # git服务名称，可自定义
+    	HostName xxx.xxx.xxx.xxx	 # git服务，可能是IP名称，可能是域名
+    	ProxyJump jump				# 必须与上面的“跳板机名称”相同
+    	User git
+    	IdentityFile xxxx			# 可选
+    ```
+
+    填完后，使用命令`ssh gitlab`测试能否连通，不行的话进行排查。
+
+    确认可以连通后，对于git服务上的某个git仓库，假设地址为`git@xxx.xxx.xxx.xxx:test.git`，则应该将@和冒号之间的内容改成上面的“git服务名称”然后进行git clone，即
+
+    ```bash
+    git clone git@gitlab:test.git
+    ```
+
+    注意：http形式的仓库链接暂时不知道咋弄
+
 # Miniconda
 
 [官网](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)。安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改 [Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/) 和 [pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/) (可选)为清华镜像，并安装如下包
 
 ```bash
+conda create --name DL python=3.8
 conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
-conda install pytorch torchvision cudatoolkit=11.1 -c pytorch -c conda-forge
+conda install pytorch torchvision cudatoolkit=11.6 -c pytorch -c nvidia
 pip install opencv-contrib-python torch-summary tensorboardX tensorflow tensorflow-datasets mmcv mmedit
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
 conda install cupy -c anaconda	# 这个跟cuda=9.2 & pytorch=0.4兼容
@@ -359,5 +384,60 @@ mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramDa
 
 # 杂
 
-- clash for windows[自动选择路线](https://lancellc.gitbook.io/clash/clash-config-file/proxy-groups/auto)
+- 设定远程控制流量走指定网卡：使用clash for windows（[教程](https://docs.cfw.lbyczf.com/contents/parser.html#%E7%AE%80%E4%BE%BF%E6%96%B9%E6%B3%95-yaml)），在Setting => Profiles => Parsers中添加如下内容，就可以在更新订阅链接的时候往里面加想要的内容了
+
+    ```yaml
+    parsers: 
+      - url: https://xxx.xxx.xxx/link/xxx	# 订阅链接
+        yaml:
+          append-proxy-groups:
+            - name: 远程控制
+              type: select
+              interface-name: wlp38s0  # 网卡名称
+              proxies:
+                - DIRECT
+          prepend-rules:
+            - DOMAIN-KEYWORD,oray,远程控制 # rules最前面增加一个规则
+            - DOMAIN-KEYWORD,todesk,远程控制 
+    ```
+
+    - **注意**：向日葵等远程软件被一个网络屏蔽后，就可以使用该方法，但是需要clash for windows**一直开启Rule模式**，并远程软件的网络设置里面填入clash for windows的**代理IP和端口**
+
+- clash for windows[自动选择路线](https://lancellc.gitbook.io/clash/clash-config-file/proxy-groups/auto)：在config.yaml添加如下内容
+
+    ```yaml
+      proxy-groups:
+      - name: "auto"
+        type: url-test
+        proxies:
+          - ss1
+          - ss2
+          - vmess1
+        url: 'http://www.gstatic.com/generate_204'
+        interval: 300
+       #tolerance: 50
+       #lazy: true
+       #disable-udp: true
+    ```
+
+- [clash for windows同时使用双网卡](https://github.com/Fndroid/clash_for_windows_pkg/issues/2702)：在config.yaml添加如下内容
+
+    ```yaml
+    proxy-groups:
+      - name: A
+        type: select
+        interface-name: 以太网  # 网卡1名称
+        proxies:
+          - DIRECT
+      - name: B
+        type: select
+        interface-name: WLAN  # 网卡2名称
+        proxies:
+          - DIRECT
+    
+    rules:
+      - DOMAIN-SUFFIX,foo.com,A
+      - DOMAIN-SUFFIX,bar.com,B
+    ```
+
 - utools插件：翻译、FileShare文件共享
