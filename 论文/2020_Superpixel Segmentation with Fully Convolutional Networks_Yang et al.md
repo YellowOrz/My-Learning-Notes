@@ -21,7 +21,7 @@
 
   - 为了节约计算量，每个像素只与附近$N_p$（一般是9个）的格子关联（例如下图），整个过程可以用一个tensor表示$G\in Z^{H*W*|N_p|}$
 
-    ![image-20230126152340722](C:\Users\orz\Documents\My-Learning-Notes\论文\images\image-20230126152340722.png)
+    ![image-20230126152340722](./images/image-20230126152340722.png)
 
   - 本文可以用FCN直接预测上面那个tensor（后面用$Q$表示），即每个像素与周围格子关联的概率（0-1），然后选出最大的即可
 
@@ -31,7 +31,7 @@
 
   - 网络 = Encoder + Decoder + leaky ReLU + skip connection + softmax，输出的就是超像素图association map$Q$
 
-    ![image-20230126153230558](C:\Users\orz\Documents\My-Learning-Notes\论文\images\image-20230126153230558.png)
+    ![image-20230126153230558](./images/image-20230126153230558.png)
 
   - Loss
 
@@ -87,7 +87,7 @@
 
   - 本文的超像素分割网络，后面可以接其他下游任务，这里以双目匹配（PSMNet）为例子
 
-    ![image-20230126162810555](C:\Users\orz\Documents\My-Learning-Notes\论文\images\image-20230126162810555.png)
+    ![image-20230126162810555](./images/image-20230126162810555.png)
 
   - 两种训练方式
 
