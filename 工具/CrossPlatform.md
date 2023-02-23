@@ -344,7 +344,8 @@ pip install --upgrade flake8
 conda create --name DL python=3.8
 conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
 conda install pytorch torchvision cudatoolkit=11.6 -c pytorch -c nvidia
-pip install opencv-contrib-python torch-summary tensorboardX tensorflow tensorflow-datasets mmcv mmedit
+pip install opencv-contrib-python torch-summary tensorboardX easydict kornia
+pip install tensorflow tensorflow-datasets mmcv mmedit
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
 conda install cupy -c anaconda	# 这个跟cuda=9.2 & pytorch=0.4兼容
 pip install easydict argparse scipy pprint albumentations json-py imageio

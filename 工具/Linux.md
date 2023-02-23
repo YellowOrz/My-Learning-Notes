@@ -556,11 +556,10 @@ apt install libgtk-3-dev
 
     ```shell
     id=$(xinput --list |grep TrackPoint| awk '{printf $6"\n"}'|cut -d "=" -f 2)
-    num=$(xinput list-props $id| grep Speed|head -1|awk '{printf $4 "\n"}'|
-          cut -d"(" -f2|cut -d")" -f1)
+    num=$(xinput list-props $id| grep Speed|head -1|awk '{printf $4 "\n"}'| cut -d"(" -f2|cut -d")" -f1)
     xinput set-prop $id $num -1.0 
     ```
-
+    
 - 笔记本触控板多指功能失效：安装fusuma（[18.04](https://hirosht.medium.com/gestures-on-ubuntu-18-04-xorg-2fe05efb05fc)）
 
 - **关闭fcitix的中文简体繁体切换快捷键：**
@@ -593,16 +592,13 @@ apt install libgtk-3-dev
 
         - 本文档同目录下`./Material/字体/`有3种下载好的字体，请注意使用范围
 
-- ~~添加代理~~：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
+- 添加代理：在环境变量（最好是`/etc/bash.bashrc` or `/etc/bashrc`）中添加如下内容
 
     ```shell
     # 在WSL为下面那个
     # IP=$(cat /etc/resolv.conf |grep name|cut -f 2 -d " ") 
     IP=127.0.0.1
     Port=7890
-    #默认不开启代理。否则git可能会连不上，无论git有没有设置代理。
-    #export http_proxy="http://${IP}:${Port}"
-    #export https_proxy="http://${IP}:${Port}"
     proxyon(){
     	export http_proxy="http://${IP}:${Port}"
     	export https_proxy="http://${IP}:${Port}"
@@ -615,25 +611,10 @@ apt install libgtk-3-dev
       unset https_proxy
       echo "proxy off"
     }
-    # git的代理。默认关闭。
-    # git config --global http.proxy "socks5://${IP}:${Port}"
-    # git config --global https.proxy "socks5://${IP}:${Port}"
-    gitproxyon(){
-        git config --global http.proxy "socks5://${IP}:${Port}"
-        git config --global https.proxy "socks5://${IP}:${Port}"
-        echo "git proxy on"
-        echo git config --global --get http.proxy $(git config --global --get http.proxy)
-        echo git config --global --get https.proxy $(git config --global --get https.proxy)
-    }
-    gitproxyoff(){
-        git config --global --unset http.proxy
-        git config --global --unset https.proxy
-        echo "git proxy off"
-        echo git config --global --get http.proxy $(git config --global --get http.proxy)
-        echo git config --global --get https.proxy $(git config --global --get https.proxy)
-    }
     ```
-
+    
+    注意：git就不要添加类似这种的代理了，使用http代理或者ssh的代理
+    
 - ~~自动进行git操作脚本`gitauto.sh`：~~
 
     ```shell
