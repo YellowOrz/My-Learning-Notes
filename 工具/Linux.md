@@ -484,6 +484,8 @@ apt install libgtk-3-dev
     # 开启256 colors支持
     set -g default-terminal "screen-256color"
     # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
+    # 多窗口同步操作快捷键ctrl+b s
+    bind-key s setw synchronize-panes
     ```
 
     复制模式步骤：

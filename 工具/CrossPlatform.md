@@ -344,7 +344,7 @@ pip install --upgrade flake8
 conda create --name DL python=3.8
 conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
 conda install pytorch torchvision cudatoolkit=11.6 -c pytorch -c nvidia
-pip install opencv-contrib-python torch-summary tensorboardX easydict kornia
+pip install opencv-contrib-python torch-summary tensorboardX tensorboard easydict kornia
 pip install tensorflow tensorflow-datasets mmcv mmedit
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
 conda install cupy -c anaconda	# 这个跟cuda=9.2 & pytorch=0.4兼容
@@ -383,7 +383,7 @@ mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramDa
 - 修改文件命名方式：在zotero中，`工具`=>`ZotFile Preferences`=>`Renaming Rules`，取消勾选`Use Zotero to Rename`，将其下面两个空格填入`{%y_}{%t_}{%a}`
 - 显示列：刊名缩写、档案、短标题
 
-# 杂
+# clash for windows
 
 - 设定远程控制流量走指定网卡：使用clash for windows（[教程](https://docs.cfw.lbyczf.com/contents/parser.html#%E7%AE%80%E4%BE%BF%E6%96%B9%E6%B3%95-yaml)），在Setting => Profiles => Parsers中添加如下内容，就可以在更新订阅链接的时候往里面加想要的内容了
 
@@ -440,5 +440,16 @@ mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramDa
       - DOMAIN-SUFFIX,foo.com,A
       - DOMAIN-SUFFIX,bar.com,B
     ```
+
+- [自定义节点排序](https://docs.cfw.lbyczf.com/contents/proxyorder.html#版本要求)：Settings => Proxies => Order By
+
+    > - Default：按配置文件定义节点顺序
+    > - Latency：按节点延迟升序排列
+    > - Alphabet：按节点名称字母表排列
+
+- 
+
+
+# 杂
 
 - utools插件：翻译、FileShare文件共享
