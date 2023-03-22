@@ -70,7 +70,7 @@ sudo apt install polychromatic  # Full installation
 | [OneDrive](https://github.com/abraunegg/onedrive) | 第三方onedrive软件，[20.04](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) \| [22.04](https://github.com/abraunegg/onedrive) | [Mathpix Snip](https://mathpix.com/desktop-downloads) | 数学公式识别神器            |
 | [OneDriveGUI](https://github.com/bpozdena/OneDriveGUI) | 上面OneDrive的配套GUI                                        | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，下载[2021.2.2版](https://download.jetbrains.com.cn/cpp/CLion-2021.2.2.tar.gz) |
 | [diskusage](https://github.com/chenquan/diskusage)           | 磁盘使用情况查看                                             | [texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/) | latex工具集 |
-| [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app                                  |                                                              |                                                              |
+| [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app                                  | [drawio](https://github.com/jgraph/drawio-desktop/releases) | 跨平台（包括网页）的流程绘制工具 |
 |                                                        |                                                              |                                                              |                                                              |
 | ~~[福昕阅读器](https://www.foxitsoftware.cn/downloads/)~~ | pdf阅读器 |                                                              |                                                              |
 

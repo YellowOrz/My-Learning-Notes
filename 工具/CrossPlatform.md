@@ -46,6 +46,10 @@
 
 ## 配置
 
+- [在新标签页打开文件](https://vscode.one/new-tab-vscode/)：点击一下文件名，是临时预览（文件名是斜体）；双击文件名，表示正式打开（文件名是正的）
+
+    ![image-20230321143025311](images/image-20230321143025311.png)
+
 - [显示限宽提示线or修改限宽]( https://www.zhihu.com/question/61341938/answer/186940141)：`setting=>editor.rulers`，内容设置成[80]
 
 - 使用谷歌代码风格：`setting=>Clang_format_fallback Style`，内容改成`Google`
