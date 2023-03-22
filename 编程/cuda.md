@@ -600,7 +600,7 @@
 
 ### 改善并行规约的分支分化
 
-- 相邻配对的原始实现方法
+- **相邻配对**的原始实现方法
 
     ```c++
     __global__ void reduceNeighbored(int *g_idata, int *g_odata, unsigned int n){
@@ -632,7 +632,7 @@
 
     <img src="images/3_21.png" alt="img" style="zoom:50%;" /> 
 
-- **优化一**：相对配对，每两个数字分配一个线程，注意下图橙色圆圈，表示thread id
+- **优化一**：**相对配对**，每两个数字分配一个线程，注意下图橙色圆圈，表示thread id
 
     <img src="images/3_23.png" alt="img" style="zoom:40%;" /> 
 
@@ -644,7 +644,7 @@
       int *idata = g_idata + blockDim.x * blockIdx.x;
       if(idx&gt;n) return;
       // 逐步增大步长将每个block负责的数据汇总
-      for(int stride = 1; stride&lt;blockDim.x;stride*=2){
+      for(int stride = 1; stride < blockDim.x;stride*=2){
         // 找到每个thread负责的数据位置
         int index = tid * 2 * stride;
         if (index &lt; blockDim.x) 
@@ -659,7 +659,7 @@
 
     > 但其实还是分配了n个线程，只是真正起作用的是前$n/2$的线程，后面的线程所属的线程束中都没有上，就没有调度，从而节省了资源
 
-- **优化二**：使用交错配对，书上说优势在内存读取，而非线程束分化；但是博主经过实验发现结果相反
+- **优化二**：使用**交错配对**，书上说优势在内存读取，而非线程束分化；但是博主经过实验发现结果相反
 
     ```c++
     __global__ void reduceInterleaved(int *g_idata, int *g_odata, int n){
