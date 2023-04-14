@@ -320,3 +320,41 @@ git fetch --all
 git pull --all
 ```
 
+## 分支合并
+
+**假设将devel合并到master**
+
+- 方法一（不推荐）：`git merge`，这样会导致devel提交的所有commit都会跟着master走，会**让master很冗余**
+
+    ```bash
+    git checkout master
+    git merger devel
+    ```
+
+    <img src="images/webp.webp" alt="img" style="zoom: 33%;" />
+
+    <img src="images/webp-16813589881122.webp" alt="img" style="zoom: 33%;" />
+
+- 方法二（不推荐）：`git merge --squash`，然后让你重新提交commit，类似先git merge然后reset soft，但是这样会导致devel所有的commit记录全没了，而且**新提交的commit信息是操作者而不是原作者**
+
+    ```bash
+    git checkout master
+    git merger --squash devel
+    git commit -m "xxxx"
+    ```
+
+- ==方法三（推荐）==：`git reset -i HEAD~n`，可以完整保留devel分支，而且master上新的commit信息是原作者
+
+    ```bash
+    git checkout master
+    git merger devel
+    git rebase -i HEAD~n # n为devel分支上多的commit数量
+    ```
+
+    输入上面命令后会出现如下界面（如果设置git使用nano编辑器），除了第一个pick之外所有pick改成s或者（squash），然后保存退出
+
+    <img src="images/webp-16813603087047.webp" alt="img" style="zoom:80%;" />
+
+    然后又会进入第二次编辑界面，将commit信息改成最终想要的即可（注释会被自动忽略）
+
+    <img src="images/webp-16813603182939.webp" alt="img" style="zoom:80%;" />
