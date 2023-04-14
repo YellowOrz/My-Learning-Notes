@@ -25,26 +25,25 @@
 
 # VS Code
 
+==推荐登录Github/微软账号以开启设置同步==
+
 ## 扩展
 
-- [**Markdown All in One**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)：超级好用的快捷键、自动补全
-- ~~**Markdown PDF**：将Markdown转为PDF（也可以转为jpg、HTML），但是生成的中文字体有点奇怪，而且生成的目录无法跳转~~
-- ~~**Markdown TOC**：生成目录。简洁而且可以在Markdown PDF生成的PDF中也可以使用。~~
-- ~~[**Markdown Preview Enhanced**](https://shd101wyy.github.io/markdown-preview-enhanced/#/zh-cn/)：可以生成目录、转换为PDF、以及有漂亮的预览~~
+- [**Markdown All in One**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)：markdown可视化
+
 - **TabNine**：我觉得超级好用的自动补全软件
-- **Python**：直接运行python文件（不需要扩展Code Runner），然后不需要手动配置python的路径了，好像会自动配置的（我已经安装了anaconda，而且添加到环境变量里面了）
-- **C/C++**：编译C/C++，但是好像不能运行（具体的有点混，搞不清楚）
-- **Code Runner**：配合扩展C/C++来运行C/C++的程序
-- **CMake**：可以自动补全CMake相关的代码
-- **Remote - SSH**：远程调试代码全家桶
-- **Remote Development**：远程调试代码全家桶
-- **Remote - Containers**：远程调试代码全家桶
-- **Remote - SSH: Editing Configuration Files**：远程调试代码全家桶
-- **Remote - WSL**：用来跟WSL互动
-- **Anaconda Extension Pack**：可以切换Anaconda的虚拟环境
-- **Chinese (Simplified) Language Pack for Visual Studio Code**：中文有时候还是用得到的吧
+
+- **Python**：直接运行python文件（不需要扩展Code Runner）
+
+    
 
 ## 配置
+
+-  [不追踪软连接](https://www.likecs.com/show-204229604.html)：文件夹中包含太多软连接会消耗大量CPU
+
+    <img src="images/image-20230411110038620.png" alt="image-20230411110038620" style="zoom: 80%;" />
+
+- [设置ssh远程服务器的插件安装位置](https://stackoverflow.com/questions/71856659/vs-code-ssh-server-install-path)：vscode用ssh远程linux服务器时，需要在${HOME}下面创建文件夹.vscode-server安装相关插件文件后才能正常远程，但是有时候可能没有home目录，因此就需要修改安装路径。在vscode的设置中搜索@ext:ms-vscode-remote.remote-ssh serverInstallPath，然后点击"Add Item"，Key为远程服务器的代号（即.ssh/config中Host后面的名称），Value为想要安装的路径
 
 - [在新标签页打开文件](https://vscode.one/new-tab-vscode/)：点击一下文件名，是临时预览（文件名是斜体）；双击文件名，表示正式打开（文件名是正的）
 
@@ -68,103 +67,39 @@
     "editor.fontWeight": "600" // Bold
     ```
 
-- ~~**python代码格式化**：使用库`Autopep8`。~~
-
-    ```bash
-    pip install --upgrade autopep8
-    ```
-
-- ~~**python代码检查**：使用库`Flake8`。~~
-
-```bash
-pip install --upgrade flake8
-```
-
-- ~~**配置C++运行环境**：主要参考[知乎上的一个回答](https://www.zhihu.com/question/30315894/answer/154979413)。但是要说的是，如果要**引用其他的库**（比如OpenCV），需要在**C_Cpp.default.includePath**中添加头文件路径（前面那个知乎的回答说还要填browse的）~~  
 - ~~**整体settings.json**~~
 
-```JSON
-{
-    "editor.formatOnType": true, // 输入分号(C/C++的语句结束标识)后自动格式化当前这一行的代码
-    "files.autoSave": "afterDelay",
-    "editor.acceptSuggestionOnEnter": "off", // 我个人的习惯，按回车时一定是真正的换行，只有tab才会接受Intellisense
-    //忽略“推荐扩展”
-    "extensions.ignoreRecommendations": true,
-    //不继承VS Code的Windows环境，针对Linux
-    "terminal.integrated.inheritEnv": false,
-    //调整窗口的缩放级别
-    "window.zoomLevel": 0,
-    "explorer.confirmDragAndDrop": false,
-
-
-    //C++配置
-    "C_Cpp.default.includePath": [
-        "E://Library//OpenCV//opencv//build//include",
-        "E://Library//OpenCV//opencv//build//include//opencv",
-        "E://Library//OpenCV//opencv//build//include//opencv2"
-    ],
-    "C_Cpp.default.browse.path": [
-        "E://Library//OpenCV//opencv//build//include",
-        "E://Library//OpenCV//opencv//build//include//opencv",
-        "E://Library//OpenCV//opencv//build//include//opencv2"
-    ],
-    "C_Cpp.clang_format_sortIncludes": true,
-    "code-runner.ignoreSelection": true,
-    "code-runner.saveFileBeforeRun": true,
-    "code-runner.runInTerminal": true, // 设置成false会在“输出”中输出，无法输入
-    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, AllowShortIfStatementsOnASingleLine: true, ColumnLimit: 0, IndentWidth: 4}",
-    "debug.onTaskErrors": "showErrors",
-
-
-    //自动预览markdown
-    "markdown.extension.preview.autoShowPreviewToSide": false,
-    "markdown-pdf.displayHeaderFooter": true,
-    //markdown的目录是否为纯文本？？？
-    "markdown.extension.toc.plaintext": true,
-    //防止Markdown TOC生成的目录不自动换行
-    "files.eol": "\n",
+    ```json
+    {
+        "editor.formatOnType": true, // 输入分号(C/C++的语句结束标识)后自动格式化当前这一行的代码
+        "files.autoSave": "afterDelay",
+        "editor.acceptSuggestionOnEnter": "off", // 我个人的习惯，按回车时一定是真正的换行，只有tab才会接受Intellisense
+        //忽略“推荐扩展”
+        "extensions.ignoreRecommendations": true,
+        //不继承VS Code的Windows环境，针对Linux
+        "terminal.integrated.inheritEnv": false,
+        //调整窗口的缩放级别
+        "window.zoomLevel": 0,
+        "explorer.confirmDragAndDrop": false,
     
+        //自动预览markdown
+        "markdown.extension.preview.autoShowPreviewToSide": false,
+        "markdown-pdf.displayHeaderFooter": true,
+        //markdown的目录是否为纯文本？？？
+        "markdown.extension.toc.plaintext": true,
+        //防止Markdown TOC生成的目录不自动换行
+        "files.eol": "\n",
     
-    // 是否启用交互式窗口（jupyter）？
-    // "python.dataScience.sendSelectionToInteractiveWindow": true,
-    //代码自动检查
-    "python.linting.flake8Enabled": true,
-    //python一行代码的最长长度，超了会报错
-    "python.linting.flake8Args": [
-        "--max-line-length=200"
-    ],
-    "python.pythonPath": "E:\\Library\\Anaconda3\\python.exe",
-    //python一行代码的最长长度，格式化时会将超了的自动换行
-    "python.formatting.autopep8Args": [
-        "--max-line-length=200"
-    ],
-    //防止报错Module 'cv2' has no 'imread' member
-    "python.linting.pylintArgs": [
-        "-–generate-members"
-    ],
-    //第三方库的自动补全
-    "python.autoComplete.extraPaths": [
-        "E://Library//Anaconda3//Lib//site-packages",
-        "E://Library//Anaconda3//Scripts"
-    ],
+        // 是否启用交互式窗口（jupyter）？
+        // "python.dataScience.sendSelectionToInteractiveWindow": true,
     
-    
-    "remote.SSH.defaultForwardedPorts": [],
-    "remote.SSH.remotePlatform": {
-        "106-外网": "linux",
-        "112-外网": "linux"
-    },
-    "remoteX11.SSH.privateKey": "~/.ssh/112-out",
-    "remoteX11.screen": 1,
-    "remoteX11.display": 1,
-    "markdown-preview-enhanced.liveUpdate": false,
-    //vscode 没办法给中文断词，所以加上中文常用标点
-    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?、，。？！“”‘’；：（）「」【】〔〕『』〖〗",
-    
-}
-```
+        "markdown-preview-enhanced.liveUpdate": false,
+        //vscode 没办法给中文断词，所以加上中文常用标点
+        "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?、，。？！“”‘’；：（）「」【】〔〕『』〖〗"
+    }
+    ```
 
->参考：[CLANG-FORMAT STYLE OPTIONS
+    
 
 # Typora
 
@@ -345,14 +280,14 @@ pip install --upgrade flake8
 [官网](https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/)。安装方法参考[我的这篇博客](https://blog.csdn.net/OTZ_2333/article/details/86688480)，安装完后需要更改 [Anaconda镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/) 和 [pypi镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/) (可选)为清华镜像，并安装如下包
 
 ```bash
-conda create --name DL python=3.8
-conda install python=3.8 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
-conda install pytorch torchvision cudatoolkit=11.6 -c pytorch -c nvidia
-pip install opencv-contrib-python torch-summary tensorboardX tensorboard easydict kornia
+conda create --name DL python=3.9
+conda install python=3.9 numpy matplotlib pandas ipython jupyter pillow scikit-image tqdm
+conda install pytorch=1.13 torchvision cudatoolkit -c pytorch -c nvidia
+pip install opencv-contrib-python tensorboardX tensorboard easydict scikit-image
 pip install tensorflow tensorflow-datasets mmcv mmedit
 # 以下是各个项目中遇到的包。使用率高的挑出来放在上面了
 conda install cupy -c anaconda	# 这个跟cuda=9.2 & pytorch=0.4兼容
-pip install easydict argparse scipy pprint albumentations json-py imageio
+pip install scipy pprint albumentations json-py imageio kornia torch-summary
 ```
 
 |       库       |                介绍                |      库      |              介绍              |
@@ -363,17 +298,6 @@ pip install easydict argparse scipy pprint albumentations json-py imageio
 |      tqdm      |            进度提示信息            |     cupy     |       加速Numpy运算速度        |
 |                |                                    |              |                                |
 
-~~**注意**：tensorflow对于cudatoolkit和cudnn的版本有严格要求，建议查看官网（[win](https://www.tensorflow.org/install/source_windows#gpu)、[linux](https://www.tensorflow.org/install/source#gpu)）。不推荐安装2.4版本，因为2.4版本要求cuda11，而cuda11能用的cudnn只有6.0版本，还没有8版本的（2021.1.20）。或者可以给tf专门建一个环境，因为pytorch对于cuda、cudnn的版本要求并不严格。~~
-
-~~**问题**：如果tensorflow装好后，报错找不到cuda的dll，如下图。可能是因为安装的tensorflow太新，不支持老版的cuda。~~
-
-<img src="images/image-20210117181603890.png" alt="image-20210117181603890" style="zoom:80%;" />
-
-~~解决方案：（曲线救国）[使用**硬连接**，把老版的cuda名字变成新版的](https://github.com/tensorflow/tensorflow/issues/38194#issuecomment-657233766)。例如我的tf是2.4版本的，要求cuda>=11.0，而我在conda中装的cuda是10.2，则以**管理员身份**运行cmd，输入命令~~
-
-```powershell
-mklink /H "C:\ProgramData\Miniconda3\Library\bin\cudart64_110.dll" "C:\ProgramData\Miniconda3\Library\bin\cudart64_102.dll"
-```
 
 **问题**：用pip安装库的时候总是有Warning，并且报错找不到（但是到镜像源里可以手动找到），如下图
 

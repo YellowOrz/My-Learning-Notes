@@ -12,7 +12,7 @@
 
 ```shell
 apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl
-apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot vlc 
+apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot vlc kdenlive
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
 snap install meshlab stretchly
 # apt装不了的就用snap
@@ -54,7 +54,7 @@ sudo apt install polychromatic  # Full installation
 | [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                  | 截图软件<br>`apt install flameshot`       |
 | [SimpleScreenRecorder](https://github.com/MaartenBaert/ssr)  | 录屏软件，apt安装                                            | gnome-shell-extensions                               | GNOME的插件                               |
 | [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                             | 命令快速查询工具，**强力推荐**！          |
-| [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              |                                                      |                                           |
+| [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | Kdenlive                                             | 视频编辑软件                              |
 | [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine) | deepin-wine环境与应用在Ubuntu上的移植仓库 |
 | [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                         | ~~indicator-cpufreq~~                                | ~~CPU性能调节~~                           |
 | [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                            | 命令行删除文件到回收站                    |
@@ -65,7 +65,7 @@ sudo apt install polychromatic  # Full installation
 
 | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------- |
-| [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    | [Typora](https://typora.io/#download)                        | Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html) |
+| [星火商店](https://spark-app.store/) | Debian 系发行版的应用商店，**强力推荐**！                    | [Typora](https://typora.io/#download)                        | Markdown编辑器 |
 | [advcpmv](https://github.com/jarun/advcpmv)                  | 让mv和cp显示进度                                             | [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher) | 集成&运行AppImage（18.04之后共用）                           |
 | [OneDrive](https://github.com/abraunegg/onedrive) | 第三方onedrive软件，[20.04](https://github.com/abraunegg/onedrive/blob/master/docs/ubuntu-package-install.md#distribution-ubuntu-2004) \| [22.04](https://github.com/abraunegg/onedrive) | [Mathpix Snip](https://mathpix.com/desktop-downloads) | 数学公式识别神器            |
 | [OneDriveGUI](https://github.com/bpozdena/OneDriveGUI) | 上面OneDrive的配套GUI                                        | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，下载[2021.2.2版](https://download.jetbrains.com.cn/cpp/CLion-2021.2.2.tar.gz) |
@@ -91,11 +91,11 @@ sudo apt install polychromatic  # Full installation
 | [XnView MP](https://www.xnview.com/en/xnviewmp/#downloads)   | 图片查看软件（跨平台）                                       | Pycharm                                                      | python IDE                                                   |
 | [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机                                                       | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/)   | 远程控制软件                                                 |
 | [PyCharm 社区版](https://www.jetbrains.com/zh-cn/pycharm/)   | python IDE                                                   | VNC Viewer                                                   | VNC远程                                                      |
-| 微信(wine)                                                   | [双屏需将左屏作为主屏，否则图标显示异常](https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/135#issuecomment-530186788) |                                                              |                                                              |
+| 微信(wine)                                                   | [双屏需将左屏作为主屏，否则图标显示异常](https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/135#issuecomment-530186788) | [Steam](https://store.steampowered.com/about/)               | 官方                                                         |
 |                                                              |                                                              |                                                              |                                                              |
 | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                                                 | ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具                                                     |
-| ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装）                                 | ~~[Steam](https://store.steampowered.com/about/)~~           | 官方                                                         |
-| [UEngine运行器](https://gitee.com/gfdgd-xi/uengine-runner)   | 运行安卓应用                                                 |                                                              |                                                              |
+| ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装）                                 |                                                              |                                                              |
+| [UEngine运行器](https://gitee.com/gfdgd-xi/uengine-runner)   | 运行安卓应用                                                 | ~~[Mark Text](https://github.com/marktext/marktext/releases)~~ | Markdown编辑器，开源，跨平台(似乎不维护了)                   |
 
 ## 有意思的小工具
 
