@@ -74,9 +74,9 @@ InfiniTAMv3
 
 ## Pipeline(处理模块)
 
-![image-20230119141937699](C:\Users\orz\Documents\InfiniTAM_comments\InfiniTAM\images\image-20230119141937699.png)
+![image-20230119141937699](.\images\image-20230119141937699.png)
 
-- `ITMMainEngine是整个pipeline的入口，pipeline的主要部分是Process Frame
+- `ITMMainEngine`是整个pipeline的入口，pipeline的主要部分是Process Frame
 - pipeline有2种：`ITMBasicEngine`（InfiniTAMv2的）、`ITMMultiEngine`（InfiniTAMv3的）
 - 总共包含6大模块，如下
     - **tracking**：通过当前帧（depth，可选color）与model的投影进行配准，得到相机位姿
