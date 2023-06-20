@@ -12,7 +12,7 @@
 
 ```shell
 apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl
-apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot vlc kdenlive
+apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot vlc kdenlive cloc xournalpp
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
 snap install meshlab stretchly
 # apt装不了的就用snap
@@ -60,6 +60,7 @@ sudo apt install polychromatic  # Full installation
 | [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                            | 命令行删除文件到回收站                    |
 | btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)              | 三维模型查看                              |
 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                          | 基于ssh的远程图形界面                     |
+| cloc                                                         | 代码统计                                                     | [xournalpp](https://github.com/xournalpp/xournalpp)  | pdf编辑                                   |
 
 ## 手动安装
 
@@ -71,7 +72,7 @@ sudo apt install polychromatic  # Full installation
 | [OneDriveGUI](https://github.com/bpozdena/OneDriveGUI) | 上面OneDrive的配套GUI                                        | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，下载[2021.2.2版](https://download.jetbrains.com.cn/cpp/CLion-2021.2.2.tar.gz) |
 | [diskusage](https://github.com/chenquan/diskusage)           | 磁盘使用情况查看                                             | [texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/) | latex工具集 |
 | [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app                                  | [drawio](https://github.com/jgraph/drawio-desktop/releases) | 跨平台（包括网页）的流程绘制工具 |
-|                                                        |                                                              |                                                              |                                                              |
+| 搜狗输入法 |                                                              |                                                              |                                                              |
 | ~~[福昕阅读器](https://www.foxitsoftware.cn/downloads/)~~ | pdf阅读器 |                                                              |                                                              |
 
 ## 星火商店
@@ -92,6 +93,7 @@ sudo apt install polychromatic  # Full installation
 | [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机                                                       | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/)   | 远程控制软件                                                 |
 | [PyCharm 社区版](https://www.jetbrains.com/zh-cn/pycharm/)   | python IDE                                                   | VNC Viewer                                                   | VNC远程                                                      |
 | 微信(wine)                                                   | [双屏需将左屏作为主屏，否则图标显示异常](https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/135#issuecomment-530186788) | [Steam](https://store.steampowered.com/about/)               | 官方                                                         |
+| [Motirx](https://motrix.app/zh-CN/)                          | 下载软件。支持多种协议（包含BT、磁力）                       |                                                              |                                                              |
 |                                                              |                                                              |                                                              |                                                              |
 | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                                                 | ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具                                                     |
 | ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装）                                 |                                                              |                                                              |
@@ -159,7 +161,7 @@ make install
 cd ../..
 
 # Sophus
-git clone -b v22.04.1 --depth=1 https://github.com/strasdat/Sophus.git
+git clone -b 1.22.4 --depth=1 https://github.com/strasdat/Sophus.git
 cd Sophus
 mkdir build
 cd build
@@ -184,8 +186,7 @@ cd g2o
 mkdir build
 cd build
 cmake ..
-make -j4
-make install
+make -j4 install
 cd ../..
 
 # glog
@@ -564,7 +565,7 @@ apt install libgtk-3-dev
     
 - 笔记本触控板多指功能失效：安装fusuma（[18.04](https://hirosht.medium.com/gestures-on-ubuntu-18-04-xorg-2fe05efb05fc)）
 
-- **关闭fcitix的中文简体繁体切换快捷键：**
+- **关闭fcitx的中文简体繁体切换快捷键：**
 
     <img src="images/image-20221209145039632.png" alt="image-20221209145039632" style="zoom: 80%;" />
 
@@ -684,7 +685,7 @@ apt install libgtk-3-dev
     alias gitauto="bash ~/gitauto.sh"
     ```
 
-- 
+- utools搜索硬盘文件：https://github.com/shenzhuoyan/utools_linux_find
 
   ​    
 

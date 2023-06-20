@@ -22,12 +22,15 @@
 | :---: | :---: | :---: | :---: |
 |[白描](https://baimiao.uzero.cn/)|OTC和文档扫描|[存储空间清理](https://www.coolapk.com/apk/com.ktls.fileinfo)|存储空间清理|
 |[慢慢买](http://www.manmanbuy.com/)|查询历史价格&优惠信息|[账号本子](https://www.coolapk.com/apk/com.wei.account)|存储密码|
-|[To Do](https://todo.microsoft.com/)| 任务清单 | [SSRR](https://github.com/shadowsocksrr/shadowsocksr-android/releases) | 代理 |
+|[To Do](https://todo.microsoft.com/)| 任务清单 | ~~[SSRR](https://github.com/shadowsocksrr/shadowsocksr-android/releases)~~ | ~~代理~~ |
 |米家| 远程控制插座（远程开电脑） | Forest | 种树 |
 |[调音器和节拍器](https://play.google.com/store/apps/details?id=com.soundcorset.client.android&hl=zh&gl=US)| 练吉他好帮手 | [MX播放器](https://play.google.com/store/apps/details?id=com.mxtech.videoplayer.ad&hl=zh&gl=US) | 视频播放器 |
 |全民K歌极速版| 练吉他伴奏 | [Clash for Android](https://github.com/Kr328/ClashForAndroid/releases) | 代理 |
 |YOYI| 拍摄定格动画 | iShredder | 删除软件 |
-|[zoo for zotero](https://apkpure.com/zoo-for-zotero/com.mickstarify.zooforzotero)| zotero安卓版（[配置](https://blog.csdn.net/OTZ_2333/article/details/128748897)） |  |  |
+|[zoo for zotero](https://apkpure.com/zoo-for-zotero/com.mickstarify.zooforzotero)| zotero安卓版（[配置](https://blog.csdn.net/OTZ_2333/article/details/128748897)） | [Measure](https://measure.en.uptodown.com/android) | 谷歌推出的AR测量软件 |
+|Tailscale| 异地局域网组建 | [AudioRelay](https://audiorelay.net/) | 手机当电脑音箱 |
+|[魔控远程控制](https://monect.cn/)| 手机做手柄 |  |  |
+||  |  |  |
 
 ## Termux
 

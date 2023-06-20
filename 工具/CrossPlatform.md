@@ -1,5 +1,13 @@
 [TOC]
 
+# 工具集合
+
+| 工具                                                         | 简介                                                         | 工具                                                 | 简介                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------------------------------- |
+| [字幕组机翻小助手](https://github.com/1c7/Translate-Subtitle-File) | 给字幕文件翻译（[网页版](https://tern.1c7.me/#/)），可配合腾讯云的[机器翻译](https://www.tencentcloud.com/zh/products/tmt)（每月有500万字的免费额度） | [KeymouseGo](https://github.com/taojy123/KeymouseGo) | 精简绿色版的按键精灵                               |
+| [git-sim](https://github.com/initialcommit-com/git-sim)      | 可视化模拟 Git 操作                                          | [Pandora](https://github.com/pengzhile/pandora)      | 顺畅体验ChatGPT（[网页版](https://chat.zhile.io)） |
+| [EasySpider](https://github.com/NaiboWang/EasySpider)        | 可视化爬虫（浙大人写的）                                     |                                                      |                                                    |
+
 
 
 # Edge
