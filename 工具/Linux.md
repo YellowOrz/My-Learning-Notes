@@ -12,7 +12,7 @@
 
 ```shell
 apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl
-apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot vlc kdenlive cloc xournalpp
+apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot smplayer mpv kdenlive cloc xournalpp
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
 snap install meshlab stretchly
 # apt装不了的就用snap
@@ -56,11 +56,13 @@ sudo apt install polychromatic  # Full installation
 | [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                             | 命令快速查询工具，**强力推荐**！          |
 | [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | Kdenlive                                             | 视频编辑软件                              |
 | [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine) | deepin-wine环境与应用在Ubuntu上的移植仓库 |
-| [VLC](https://www.videolan.org/vlc/download-ubuntu.html)     | 视频播放器（跨平台）                                         | ~~indicator-cpufreq~~                                | ~~CPU性能调节~~                           |
+| [smplayer](https://www.smplayer.info/) && [mpv](https://mpv.io/) | 跨平台的视频播放器 && 逐帧播放引擎                           |                                                      |                                           |
 | [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                            | 命令行删除文件到回收站                    |
 | btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)              | 三维模型查看                              |
 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                          | 基于ssh的远程图形界面                     |
 | cloc                                                         | 代码统计                                                     | [xournalpp](https://github.com/xournalpp/xournalpp)  | pdf编辑                                   |
+|                                                              |                                                              |                                                      |                                           |
+| ~~[VLC](https://www.videolan.org/vlc/download-ubuntu.html)~~ | ~~视频播放器（跨平台）~~                                     | ~~indicator-cpufreq~~                                | ~~CPU性能调节~~                           |
 
 ## 手动安装
 
@@ -346,8 +348,6 @@ apt install libgtk-3-dev
     sudo apt install gnome-sushi
     ```
 
-    
-
 - 黑暗主题
 
   ```bash
@@ -618,76 +618,16 @@ apt install libgtk-3-dev
     
     注意：git就不要添加类似这种的代理了，使用http代理或者ssh的代理
     
-- ~~自动进行git操作脚本`gitauto.sh`：~~
-
-    ```shell
-    #!/bin/bash
-    proxyon
-    # 用于判断的关键词
-    fail="失败|error|fail"
-    success="干净|succe|clear|clean"
-    
-    # 将要监控的git仓库路径存放在下面
-    git_path=(
-        "/home/orz/Documents/My-Learning-Notes/"
-        # "/home/orz/Documents/"
-    )
-    date=$(date +%Y.%m.%d)
-    
-    # 处理每一个文件
-    for path in ${git_path[*]}
-    do
-        echo -e "\e[1;31m$path\e[0m"
-        name=$(echo $path | rev | cut  -d "/" -f  2 | rev )
-    
-        cd $path
-        # pull
-        if [ -n "$(git pull|grep -E "$fail")"  ]
-        then
-            echo -e "\e[1;33m ##### pull 失败 #####\e[0m"
-            cd -L
-            continue
-        fi
-    
-        # add + commit
-        if [ -n "$(git status|grep -E "$success")" ]
-        then
-            echo "无需commit"
-            cd -L
-            continue
-        else
-            read -p "输入姓名（可以空白）：" message
-            if [ -n "$message" ]
-            then
-                message=$message"-"$date
-            else
-                message=$date
-            fi
-            git add .
-            git commit -m "$message"
-        fi
-    
-        # push
-        if [ -n "$(git push|grep -E "$fail")" ]
-            then
-                echo -e "\e[1;34m ##### push 失败 ##### \e[0m"
-        fi
-    
-        cd -L
-    done
-    
-    proxyoff
-    ```
-
-    然后添加到环境变量文件`~/.bashrc`中添加如下内容
-
-    ```shell
-    alias gitauto="bash ~/gitauto.sh"
-    ```
-
 - utools搜索硬盘文件：https://github.com/shenzhuoyan/utools_linux_find
 
-  ​    
+- SMPlayer设置：
+
+  - 使用快捷键`.`和`,`逐帧前进、后退：“首选项”=>"常规"=>"常规"=>"多媒体引擎"，改成mpv。如果提示找不到，则安装`sudo apt install mpv`
+  - 播放暂停切换窗口黑屏的解决方法：“首选项”=>"高级"=>"高级"=>"重绘视频窗口背景"，取消勾选
+  - 音量调节：“首选项”=>"键盘和鼠标"=>"键盘"，找到"音量-"和"音量+"，分别改成↑和↓
+  
+  > 参考：[Ubuntu下SMPlayer播放器安装配置以及常用快捷键记录](https://blog.csdn.net/zhanghm1995/article/details/109408954)
+  
 
 # 技巧
 
