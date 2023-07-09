@@ -23,6 +23,10 @@
 
 - 所有CUDA runtime API都以cuda开头
 
+- 一个SM中线程块数量$N_b$最多 16（开普勒和图灵架构）or 32（麦克斯韦、帕斯卡和伏特架构）
+
+- 一个SM中线程数$N_t$最多 2048（开普勒到福特架构）or 1024（图灵架构）
+
 ### 编程习惯
 
 - device的变量以`d_`开头，host的以`h_`开头
@@ -31,11 +35,19 @@
 - CHECK宏函数不能用于cudaEventQuery函数
 - 调试时，可以设置环境变量`CUDA_LAUNCH_BLOCKING=1`将核函数的调用设置成同步（即host调用核函数，必须等它都执行完了才走下一步）
 - 内存错误检查：可执行文件cuda-memcheck
+- 要保证核函数中的代码执行顺序 与 写得一样，要用同步函数`__syncthreads()`
 
 ### 优化技巧
 
 - 提升利用率：总的线程数>计算核心数
-- 
+- 提升SM的利用率：SM中驻留的线程数 越大越好
+    - 技巧一：参考CUDA工具箱中的`CUDA_Occupancy_Calculator.xls`的文档，来计算sm占有率
+    - 技巧二：用编译器选项`--ptxas-options=-v` 显示每个核函数的寄存器使用数量
+    - ‌技巧三：使用核函数的`__launch_bounds__()`修饰符和 编译选项`--maxrregcount=` 控制一个和所有 核函数中的寄存器使用数量
+
+- 在不满足 读和写 都合并的情况下，尽量做到合并地写入，因为可以使用`__ldg()`读取 全局内存
+- 核函数对共享内存访问的次数越多，则加速效果越明显
+- 解决bank冲突方法的一种思路：数组多申请一列
 
 ## 第1章 GPU硬件与CUDA程序开发工具
 
@@ -289,6 +301,329 @@
     ```
 
     > - 处于WDDM驱动模式的GPU中，一个==CUDA流（CUDA stream）==中的操作（如cudaEventRecord函数）并不是直接提交给GPU执行，而是先提交到一个软件队列，需要添加一条对该流的 cudaEventQuery操作（或者cudaEventSynchromze）刷新队列，才能促使前面的操作在GPU执行
+
+- GPU加速的关键
+    - 尽量缩减数据传输所花时间的比例
+    - 算数强度：算数操作的工作量与必要的内存操作的工作量之比
+    - （并行规模）核函数中定义的线程总数 等于 一个SM中最多驻留线程个数（也可能更小），图灵架构为1024，开普勒到伏特架构为2048
+- CUDA数学库的函数：只有半精度需要包含头文件`<cuda_fp16.h>`，其他都不用额外头文件
+    - 单精度、双精度、半精度的浮点数内建函数和数学函数
+    - 整数类型的内建函数
+    - 类型转换内建函数（type casting intrinsics）
+    - 单指令-多数据内建函数（SIMD intrinsics）
+- ==内建函数==：准确度较低，但效率较高的函数
+
+## 第6章 CUDA的内存组织
+
+![image-20230707214228676](images/image-20230707214228676.png)
+
+![image-20230707214146418](images/image-20230707214146418.png)
+
+- ==全局内存（global memory）==
+
+    - 容量基本就是显存容量
+    - 角色：为核函数提供数据，并在 host与device、device与device之间传输数据
+
+    - 使用`cudaMalloc()`分配。在处理逻辑上的两维或三维问题时，可以使用`cudaMallocPitch()`和`cudaMalloc3D()`分配，用`cudaMemcpy2D()`和`cudaMemcpy3D()`复制，释放还是用`cudaFree()`
+    - 可读可写
+    - 生命周期由host决定，不由核函数决定
+
+- ==静态全局内存==：所占内存在编译期间确定，是全局变量
+
+    - 定义方式：在任何函数外部定义
+
+        ```cpp
+        __device__ T x; // 单个变量
+        __device__ T y[N]; // 固定长度的数组
+        ```
+
+    - 核函数中，可直接访问 静态全局内存变量；不能在host函数中直接访问，需要使用`cudaMemcpyToSymbol()`和`cudaMemcpyFromSymbol()`在 静态全局内存 与 主机内存中传输数据，具体函数原型如下
+
+        ```c++
+        __host__cudaError_t cudaMemcpyToSymbol ( 
+            const void* symbol,       // 静态全局内存变量名，或者 常量内存变量名
+            const void* src,          // 主机内存缓冲区指针       
+            size_t count,             // 复制的字节数
+            size_t offset = 0,        // 从symbol对应设备地址开始偏移的字节数
+            cudaMemcpyKind kind = cudaMemcpyHostToDevice    // 可选参数
+        );
+        __host__cudaError_t cudaMemcpyFromSymbol ( 
+            const void* dst,          // 主机内存缓冲区指针     
+            const void* symbol,       // 静态全局内存变量名，或者 常量内存变量名  
+            size_t count,             // 复制的字节数
+            size_t offset = 0,        // 从symbol对应设备地址开始偏移的字节数
+            cudaMemcpyKind kind = cudaMemcpyDeviceToHost    // 可选参数
+        )
+        
+        ```
+
+- ==常量内存（constant memory）==：
+    - 有常量缓存的全局内存，数量仅64KB
+    - 仅可读
+    - 如果一个线程束读取相同的常量内存数据，则速度>全局内存
+    - 使用方法：① 在核函数外，使用`__constant__`定义变量；
+                             ② 给核函数 传值 的参数都放在常量内存中，但是一个核函数最多只能用4KB的常量内存
+
+- ==纹理内存（texture memory）==和==表面内存（surface memory）==：
+    - 类似常量内存，也是带缓存的全局内存，但容量更大
+    - 一般仅可读，表面内存也可以写
+    - 纹理内存的使用方法
+        - 计算能力>3.5的GPU，将只读全局内存 使用 `__ldg()`读取（利用 ==只读数据缓存（read-only data cache）==），可以加速
+
+            ```c++
+            T __ldg(const T* address);
+            ```
+
+        - 大于帕斯卡架构，全局内存的读取默认使用`__ldg()`
+
+- ==寄存器（register）==
+
+    - 核函数中定义的 不加任何限定符 的变量，存放在寄存器中，仅对一个线程可见
+        - 但 数组 可能在 寄存器 也可能在 局部内存中
+    - 各种内建变量（例如gridDim、blockIdx、warpSize等）都存在 特殊的寄存器中 
+
+- ==局部内存（local memory）==：
+
+    - 寄存器中放不下的变量 && 索引值不能再编译时确定的数组，都可能放在局部内存，由编译器自动判断
+    - 用法类似寄存器，但硬件角度，局部内存是全局内存的一部分
+    - 每个线程最多使用512KB的局部内存，用多了降低性能
+
+- ==共享内存（shared memory）==
+
+    - 位于芯片上，速度仅次于寄存器
+    - 同一共享内存的变量在不同线程块中都有副本，具体值可以不同；单个副本 对 单个线程块 可见
+    - 作用：减少对全局内存的访问
+
+    ![image-20230707215519258](images/image-20230707215519258.png)
+
+- ==L1和L2缓存==
+
+    ![CUDA访存优化(2)](images/v2-762832cba6e4de8efa04a9325a5fd6ca_720w.jpg)
+
+    - 大于费米架构，SM层次的L1缓存 和 设备层次的L2缓存
+    - 作用：缓存 全局内存 和 局部内存 的访问
+    - 共享内存 是可编程的内存（完全由用户操控），L1和L2缓存 不可编程（用户顶多引导编译器）
+    - 可针对 单个核函数 or 整个程序 改变 L1缓存和共享内存的比例
+        - 计算能力3.5：共有64KB，共享内存可为16KB、32KB和48KB（默认），其余的归L1缓存
+        - 计算能力3.7：共有128KB，共享内存可为80KB、96KB和112KB（默认），其余的归L1缓存
+        - 麦克斯韦架构和帕斯卡架构，不能 调整共享内存
+        - 伏特架构：统一的(L1/纹理/共享内存)缓存共有128KB，共享内存可为0KB、8KB、16KB、32KB、64KB或96KB。
+        - 图灵架构：统一的(L1/纹理/共享内存)缓存共有96KB，共享内存可为32KB或64KB
+
+- **SM的构成**
+
+    - 寄存器、共享内存
+    - 常量内存、纹理和表面内存的缓存
+    - L1缓存
+    - 2个（计算能力60）或 4个（其他）==线程束调度器（warp scheduler）==，用于 不同线程的上下文 之间的迅速切换，&& 为准备就绪的线程束发出执行指令。
+    - 执行核心，包括
+        - 整型数运算的核心(INT32)、单精度浮点数运算的核心(FP32)、双精度浮点数运算的核心(FP64)
+        - 单精度浮点数==超越函数 (transcendental functions)==的==特殊函数单元(special function units，SFUs)==
+        - 混合精度的张量核心 (tensor cores，由伏特架构引入，适用于机器学习中的低精度矩阵计算)
+
+- ‌==SM的理论占有率（theoretical occupancy）===驻留的线程数目÷理论最大值
+
+    - 实际情况中要让SM的占有率>某值（例如25%）才能获得较高性能
+    - 已知：
+        - 一个线程块中所有维度的线程数量加起来，不能超过1024
+        - 一个SM中线程块数量$N_b$最多 16（开普勒和图灵架构）or 32（麦克斯韦、帕斯卡和伏特架构）
+        - 一个SM中线程数$N_t$最多 2048（开普勒到福特架构）or 1024（图灵架构）
+    - 指导方针：SM中驻留的线程数 越大越好
+    - 情况一：寄存器和共享内存使用量很少
+        - block size 需要>$N_t/N_b$ ，而且为32的倍数
+    - ‌情况二：有限的寄存器数量
+        - 一个SM最多使用寄存器数量为64K（见表6.2），假设一个线程使用n个寄存器，驻留的线程数目=$64*1024/n$
+    - 情况三：有限的共享内存
+        - 以计算能力7.5为例，SM中共享内存最多使用64KB，假设block size为128，单个block使用4KB 共享内存（最多使用64KB），
+        - 则 最多有64KB/4KB=16个block，共16*128=2048个线程，SM占用率为100%
+
+    > - 技巧一：参考CUDA工具箱中的`CUDA_Occupancy_Calculator.xls`的文档，来计算sm占有率
+    > - 技巧二：用编译器选项`--ptxas-options=-v` 显示每个核函数的寄存器使用数量
+    > - ‌技巧三：使用核函数的`__launch_bounds__()`修饰符和 编译选项`--maxrregcount=` 控制一个和所有 核函数中的寄存器使用数量
+
+- 使用 runtime API查询设备信息
+
+    ```cpp
+        int device_id = 0;
+        if (argc > 1) device_id = atoi(argv[1]);
+        CHECK(cudaSetDevice(device_id));
+    
+        cudaDeviceProp prop;
+        CHECK(cudaGetDeviceProperties(&prop, device_id));
+    
+        printf("Device id:                                 %d\n",
+            device_id);
+        printf("Device name:                               %s\n",
+            prop.name);
+        printf("Compute capability:                        %d.%d\n",
+            prop.major, prop.minor);
+        printf("Amount of global memory:                   %g GB\n",
+            prop.totalGlobalMem / (1024.0 * 1024 * 1024));
+        printf("Amount of constant memory:                 %g KB\n",
+            prop.totalConstMem  / 1024.0);
+        printf("Maximum grid size:                         %d %d %d\n",
+            prop.maxGridSize[0], 
+            prop.maxGridSize[1], prop.maxGridSize[2]);
+        printf("Maximum block size:                        %d %d %d\n",
+            prop.maxThreadsDim[0], prop.maxThreadsDim[1], 
+            prop.maxThreadsDim[2]);
+        printf("Number of SMs:                             %d\n",
+            prop.multiProcessorCount);
+        printf("Maximum amount of shared memory per block: %g KB\n",
+            prop.sharedMemPerBlock / 1024.0);
+        printf("Maximum amount of shared memory per SM:    %g KB\n",
+            prop.sharedMemPerMultiprocessor / 1024.0);
+        printf("Maximum number of registers per block:     %d K\n",
+            prop.regsPerBlock / 1024);
+        printf("Maximum number of registers per SM:        %d K\n",
+            prop.regsPerMultiprocessor / 1024);
+        printf("Maximum number of threads per block:       %d\n",
+            prop.maxThreadsPerBlock);
+        printf("Maximum number of threads per SM:          %d\n",
+            prop.maxThreadsPerMultiProcessor);
+    ```
+
+## 第7章 全局内存的合理使用
+
+- 对全局的访问将触发==内存事务（memory transaction）==，即==数据传输（data transfer）==
+
+- 读取顺序：全局内存的读取 先从L1缓存，未命中则使用L2缓存，再未命中，直接从DRAM读取
+
+    - **一次传输32 Byte**，给**线程束**用
+
+- ==合并（coalesced）访问==：一个线程warp对全局内存的一次访问请求（读or写）导致最少数量的数据传输
+
+    - 否则为==非合并（uncoalesced）==
+
+- ==合并度（degree of coalescing）==：$=\frac{线程束请求的字节数}{该请求导致的所有数据传输处理的字节数}$
+
+    - 是一种资源利用率，利用率低 表示 显存带宽浪费
+
+- 在一次数据传输中，从全局内存 转移到 L2缓存 的一片<u>内存的首地址一定是32 Byte的整数倍</u>
+
+    - 保证方法：使用CUDA函数（例如`cudaMalloc`）分配的内存首地址至少是256 Byte的整数倍
+
+- 常见的内存访问模式 && 合并度
+
+    - 顺序的合并访问：合并度100%
+
+        ```cpp
+        int n = threadIdx.x + blockIdx.x * blockDim.x;
+        z[n] = x[n] + y[n];
+        ```
+
+        第一个线程块中的线程束 访问数组x中的0-31号元素，对应128 Byte的连续内存（int是4 Byte），且首地址一定是256 Byte的整数倍，∴只要4次数据传输，是合并访问，合并度100%
+
+    - 乱序的合并访问：
+
+        ```cpp
+        int n = threadIdx.x ^ 0x1 + blockIdx.x * blockDim.x;	 // ^是异或操作，可以打乱threadIdx.x，但不会出现重复
+        z[n] = x[n] + y[n];
+        ```
+
+        经过异或操作后，第一个线程块中的线程束 还是访问x中的0-31号元素（不按照顺序），但是同样是合并访问，合并度100%
+
+    - 不对齐的非合并访问：合并度80%
+
+        ```cpp
+        int n = threadIdx.x + blockIdx.x * blockDim.x + 1;
+        z[n] = x[n] + y[n];
+        ```
+
+        第一个线程块中的线程束 访问x中的1-32号元素，导致触发5次传输（分别传输0-7、8-15、16-23、24-31、32-40元素），没有进行对齐，合并度为$\frac{32*4 Byte}{5*32 Byte}=80\%$
+
+    - 跨越式的非合并访问：合并度12.5%
+
+        ```cpp
+        int n = blockIdx.x + threadIdx.x * blockDim.x + 1;
+        z[n] = x[n] + y[n];
+        // block size = 32, grid size = 128
+        ```
+
+        第一个线程块中的线程束 访问x中的0、128、256、384等元素，将导致32次数据传输，合并度为$\frac{32*4 Byte}{32*32 Byte}=12.5\%$
+
+    - 广播式的非合并访问：合并度12.5%
+
+        ```cpp
+        int n = threadIdx.x + blockIdx.x * blockDim.x;
+        z[n] = x[0] + y[n];
+        ```
+
+        第一个线程块中的线程束 都访问同一元素，合并度为$\frac{4 Byte}{32 Byte}=12.5\%$
+
+        推荐使用 <u>常量内存</u>
+
+- 在不满足 读和写 都合并的情况下，尽量做到合并地写入，因为可以使用`__ldg()`读取 全局内存
+
+    - 大于帕斯卡架构，会自动使用；其他的要手动使用
+
+## 第8章 共享内存的合理使用
+
+- 共享内存的作用
+
+    - 减少核函数对全局内存的访问次数，实现高效的线程块内部通信
+    - 提高全局内存访问的合并度
+
+- 要保证核函数中的代码执行顺序 与 写得一样，要用同步函数`__syncthreads()`（只能在核函数中用）
+
+- 核函数中，位操作 比 对应的整数操作 高效
+
+    - 编译期间知道变量可能的取值时（比如除2），编译器会自动使用 位操作
+
+- **（静态）共享内存变量的定义**：加上限定符`__shared__`，同时指定数据量大小
+
+- **可见范围**：在一个核函数中定义一个共享内存变量，相当于每个线程块中都有一个该变量的<u>副本</u>。每个副本不一样，但是共用一个 变量名。核函数中对共享内存的变量都是作用在所有副本上的
+
+- 核函数对共享内存访问的次数越多，则加速效果越明显
+
+- ==动态共享内存==
+
+    ```cpp
+    // 在核函数的调用时，加入第三个参数：每个线程块定义的动态共享内存的字节数
+    <<<grid_size, block_size, sizeof(float) * block_size>>>
+    // 声明：多加上extern，不能指定数组大小，不能用指针（∵数组≠指针）
+    extern __shared__ float x[];
+    ```
+
+- ==内存bank==：为了获得高的内存带宽，共享内存 在物理上被分成32个（等价于warpSize）同样大小的、可以被同时访问的内存bank
+
+    - 开普勒架构中，每个bank大小为8 Byte（不做讨论）；其他架构，都是4 Byte
+    - 例如，对于bank大小为4 Byte的架构，维度32\*32的int数组，0-31号元素 依次 对应到32个bank的第1层，32-63号元素在第2层，等等，如下图
+
+- ==bank冲突==：只要 同一线程束中不同线程 访问 同一bank中 n层的数据，就会出现bank冲突，导致n次==内存事务（memory transaction）==；否则就只需要一次 内存事务
+
+    ![image-20230709203854641](images/image-20230709203854641.png)
+
+    - 解决bank冲突方法的一种思路：对于上面的示例，数组多申请一列，即大小为32\*33（先遍历33）
+        - 第0个线程读取\[0\]\[0\]坐标的元素，对应第0个元素，在bank0的第1层
+        - 第1个线程读取\[0\]\[1\]坐标的元素，对应第34个元素，在bank1的第2层（因为总共32个bank）
+        - 以此类推，每个线程都读取不同bank的不同层，∴一个内存事务就能读取完毕
+
+- 注意：共享内存改善全局内存的访问，**不一定**能提高核函数的性能，要具体情况具体分析
+
+    
+
+## 第9章 原子函数的合理使用
+
+- ==原子操作==：在不受其他线程的任何操作的影响下 完成某个（全局or共享内存中）数据的一套 “读-改-写”操作
+
+- 特点
+
+    - 原子函数 不能保证各个线程的执行顺序固定，但是能保证每个线程的操作 一气呵成，不被其他线程干扰
+    - 没有 同步功能
+
+- 各种 原子函数：返回值都是old，只能在核函数中使用
+
+    ![image-20230709213225338](images/image-20230709213225338.png)
+
+    ![image-20230709213244462](images/image-20230709213244462.png)
+
+    ![image-20230709213308254](images/image-20230709213308254.png)
+
+    - 以`atomicAdd()`为例，从帕斯卡架构起，引入了`atomicadd_system()`和`atomicAdd_block()`，前者 将原子函数的作用范围 扩大到 整个同节点的异构系统（包括host和所有device），后者将 范围缩小至一个block
+    - 其他所有原子函数 都可以  用`atomicCAS()`函数实现，但是效率没有官方提供的高
+
+## 第10章 线程束基本函数与协调组
 
 
 
