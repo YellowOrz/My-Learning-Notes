@@ -48,6 +48,13 @@
 - 在不满足 读和写 都合并的情况下，尽量做到合并地写入，因为可以使用`__ldg()`读取 全局内存
 - 核函数对共享内存访问的次数越多，则加速效果越明显
 - 解决bank冲突方法的一种思路：数组多申请一列
+- 通过 合并判断语句 减少分支发散
+- 数组规约的优化
+
+    - 利用洗牌函数规约
+    - 让线程访问 "跨度为一个线程块 or 所有线程数（对于一维情况，=blockDim.x\*gridDim.x）"的数据
+    - 使用 重复调用核函数 替换 原子操作：可以获得更精确的结果
+    - 用静态全局内存代替动态全局内存数组
 
 ## 第1章 GPU硬件与CUDA程序开发工具
 
@@ -564,7 +571,7 @@
     - 减少核函数对全局内存的访问次数，实现高效的线程块内部通信
     - 提高全局内存访问的合并度
 
-- 要保证核函数中的代码执行顺序 与 写得一样，要用同步函数`__syncthreads()`（只能在核函数中用）
+- 要保证核函数中的代码执行顺序 与 写得一样，要用同步 ==线程块函数==`__syncthreads()`（只能在核函数中用）
 
 - 核函数中，位操作 比 对应的整数操作 高效
 
@@ -625,5 +632,157 @@
 
 ## 第10章 线程束基本函数与协调组
 
+- 线程块执行的时候，会被分配到 没有占满 的一个SM中（不会被拆分）
 
+- ==线程束==：一个SM以32个线程为单位产生、管理、调度、执行线程，这样的32个线程为一个线程束
+
+- 伏特架构之前，一个线程束中的线程共有一个==程序计数器（program counter）==，但 各自有不同的 ==寄存器状态（register state）==，从而可以 根据程序逻辑 选择不同分支。不过，执行的时候，每个分支 按顺序执行。
+
+    - ==单指令-多线程（single instruction multiple thread， SIMT）的执行模式==：一个线程束中的线程只能执行 一个功能的指令，或者闲置，即 轮到的分支的线程执行，没有轮到的闲置
+    - ==分支发散（branch divergence）==：<u>同一个线程束中</u>的线程 顺序的执行判断语句中的不同分支
+        - 核函数中尽量避免 分支发散
+        - 可以通过 合并判断语句 减少分支发散
+
+- 从伏特架构开始，引入==独立线程调度（independent thread scheduling）机制==：每个线程有自己的程序计数器，有了新的线程束内 同步与通信的模式，提高编程灵活度
+
+    - 缺点一：增加了寄存器负担，∵单个线程的程序计数器 需要 2个寄存器（导致用户能用的少了2个）
+
+    - 缺点二：使得 假设了==线程束同步（warp synchronout）==的代码 不安全
+
+        - 可以使用比 线程块同步函数`__syncthreads()` 更精细的 ==线程束同步函数==`__syncwarp()`
+
+            ```cpp
+            void __syncwarp(unsigned mask=0xffffffff);
+            // mask中32个二进制表示 对应线程是否同步，1为同步
+            ```
+
+    - 忽略独立线程调度的方法：在编译时 将虚拟架构指定为 低于伏特架构的计算能力，例如
+
+        ```shell
+        -arch=compute_60 -code=sm_70	# 生成PTX代码时使用帕斯卡架构的线程调度机制
+        ```
+
+- 线程束内的基本函数：都以`_sync()`结尾，具有隐式的同步功能
+
+    - ==线程束表决函数（warp vote functions）==：开普勒架构后可用，（必须用）CUDA 9更新后的函数原型
+
+        - `unsinged __ballot_sync(unsigned mask, int predicate)`：返回一个无符号整数。如果线程束内第n个线程参与计算 且 predicate值非零，则将所返回无符号整数的第n个二进制位取为1，否则取为0。这里，参与的线程对应于mask中取1的比特位。
+            - 该函数的功能相当于从一个旧的掩码出发，产生一个新的掩码
+        - `int __all_sync(unsigned mask, int predicate)`：线程束内所有参与线程的predicate值都不为零才返回1，否则返回0。该函数实现了一个==归约-广播（reduction-and-broadcast）式计算==。
+            - 该函数类似 所有人都同意才通过 的选举
+        - `int __any_sync(unsigned mask, int predicate)`：线程束内所有参与线程的predicate值有一个不为零就返回1，否则返回0。该函数也实现了一个“归约-广播”式计算
+            - 该函数类似 1人同意就通过 的选举
+
+    - ==线程束洗牌函数（warp shuffle functions）==：开普勒架构后可用，（必须用）CUDA 9更新后的函数原型
+
+        > - 类型T 可以为 int、long、long long、unsigned、unsigned long、unsigned long long
+        > - 参数w只能为2、4、8、16、32，表示逻辑上的线程束大小
+        > - 参数mask 表示要参与计算的线程，1为参与
+        > - ==线程束指标==：`int lane_id = threadIdx.x % w = int lane_id = threadIdx.x & (w-1)`（后面的 按位与 的操作更高效）
+
+        - `T __shfl_sync(unsigned mask, T v, int srcLane, int w=warpSize)`：参与线程返回标号为srcLane的线程中变量v的值
+            - 广播式数据交换，即将一个线程中的数据广播到所有 (包括自己) 线程。
+        - `T __shfl_up_sync(unsigned mask, T v, int srcLane, unsigned d, int w=warpSize)`：标号为t的参与线程返回标号为t-d的线程中变量v的值。标号满足t-d<0的线程返回原来的v。
+            - 将数据向上（id小的）平移
+        - `T __shfl_down_sync(unsigned mask, T v, unsigned d, int w=warpSize)`：标号为t的参与线程 返回标号为t+d的线程中变量v的值。标号满足t+d>=w的线程返回原来的v。
+            - 将数据向下（id大的）平移
+        - `T __shfl_xor_sync(unsigned mask, T v, int laneMask, int w=warpSize)`：标号为t的参与线程 返回标号为`t^laneMask`的线程中变量v的值。
+            - 将 线程束内 线程 两两交换
+
+        > **利用洗牌函数规约**：首先在一个线程块中将数组 规约到长度为32（因为线程束为32）的共享内存数组变量`s_y`中
+        >
+        > ```cpp
+        > float y = s_y[threadIdx.x];		// 用寄存器，更快
+        > for(int offset=16;offset>0;offset>>=1)	// 用洗牌函数将剩下的32个数汇总
+        > 	y += __shfl_down_sync(0xffffffff, y, offset);	// 可以换成__shfl_xor_sync()
+        > if (threadIdx.x == 0)	// 将所有线程块中的内容通过原子操作汇总
+        > 	atomicAdd(d_y, y);
+        > ```
+
+    - ==线程束匹配函数（warp match functions）==：只能用于>伏特架构，不介绍
+
+    - ==线程束矩阵函数（warp matrix functions）==：只能用于>伏特架构，不介绍
+
+- [==协作组（cooperative groups）==](https://developer.nvidia.com/blog/cooperative-groups/)：是线程块和线程束同步机制的推广，提供了更为灵活的线程协作方式，包括线程块内部的、线程块之间的（网格级的）及 设备之间（不讨论） 的同步与协作
+
+    - 添加头文件`cooperative_groups.h`
+    - 使用命名空间`cooperative_groups`（推荐设置别名为`cg`）
+
+- 协作组的类型
+
+    - `thread_group`：最基本的类型，包含成员函数
+
+        - `void sync()`：同步组内所有线程。`g.sync()`等价于`cg::synchronize(g)`
+        - `unsigned size()`：返回组内总的线程数目，即组的大小
+        - `unsigned thread_rank()`：返回 当前调用该函数的线程 在组内的标号（从0开始计数）
+        - `bool is_valid()`：返回 定义的组 是否 满足所有CUDA的限制
+
+    - `thread_block`：`thread_group`的派生类
+
+        - 初始化方式：下面的`g`就是线程块，只是被包装成了一个类型。`g.sync()`完全等价于`__syncthreads()`
+
+            ```c++
+            thread_block g = this_thread_block();
+            ```
+
+        - 比`thread_group`多两个函数
+
+            - `dim3 group_index()`：完全等价于`blockIdx`
+            - `dim3 thread_index()`：完全等价于`threadIdx`
+
+    - `thread_block_tile`：可以将`thread_block`进一步分割成 ==片（tile）==，从而在更精细的粒度上实现协作和同步
+
+        ```cpp
+        thread_group g32 = tiled_partition(this_thread_block(), 32);
+        thread_group g4 = tiled_partition(tile32, 4);
+        // 等价于 使用模板函数（在编译阶段确定）
+        thread_block_tile<32> g32 = tiled_partition<32>(this_thread_block());
+        thread_block_tile<4> g4 = tiled_partition<4>(this_thread_block());
+        ```
+
+        - 额外有如下函数（类似 线程束内的基本函数）：①少了参数mask，∵组内所有线程都要参与运算；②少了参数w，∵tile的大小就是参数w
+
+            ```cpp
+            unsigned __ballot_sync(int predicate);
+            int __all_sync(int predicate);
+            int __any_sync(int predicate);
+            T __shfl_sync(T v, int srcLane);
+            T __shfl_up_sync(T v, unsigned d);
+            T __shfl_down_sync(T v, unsigned d);
+            T __shfl_xor_sync(T v, int laneMask);
+            ```
+
+- 数组规约的优化
+
+    - 提升线程利用率：不要让一个线程处理相邻的数据，∵必然导致全局内存的非合并访问。通过让线程访问 ""跨度为一个线程块 or 所有线程数（对于一维情况，=blockDim.x\*gridDim.x）"的数据
+
+    - 使用 重复调用核函数 替换 原子操作：可以获得更精确的结果
+
+        - 首先，线程访问的数据间隔=所有线程数（见上一条）
+
+        - 还要使用动态共享内存，这样才能在两次调用使用不一样大小的共享内存
+
+        - 然后，规约函数最后的原子操作 `if(threadIdx.x==0)  atomicAdd(d_y, y)`，替换成`if(threadIdx.x==0)  d_y[blockIdx.x] = y`，其中y保存了每个线程块的规约结果，相当于是分段规约
+
+        - 调用两次核函数：第二次调用将所有段的结果汇总
+
+            ```cpp
+            cudaMalloc(&d_y, sizeof(float)*10240);	// d_y的长度是分段数量
+            reduce_cp<<<10240, 128, sizeof(float)*128>>>(d_x, d_y, N);
+            reduce_cp<<<1, 1024, sizeof(float)>>>(d_y, d_y, 10240)	// grid size必须为1（相当于在1个线程块内部规约），block size要小于上面的grid size，两个都是d_y，最后的N必须为上面的grid size
+            ```
+
+    - 避免反复分配和释放设备内存：上面的d_y都是分配的动态全局内存数组，比较耗时，可以用静态全局内存代替 更快（因为编译期间确定），在函数外定义
+
+        ```cpp
+        __device__ float static_y[10240]; 
+        ```
+
+        然后为了不改变核函数代码，不直接使用该变量，而是利用`cuddGetSymbo1Address()`获取指向该静态全局内存的指针
+
+        ```cpp
+        cuddGetSymbo1Address((vo1d**)&d_y, static_y);
+        ```
+
+## 第11章 CUDA流
 
