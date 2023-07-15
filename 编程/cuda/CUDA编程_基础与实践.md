@@ -786,3 +786,132 @@
 
 ## 第11章 CUDA流
 
+- CUDA程序的并行层次 \* 2
+    - 核函数内部的并行：重点
+    - 核函数外部的并行：非重点
+      - 核函数计算、主机计算、数据传输 之间的并行
+      - 不同的数据传输（例如HostToDevice、DeviceToHost等）之间的并行
+      - 不同核函数之间的并行：使用多个CUDA流
+- ==CUDA流（stream）==：由host（或者device，暂不考虑）发出的在一个device中执行的CUDA操作序列（即跟CUDA相关的操作）
+    
+    - 由类型为`cudaStream_t`的变量表示
+    - 要么存在于 ==默认流（default stream）==，也称为==空流（null stream）==，要么在 明确指定的==非空流==
+- 非空流：在host端 产生和销毁
+
+    ```cpp
+    // 产生
+    __host__ ?cudaError_t cudaStreamCreate ( cudaStream_t* pStream );
+    // 销毁：CUDA 11.2的doc说也能在device上销毁？
+    __host__ ?__device__?cudaError_t cudaStreamDestroy ( cudaStream_t stream );
+    ```
+- 检查CUDA流中所有的操作是否都在device中完成
+
+    ```cpp
+    // 强制阻塞host，直到操作都完成
+    __host__ ?cudaError_t cudaStreamSynchronize ( cudaStream_t stream );
+    // 不阻塞，只检查操作是否完成
+    __host__?cudaError_t cudaStreamQuery ( cudaStream_t stream );
+    ```
+
+- 一个CUDA流 中的CUDA操作 按顺序执行，前一个完成了才进行下一个
+
+    - 实现多个核函数 之间的并行操作 必须使用 多个CUDA流
+
+- 核函数执行配置中的 流参数
+    ```cpp
+    my_kernel<<<grid_size, block_size, shared_memory_size, stream_id>>>(函数参数);
+    // 如果没用到动态共享内存，则设置shared_memory_size=0
+    ```
+- 多个CUDA流并发可以提升SM的利用率
+    - 不同计算能力GPU中，并发数量上限不同（见[官方表格](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications-technical-specifications-per-compute-capability)的第一行）
+- 异步数据传输：由GPU中的==DMA（direct memory access）==实现
+    - 非默认流的数据传输 必须使用`cudaMemcpy()`的异步版本：
+  
+      ```cpp
+      __host__ ?__device__?cudaError_t cudaMemcpyAsync ( 
+            void* dst, const void* src, 
+            size_t count, cudaMemcpyKind kind, 
+            cudaStream_t stream = 0     // 只比cudaMemcpy多了这一个函数
+      );
+      ```
+    - 使用 异步数据传输，host内存要定义成==不可分页内存（non-pageable memory）==或者==固定内存（pinned memory）==
+      - 不可分页内存：程序运行期间，其物理地址保持不变；可分页内存 则相反
+      - 不可分页内存 的 分配 和 释放：都是host内存
+      
+          ```cpp
+          // 分配：二选一。第二个函数的最后参数若为cudaHostAllocDefault，则跟第一个函数等价
+          __host__ ?cudaError_t cudaMallocHost ( void** ptr, size_t size );
+          __host__ ?cudaError_t cudaHostAlloc ( void** pHost, size_t size, unsigned int  flags ); // 注意没有M
+          // 释放：要是误用了free()会出错
+          __host__ ?cudaError_t cudaFreeHost ( void* ptr ); 
+          ```
+      
+      - 如果将 可分页内存 传给`cudaMemcpyAsync()`，会退化成`cudaMemcpy`，进行同步传输
+- 重叠核函数执行与数据传输的方法：
+    - 如果只使用一个CUDA流：CPU传数据到GPU（称H2D）、核函数计算（称KER）、GPU传数据到CPU（称D2H）的顺序为
+  
+      ```
+      stream 0: H2D => KER => D2H
+      ```
+    - 使用多个CUDA流（假设3个）：可以将数据均分（比如分成3份），执行效率提升$\frac{3}{5/3}=1.8$倍；随着流数量的增加，理论最大加速比为3倍（假设H2D、KER、D2H的耗时一样）
+  
+      ```
+      stream 0: H2D0 => KER0 => D2H0
+      stream 1:         H2D1 => KER1 => D2H1
+      stream 2:                 H2D2 => KER2 => D2H2
+      ```
+- 使用CUDA工具箱中的`nvvp`工具 可以对 CUDA流 进行可视化性能剖析
+
+## 第12章 使用同一内存编程
+- CUDA 6引入。到CUDA 10.2为止，某些功能在win中受限
+- ==统一内存（unified memory）==：系统中任何处理器（CPU or GPU）都可以访问、并保证一致性的虚拟内存
+    - 实现方式：通过GPU和GPU内部各自集成的==内存管理单元（memory management unit）==
+    - ==第一代统一内存==：开普勒和麦克斯韦架构，功能相对较弱
+    - ==第二代统一内存==：帕斯卡架构开始，GPU有了精细的==缺页异常处理（page-fault handing）==能力
+    - 很大程度上涉及 多GPU编程
+- ==零复制内存（zero-copy memory）==：在统一内存之前，也提供了一种能被CPU和GPU统一访问的存储器。
+    - 但其只用 host 内存作为存储介质
+    - 统一内存则将数据放在最合适的地方，host或者device
+- 统一内存的<u>硬件要求</u>
+    - \>=开普勒架构，程序是64位
+    - 新功能要>=帕斯卡架构 && Linux。win上只能用第一代统一内存
+    - IBM Power 9 和 NVLink，伏特架构，device可以访问任何host内存（包含malloc和栈上的)
+- 统一内存的**优势**：
+    - CUDA编程更简单：不需要在host和device之间 手动传数据
+    - 比手动传数据的性能更好：∵数据自动就近存放
+    - 允许 超量分配：要求>=帕斯卡架构 && Linux
+- 统一内存的**分配** && **释放**：只能在host分配，不能在device（核函数和__device__函数）。释放还是用`cudaFree()`
+  - ==动态统一内存==：分配函数原型如下，可以直接由核函数和CPU访问
+
+      ```cpp
+      __host__ ?cudaError_t cudaMallocManaged ( 
+        void** devPtr, size_t size, 
+        unsigned int  flags = cudaMemAttachGlobal // 另一取值为cudaMemAttachHost
+      );
+      ```
+
+  - ==静态统一内存==：在修饰符`__device__`的基础上加上修饰符`__managed__`即可
+
+      - 在任何函数外部定义
+
+- 使用同一内存**申请超量内存**：`nvcc`编译加上参数`-DUNIFIED`
+
+    - 超量的原因：对于第二代统一内存，`cudaMallocManaged()`调用后只是预定了一段内存空间，只有在host或者device第一次访问预留的内存时，才会<u>实际分配</u> 统一内存
+    - device上访问统一内存，最多使用量 = 内存+显存
+    - host上访问统一内存，最多使用量 = 内存
+
+- 优化 统一内存 的使用：避免缺页异常、保持数据的局部性（让相关数据尽可能靠近对应的处理器）、避免内存抖动（频繁在不同处理器之间传输数据）
+
+    - 手动给编译器一些提示：
+
+        ```cpp
+        // 暂不介绍
+        __host__ cudaError_t cudaMemAdvise ( const void* devPtr, size_t count, cudaMemoryAdvise advice, int  device );
+        // 作用：将CUDA流中统一内存缓冲区devPtr内count字节的内存迁移到设备dstDevice（host用cudaCpuDeviceId表示）中的内存区域，从而 防止or减少 缺页异常，并提高数据的局部性
+        // 感觉跟cudaMemcpy本质一样呀？？？
+        __host__ cudaError_t cudaMemPrefetchAsync ( 
+        	const void* devPtr, size_t count, 
+        	int dstDevice, cudaStream_t stream = 0 );
+        ```
+
+        
