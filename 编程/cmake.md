@@ -283,7 +283,7 @@
 
 - FIND指令
 
-    ```
+    ```cmake
     FIND_FILE(<VAR> name1 path1 path2 ...) 		# VAR 变量代表找到的文件全路径，包含文件名
     FIND_LIBRARY(<VAR> name1 path1 path2 ...) 	# VAR 变量表示找到的库全路径，包含库文件名
     FIND_PATH(<VAR> name1 path1 path2 ...) 		# VAR 变量代表包含这个文件的路径
@@ -300,25 +300,108 @@
 
     ```cmake
     IF(expression)
-              # THEN section.
               COMMAND1(ARGS ...)
-              COMMAND2(ARGS ...)
+              ...
+    ELSEIF(expression2)
+    		 COMMAND1(ARGS ...)
               ...
     ELSE(expression)
-              # ELSE section.
               COMMAND1(ARGS ...)
-              COMMAND2(ARGS ...)
               ...
     ENDIF(expression)
     ```
 
+    - 设置变量`CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS`为ON，则ELSE和ENDIF的括号 中不用填东西
+
     - 表达式的使用方法
-        - 
+
+        - `IF(var)`：如果变量不是 空，0，N, NO, OFF, FALSE, NOTFOUND 或`<var>_NOTFOUND` 时，表达式为真。
+
+        - `IF(NOT var )`：与上述相反
+
+        - `IF(var1 [AND|OR] var2)`：逻辑与 和 或
+
+        - `IF(COMMAND cmd)`：当给定的cmd确实是命令并可以调用，则为真。
+
+        - `IF(EXISTS dir)`或者`IF(EXISTS file)`：当目录名或者文件名存在时为真
+
+        - `IF(file1 IS_NEWER_THAN file2)`：当 file1 比 file2 新，或者 file1/file2 其中有一个不存在时为真（？？？），文件名请使用完整路径
+
+        - `IF(IS_DIRECTORY dirname)`：当是目录时，为真
+
+        - `IF(variable MATCHES regex)` 或者 `IF(string MATCHES regex)`：当给定的变量或者字符串 能匹配正则表达式 regex 时，为真
+
+        - 数字比较表达式
+
+            ```cmake
+            IF(variable LESS number) 
+            IF(string LESS number) 
+            IF(variable GREATER number) 
+            IF(string GREATER number) 
+            IF(variable EQUAL number) 
+            IF(string EQUAL number)
+            ```
+
+        - 按照字母序的排列进行比较
+
+            ```cmake
+            IF(variable STRLESS string)
+            IF(string STRLESS string)
+            IF(variable STRGREATER string) 
+            IF(string STRGREATER string) 
+            IF(variable STREQUAL string)
+            IF(string STREQUAL string)
+            ```
+
+        - `IF(DEFINED variable)`：变量被定义，为真
+
+- `WHILE`指令
+
+    ```
+    WHILE(condition)	# 其真假判断条件可以参考 IF 指令
+              COMMAND1(ARGS ...)
+              COMMAND2(ARGS ...)
+              ...
+    ENDWHILE(condition)
+    ```
+
+- `FOREACH`指令
+
+    - 列表
+
+        ```cmake
+        FOREACH(loop_var arg1 arg2 ...)		# 或者FOREACH(loop_var ${SRC_LIST})
+                  COMMAND1(ARGS ...)
+                  COMMAND2(ARGS ...)
+                  ...
+        ENDFOREACH(loop_var)
+        ```
+
+    - 范围
+
+        ```cmake
+        FOREACH(loop_var RANGE number) 
+        	COMMAND1(ARGS ...)
+        	...
+        ENDFOREACH(loop_var)
+        ```
+
+    - 范围和步进
+
+        ```
+        FOREACH(loop_var RANGE start stop [step]) 
+        	COMMAND1(ARGS ...)
+        	...
+        ENDFOREACH(loop_var)
+        ```
+
+    - 
+
 
 
 ## 基本语法
 
-- 变量使用`${}`方式取值，但是在 IF 控制语句中是直接使用变量名。
+- 变量使用`${}`方式取值，但是<u>在 IF 中是直接使用变量名</u>。
 - 指令的参数之间使用空格或分号分开。
 - 指令是大小写无关的，参数和变量是大小写相关的
 - ~~忽略掉 source 列表中的源文件后缀~~
@@ -406,3 +489,45 @@
 - cmake 使用环境变量
     - 调用系统的环境变量：`$ENV{NAME}` 
     - 设置环境变量：`SET(ENV{变量名} 值)`
+
+## 模块
+
+- 系统预定义的 `Find<name>.cmake` 模块，用法如下（以CURL库为例）
+
+    ```cmake
+    FIND_PACKAGE(CURL)
+    IF(CURL_FOUND)
+       INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
+       TARGET_LINK_LIBRARIES(curltest ${CURL_LIBRARY})
+    ELSE(CURL_FOUND)
+         MESSAGE(FATAL_ERROR ”CURL library not found”)
+    ENDIF(CURL_FOUND)
+    ```
+
+    - 每一个模块都会定义以下变量
+        - `<name>_FOUND `
+        - `<name>_INCLUDE_DIR` or `<name>_INCLUDES`
+        - `<name>_LIBRARY` or `<name>_LIBRARIES`
+
+- 自定义的`.cmake` 模块示例
+
+    ```cmake
+    FIND_PATH(HELLO_INCLUDE_DIR hello.h /usr/include/hello /usr/local/include/hello)
+    FIND_LIBRARY(HELLO_LIBRARY NAMES hello PATH /usr/lib /usr/local/lib)
+    IF(HELLO_INCLUDE_DIR AND HELLO_LIBRARY)
+       SET(HELLO_FOUND TRUE)
+    ENDIF(HELLO_INCLUDE_DIR AND HELLO_LIBRARY)
+    IF(HELLO_FOUND)
+       IF(NOT HELLO_FIND_QUIETLY)	# 来源于FIND_PACKAGE中的QUIET参数
+           MESSAGE(STATUS "Found Hello: ${HELLO_LIBRARY}")
+       ENDIF(NOT HELLO_FIND_QUIETLY)
+    ELSE(HELLO_FOUND)
+       IF(HELLO_FIND_REQUIRED)		# 来源于FIND_PACKAGE中的REQUIRED参数
+          MESSAGE(FATAL_ERROR "Could not find hello library")
+       ENDIF(HELLO_FIND_REQUIRED)
+    ENDIF(HELLO_FOUND)
+    ```
+
+    - 为了让CMake找到自己的模块，需要将路径添加到变量`CMAKE_MODULE_PATH`
+
+        
