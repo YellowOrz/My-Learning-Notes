@@ -37,19 +37,113 @@
 
 ## 扩展
 
-- [**Markdown All in One**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)：markdown可视化
+- [**Markdown All in One**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)：markdown全家桶
 
-- **TabNine**：我觉得超级好用的自动补全软件
+- ~~**TabNine**：我觉得超级好用的自动补全软件~~
 
-- **Python**：直接运行python文件（不需要扩展Code Runner）
+- **[Bookmarks](https://marketplace.visualstudio.com/items?itemName=alefragnani.Bookmarks)**：书签
 
-    
+- [**Better Comments**](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)：给不同的注释加颜色
+
+    - 在设置中的`better-comments.tags`加入如下内容，给`// NOTE`添加颜色
+
+        ```json
+        {
+            "tag": "note",
+            "color": "#98C379",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        ```
+
+- [**highlight-words**](https://marketplace.visualstudio.com/items?itemName=rsbondi.highlight-words)：在同一vscode窗口里打开的所有文档中，高亮所有 选中的文本。用来看日志是极好的
+
+- [**Git Graph**](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph)：常用的git插件
+
+-  [**Git History**](https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory)：常用的git插件
+
+- [**Colonize**](https://marketplace.visualstudio.com/items?itemName=vmsynkov.colonize)：换行末尾添加分号（类似clion）
+
+- ~~[**macros**](https://marketplace.visualstudio.com/items?itemName=ctf0.macros)：宏操作，可以实现[换行末尾添加分号](https://blog.csdn.net/m0_46230476/article/details/115637879)~~
+
+- [**VS Code Counter**](https://marketplace.visualstudio.com/items?itemName=uctakeoff.vscode-counter)：代码量统计
+
+- [**indent-rainbow**](https://marketplace.visualstudio.com/items?itemName=oderwat.indent-rainbow)：给不同层级的缩进添加颜色
+
+- **[Doxygen Documentation Generator](https://marketplace.visualstudio.com/items?itemName=cschlosser.doxdocgen)**：doxygen注释
+
+    - 将设置中的`doxdocgen.cpp.tparamTemplate`改成`@param[in] {param} `
+
+    - 在设置中的`editor.tokenColorCustomizations`加入如下内容，来[修改doxygen注释颜色](https://blog.csdn.net/weixin_44488341/article/details/130621912)
+
+        ```json
+        "textMateRules": [
+            {
+                "scope" : [
+                    "comment.block.documentation.cpp",
+                    "storage.type.class.doxygen"
+                ],
+                "settings": {
+                    "foreground": "#689451",
+                    "fontStyle": "bold"
+                }
+            }
+        ]
+        ```
+
+    - [修改doxygen注释的格式](https://blog.csdn.net/lipenghui0804/article/details/112012514)：比如添加默认author
+
+- [**Comment Divider**](https://marketplace.visualstudio.com/items?itemName=stackbreak.comment-divider)**: 生成类似下图的注释分割块**
+
+    ```c++
+    /* -------------------------------------------------------------------------- */
+    /*                                Example text                                */
+    /* -------------------------------------------------------------------------- */
+    ```
+
+- [**Inline Parameters for VSCode**](https://marketplace.visualstudio.com/items?itemName=liamhammett.inline-parameters)：跟clion一样的参数提示插件，但是暂不支持c++
+
+- [**GitHub Theme**](https://marketplace.visualstudio.com/items?itemName=GitHub.github-vscode-theme)：主题插件，喜欢用里面的高对比度的主题
+
+
+## 快捷键
+
+| 内容                      | 快捷键             | 备注         | 内容                             | 快捷键               | 备注         |
+| ------------------------- | ------------------ | ------------ | -------------------------------- | -------------------- | ------------ |
+| 向后跳转（navigate back） | alt + ←            |              | 快速预览定义（peek definition）  | alt + F12            |              |
+| 隐藏活动栏                | ctrl + shift + A   | 手动修改     | 快速预览申明（peek declaration） | ctrl + shift + F12   |              |
+| 设置                      | ctrl + ,           | 默认         | 快捷键设置                       | ctrl + k<br>ctrl + s | 默认         |
+| 块注释的切换              | ctrl + alt + /     |              |                                  |                      |              |
+| 末尾加分号并换行          | ctrl + alt + enter | 安装Colonize | 光标不动、末尾加分号             | alt + enter          | 安装Colonize |
+|                           |                    |              |                                  |                      |              |
+|                           |                    |              |                                  |                      |              |
+
+  
 
 ## 配置
 
--  [不追踪软连接](https://www.likecs.com/show-204229604.html)：文件夹中包含太多软连接会消耗大量CPU
+- vsode server安装包下载：将下面的commit号换成对应vsode即可
 
-    <img src="images/image-20230411110038620.png" alt="image-20230411110038620" style="zoom: 80%;" />
+    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable
+
+    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32-x64/stable
+    -  [https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux_x64/stable](https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable)
+    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux-arm64/stable
+
+- 让标签页更紧凑：setting=> tab sizing，改为shrink
+
+- 标签页自动换行：`setting › Editor: Wrap Tabs`打钩
+
+- 自动换行：`setting=>Editor: Word Wrap`改成wordWrapColumn，`setting=>Editor: Word Wrap Column`改成跟code style中一致（比如120）
+
+- [增加文件后缀类型的支持](https://blog.csdn.net/billbliss/article/details/82774315)：`setting=>files.associations`，添加例如"*.tpp": "cpp"
+
+- 给中文断词：`setting=>editor.wordSeparators`，继续加上“、，。？！“”‘’；：（）「」【】〔〕『』〖〗”
+
+- [不追踪软连接](https://www.likecs.com/show-204229604.html)：文件夹中包含太多软连接会消耗大量CPU。`setting=>search.followSymlinks`，设置为false
 
 - [设置ssh远程服务器的插件安装位置](https://stackoverflow.com/questions/71856659/vs-code-ssh-server-install-path)：vscode用ssh远程linux服务器时，需要在${HOME}下面创建文件夹.vscode-server安装相关插件文件后才能正常远程，但是有时候可能没有home目录，因此就需要修改安装路径。在vscode的设置中搜索@ext:ms-vscode-remote.remote-ssh serverInstallPath，然后点击"Add Item"，Key为远程服务器的代号（即.ssh/config中Host后面的名称），Value为想要安装的路径
 
@@ -57,9 +151,15 @@
 
     ![image-20230321143025311](images/image-20230321143025311.png)
 
-- [显示限宽提示线or修改限宽]( https://www.zhihu.com/question/61341938/answer/186940141)：`setting=>editor.rulers`，内容设置成[80]
+- [显示限宽提示线or修改限宽]( https://www.zhihu.com/question/61341938/answer/186940141)：
 
-- 使用谷歌代码风格：`setting=>Clang_format_fallback Style`，内容改成`Google`
+    -  `setting=>editor.rulers`，内容设置成[80]
+
+    -  如果不是自己指定了clang_format文件，则`setting=>C_Cpp.clang_format_style`，添加`{ColumnLimit: 120}`
+
+- 使用谷歌代码风格：`setting=>C_Cpp: Clang_format_style`，内容改成`{BasedOnstyle: Google, ColumnLimit: 120}`
+
+    -  以防万一，将`setting=>C_Cpp: Clang_format_fallback Style`也改了，虽然不知道有啥区别
 
 - 终端字体间隔过大：`setting=>Terminal.integrated.fontFamily`，填入`consolas`或者`monospace`
 
@@ -160,6 +260,13 @@
 
 # CLion
 
+- 插件
+
+    - String Manipulation：快速转换代码命名风格，如转换大小写，驼峰变下划线等
+    
+    - Quick File Preview ：单击文件即可打开预览，类似VSCode
+    - CodeGlance Pro：代码预览，类似VSCode
+    
 - 快捷键
 
     | 快捷键                       | 作用                                                         | 说明                                                       |

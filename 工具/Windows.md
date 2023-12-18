@@ -2,7 +2,21 @@
 
 # 系统设置
 
+- [WPS关闭强制登录](https://www.zhihu.com/question/525681203/answer/3206513391)：创建.reg格式文件，填入如下内容，然后双击打开导入注册表
+    
+    ```
+    Windows Registry Editor Version 5.00
+    
+    [HKEY_CURRENT_USER\Software\kingsoft\Office\6.0\plugins\officespace\flogin]
+    "enableForceLoginForFirstInstallDevice"="false"
+    ```
+    
+    
+    
+- git bash 使用tmux：[How to run Tmux in GIT Bash on Windows | PJSen Blog](https://blog.pjsen.eu/?p=440#:~:text=This is what you do%3A Install before-mentioned msys2,Git for Windows directory%2C mine is C%3AProgram FilesGitusrbin.)
+    
 - 分区：系统+主要的软件装在SSD上面。
+    
     - 若只有SSD：C盘至少150G，剩下所有的容量都分给D盘
     - SSD+HDD：SSD全分给C盘，HDD全分给其他盘
     
@@ -28,7 +42,33 @@
     set https_proxy=
     ```
 
-    
+- vscode使用MSVC编译C++
+
+    - vscode中安装c++相关插件
+
+    - [在task.json中添加“windows”](https://code.visualstudio.com/docs/cpp/config-msvc#_reusing-your-c-configuration)：将VsDevCmd.bat的路径换成自己的，用来设置MSVC所需环境
+
+        ```json
+        {
+            "tasks": [ ... ],
+            "windows": {
+                "options": {
+                  "shell": {
+                    "executable": "cmd.exe",
+                    "args": [
+                        "/C",
+                        "\"C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/Common7/Tools/VsDevCmd.bat\"",
+                        "&&"
+                    ]
+                  }
+                }
+            },
+            "version": ...
+        }
+        ```
+
+    - [在task.json中，将“type”从cppbuild改成shell](https://blog.csdn.net/hacker_lpy/article/details/115536517)，防止出现乱码
+
 
 # 必装软件
 
@@ -60,8 +100,11 @@
 |[ventoy](https://www.lanzoui.com/b01bd54gb)|系统盘制作|[MulimgViewer](https://github.com/nachifur/MulimgViewer/releases)|同时查看多张图|
 |uTools|好用工具集合|[Zotero](https://www.zotero.org/download/)|跨平台文献查看工具|
 |Geomagic Wrap|三维模型处理工具|[Mellow Multi Player](http://mellow.official.jp/blog/archives/3081)|同时播放多个视频|
+|[WinDirStat](https://windirstat.net/download.html)|磁盘分析工具|||
+|||||
 
 3. 大型软件：[Lightroom Classic](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Photoshop](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Microsoft Office](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[WLS（Ubuntu 20.04 LTS）](https://docs.microsoft.com/zh-cn/windows/wsl/install-win10)、[Visio](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[CLion](https://www.jetbrains.com/clion/download/#section=windows)、PyCharm、[SolidWorks](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、Matlab
+3. 安装msys2：[如何优雅地配置 Windows 环境下的 MSys2 + Git 开发环境？（上） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/33751738)
 
 ## 库软件
 

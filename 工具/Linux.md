@@ -13,7 +13,7 @@
 ```shell
 apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl
 apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot smplayer mpv kdenlive cloc xournalpp
-apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang 
+apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang baobab
 snap install meshlab stretchly
 # apt装不了的就用snap
 apt install x2goserver x2goserver-xsession x2goclient
@@ -51,7 +51,7 @@ sudo apt install polychromatic  # Full installation
 
 | 软件名                                                       | 介绍                                                         | 软件名                                               | 介绍                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | ----------------------------------------- |
-| [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                  | 截图软件<br>`apt install flameshot`       |
+| [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                  | 截图软件                                  |
 | [SimpleScreenRecorder](https://github.com/MaartenBaert/ssr)  | 录屏软件，apt安装                                            | gnome-shell-extensions                               | GNOME的插件                               |
 | [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                             | 命令快速查询工具，**强力推荐**！          |
 | [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | Kdenlive                                             | 视频编辑软件                              |
@@ -61,7 +61,7 @@ sudo apt install polychromatic  # Full installation
 | btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)              | 三维模型查看                              |
 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                          | 基于ssh的远程图形界面                     |
 | cloc                                                         | 代码统计                                                     | [xournalpp](https://github.com/xournalpp/xournalpp)  | pdf编辑                                   |
-|                                                              |                                                              |                                                      |                                           |
+| baobab                                                       | 分析磁盘使用情况（即文件大小）                               |                                                      |                                           |
 | ~~[VLC](https://www.videolan.org/vlc/download-ubuntu.html)~~ | ~~视频播放器（跨平台）~~                                     | ~~indicator-cpufreq~~                                | ~~CPU性能调节~~                           |
 
 ## 手动安装
@@ -74,7 +74,7 @@ sudo apt install polychromatic  # Full installation
 | [OneDriveGUI](https://github.com/bpozdena/OneDriveGUI) | 上面OneDrive的配套GUI                                        | [CLion](https://www.jetbrains.com/clion/download/#section=linux) | IDE，下载[2021.2.2版](https://download.jetbrains.com.cn/cpp/CLion-2021.2.2.tar.gz) |
 | [diskusage](https://github.com/chenquan/diskusage)           | 磁盘使用情况查看                                             | [texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/) | latex工具集 |
 | [Ao](https://github.com/klaussinani/ao/releases)             | Microsoft To-Do desktop app                                  | [drawio](https://github.com/jgraph/drawio-desktop/releases) | 跨平台（包括网页）的流程绘制工具 |
-| 搜狗输入法 |                                                              |                                                              |                                                              |
+| 搜狗输入法 |                                                              | [code-server](https://github.com/coder/code-server) | vscode的网页版 |
 | ~~[福昕阅读器](https://www.foxitsoftware.cn/downloads/)~~ | pdf阅读器 |                                                              |                                                              |
 
 ## 星火商店
@@ -328,6 +328,16 @@ apt install libgtk-3-dev
 
 # 快捷键
 
+## 软件
+
+| 快捷键          | 作用                | 快捷键 | 作用 |
+| --------------- | ------------------- | ------ | ---- |
+| `super + enter` | gTile多分屏窗口管理 |        |      |
+|                 |                     |        |      |
+|                 |                     |        |      |
+
+
+
 ## 终端
 
 | 快捷键     | 作用                             | 快捷键     | 作用               |
@@ -357,7 +367,7 @@ apt install libgtk-3-dev
   snap install communitheme
   ```
 
-- gnome插件：`apt install gnome-shell-extensions`
+- **<u>gnome插件</u>**：`apt install gnome-shell-extensions`
 
   - 查看gnome版本：系统设置=>关于=>GNOME版本
 
@@ -383,12 +393,16 @@ apt install libgtk-3-dev
 
       - ☆**修改顶栏时间位置**：找到Just Perfection的设置，定制=>时钟菜单位置=>右边
 
+  - **多分屏窗口管理**：[gTile](https://extensions.gnome.org/extension/28/gtile/)，效果如下（默认快捷键为`super键`+`enter`。类似的还有[Put Windows](https://extensions.gnome.org/extension/39/put-windows/)
+
+      ![img](images/screenshot_28.png)
+
 - 性能指示器：[indicator-sysmonitor](https://github.com/fossfreedom/indicator-sysmonitor)  ，显示于状态栏，支持GNOME和MATE，程序里面设置**开机自启**，显示格式为
 
   ```
   {netcomp} {cpu} {nvgpu} {mem}
   ```
-  
+
 - 快捷键设置
 
   | 名称          | 命令                             | 快捷键               | 系统默认                 |
@@ -414,13 +428,17 @@ apt install libgtk-3-dev
 
 - alt+tab切换窗口而非应用（即不要将同应用的不同窗口折叠）：apt安装`dconf-editor`，进入`org/gnome/desktop/wm/keybindings`下，把`switch-applications`中的`'\<Alt\>Tab'`删去，在`switch-windows`（或者`switch-group`）中加入`'\<Alt\>Tab'`
 
-- **开机自启**：打开gnome-tweaks（可以用apt安装，中文可能叫“优化”），在开机启动程序添加如下软件
+- 管理**开机自启**：打开gnome-tweaks（可以用apt安装，中文可能叫“优化”），在开机启动程序添加如下软件
 
     - 软件内设置：clash for windows、
     - 手动添加：xdm、stretchly、utools、Guake、flameshot、thunderbird、钉钉、indicator-sysmonitor
 
+- 
+
 
 # 通用配置
+
+- root登录：[Ubuntu 18.04-20.04开机自动root用户登录（测试可用）_ubuntu开机进入root用户_墨痕诉清风的博客-CSDN博客](https://blog.csdn.net/u012206617/article/details/122343463)
 
 - 更改镜像为[清华镜像源](https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/)or[阿里镜像源](https://developer.aliyun.com/mirror/ubuntu?spm=a2c6h.13651102.0.0.3e221b119vwOjw)
 
@@ -487,6 +505,7 @@ apt install libgtk-3-dev
     # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
     # 多窗口同步操作快捷键ctrl+b s
     bind-key s setw synchronize-panes
+    set -g history -limit 99999
     ```
 
     复制模式步骤：
@@ -546,13 +565,13 @@ apt install libgtk-3-dev
 - [swap扩容](https://blog.csdn.net/wdwangye/article/details/109371782)
 
     ```bash
-    dd if=/dev/zero of=/mnt/swap bs=1G count=6
-    mkswap /mnt/swap
-    chmod 0600 /mnt/swap
-    swapon /mnt/swap
+    dd if=/dev/zero of=/swapfile bs=2G count=8
+    mkswap /swapfile
+    chmod 0600 /swapfile
+    swapon /swapfile
     vim /etc/fstab
     # 加入如下一行
-    /mnt/swap                                 none            swap    sw              0       0
+    /swapfile                                 none            swap    sw              0       0
     ```
 
 - [修改键盘小红点灵敏度](https://blog.csdn.net/weixin_36242811/article/details/88808015)：
@@ -628,6 +647,19 @@ apt install libgtk-3-dev
   
   > 参考：[Ubuntu下SMPlayer播放器安装配置以及常用快捷键记录](https://blog.csdn.net/zhanghm1995/article/details/109408954)
   
+- [code-server使用官方插件](https://blog.csdn.net/qq_45689158/article/details/125461308)：在文件`/usr/lib/code-server/lib/vscode/product.json`中最大的花括号内，新增如下内容（记得在前面一行的后面加个逗号）
+
+  ```json
+  "extensionsGallery": {
+      "serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+      "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index",
+      "itemUrl": "https://marketplace.visualstudio.com/items",
+      "controlUrl": "",
+      "recommendationsUrl": ""
+  }
+  ```
+
+- code-server插件存放位置：`~/.local/share/code-server/extensions/`
 
 # 技巧
 
