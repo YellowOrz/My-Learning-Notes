@@ -3,7 +3,7 @@
 # 系统设置
 
 - [WPS关闭强制登录](https://www.zhihu.com/question/525681203/answer/3206513391)：创建.reg格式文件，填入如下内容，然后双击打开导入注册表
-    
+  
     ```
     Windows Registry Editor Version 5.00
     
@@ -14,9 +14,9 @@
     
     
 - git bash 使用tmux：[How to run Tmux in GIT Bash on Windows | PJSen Blog](https://blog.pjsen.eu/?p=440#:~:text=This is what you do%3A Install before-mentioned msys2,Git for Windows directory%2C mine is C%3AProgram FilesGitusrbin.)
-    
+  
 - 分区：系统+主要的软件装在SSD上面。
-    
+  
     - 若只有SSD：C盘至少150G，剩下所有的容量都分给D盘
     - SSD+HDD：SSD全分给C盘，HDD全分给其他盘
     
@@ -128,5 +128,22 @@
 
 
 
->
+# powershell
+
+- [离线安装模块](https://www.c-sharpcorner.com/blogs/how-to-install-powershell-modules-in-offline-mode)，安装完成后还需要import一下，例如Import-Module {Module Name}
+
+    - [如果import报错](https://www.jianshu.com/p/4eaad2163567)”无法加载文件 xxx.psml，因为在此系统上禁止运行脚本“则运行命令set-executionpolicy remotesigned
+
+- [**PSReadLine**](https://github.com/PowerShell/PSReadLine)**：**powershell增强模块
+
+    - [启用命令补全](https://learn.microsoft.com/zh-cn/powershell/module/psreadline/about/about_psreadline?view=powershell-7.4#predictive-intellisense)：Set-PSReadLineOption -PredictionSource History
+
+    - 使用page up和page down搜索历史命令：
+
+        ```powershell
+        Set-PSReadLineKeyHandler -Key PageUp -Function HistorySearchBackward
+        Set-PSReadLineKeyHandler -Key PageDown -Function HistorySearchForward
+        ```
+
+        
 

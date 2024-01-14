@@ -14,7 +14,7 @@
 apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl
 apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot smplayer mpv kdenlive cloc xournalpp
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang baobab
-snap install meshlab stretchly
+snap install meshlab stretchly moonlight
 # apt装不了的就用snap
 apt install x2goserver x2goserver-xsession x2goclient
 
@@ -61,7 +61,7 @@ sudo apt install polychromatic  # Full installation
 | btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)              | 三维模型查看                              |
 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                          | 基于ssh的远程图形界面                     |
 | cloc                                                         | 代码统计                                                     | [xournalpp](https://github.com/xournalpp/xournalpp)  | pdf编辑                                   |
-| baobab                                                       | 分析磁盘使用情况（即文件大小）                               |                                                      |                                           |
+| baobab                                                       | 分析磁盘使用情况（即文件大小）                               | [moonlight](https://moonlight-stream.org/)           | 串流客户端                                |
 | ~~[VLC](https://www.videolan.org/vlc/download-ubuntu.html)~~ | ~~视频播放器（跨平台）~~                                     | ~~indicator-cpufreq~~                                | ~~CPU性能调节~~                           |
 
 ## 手动安装
@@ -324,7 +324,44 @@ apt install libgtk-3-dev
 因为*版本不匹配*！！！opencv contrib也是分版本的！！！在从github上下载opencv contrib的时候，需要选择banch。`master`指的是最新的版本，即opencv 4.x，`3.4`应该指的是opencv 3.4.x的（不懂了，那3.4.x之前的版本咋办？)，如图：
 <img src="images/opencv_contrib_branch.jpg" alt="opencv_contrib_branch" style="zoom:67%;" />
 
-   
+ 
+
+## ARM开发板安装PoCL
+
+- 测试环境：
+
+    - NVIDIA JETSION ORIN NX 16GB （ubuntu20.04）
+    - 九鼎创展 I3588（debian 11）
+
+- 首先安装依赖：
+
+    ```bash
+    LLVM_VERSION=11
+    sudo apt install -y build-essential ocl-icd-libopencl1 cmake git pkg-config libclang-${LLVM_VERSION}-dev clang-${LLVM_VERSION} llvm-${LLVM_VERSION} make ninja-build ocl-icd-libopencl1 ocl-icd-dev ocl-icd-opencl-dev libhwloc-dev zlib1g zlib1g-dev clinfo dialog apt-utils libxml2-dev libclang-cpp${LLVM_VERSION}-dev libclang-cpp${LLVM_VERSION} llvm-${LLVM_VERSION}-dev libncurses5
+    ```
+
+- 获取PoCL源码：[PoCL - Portable Computing Language | Download (portablecl.org)](http://portablecl.org/download.html)，我选择的是最新的4.0版本
+
+- 编译 && 安装
+
+    ```bash
+    # 在NVIDIA开发版上，cmake命令中添加-DENABLE_CUDA=ON
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/pocl/ -DLLC_HOST_CPU=cortex-a76 -DHOST_CPU_CACHELINE_SIZE=64 ..
+    make 
+    sudo make install
+    sudo mkdir -p /etc/OpenCL/vendors/
+    sudo cp /usr/local/pocl/etc/OpenCL/vendors/pocl.icd /etc/OpenCL/vendors/
+    ```
+
+- LLC_HOST_CPU填写CPU的类型。通过命令`llc -mcpu=help`可以查看当前版本llvm支持的CPU类型
+    - 如果提示`llc: command not found`，则将llc换成/usr/lib/llvm-xx/bin/llc，其中xx是llvm的版本号
+    - 如果报错`error: unable to get target for 'unknown'`，则加上-march=aarch64
+- NVIDIA JETSON ORIN NX的CPU型号是cortex-a78ae，但是我看llvm-11和llvm-12都只支持cortex-a78。于是我就用cortex-a78，可以编译通过
+
+> 参考文档：
+> [Build and Install OpenCL on Jetson Nano | by Muhammad Yunus | Medium](https://yunusmuhammad007.medium.com/build-and-install-opencl-on-jetson-nano-10bf4a7f0e65)
+> [nvidia jetson agx xavier运行 OpenCL_jetson opencl-CSDN博客](https://blog.csdn.net/lai823177557/article/details/125386488)
+> [Could not determine whether to use -march or -mcpu with clang · Issue #1170 · pocl/pocl (github.com)](https://github.com/pocl/pocl/issues/1170)
 
 # 快捷键
 

@@ -96,7 +96,7 @@
 
     - [修改doxygen注释的格式](https://blog.csdn.net/lipenghui0804/article/details/112012514)：比如添加默认author
 
-- [**Comment Divider**](https://marketplace.visualstudio.com/items?itemName=stackbreak.comment-divider)**: 生成类似下图的注释分割块**
+- [**Comment Divider**](https://marketplace.visualstudio.com/items?itemName=stackbreak.comment-divider)**: 生成类似下图的注释分割块**。记得修改配置中的“Length”为行宽（比如120）
 
     ```c++
     /* -------------------------------------------------------------------------- */
@@ -121,9 +121,16 @@
 |                           |                    |              |                                  |                      |              |
 |                           |                    |              |                                  |                      |              |
 
-  
+ ## cmake设置
+
+- 添加编译器：linux上编辑~/.local/shared/cmake-tools-kits.json，windows上编辑`%userprofile%\AppData\Local\CMakeTools\cmake-tools-kits.json`，可以添加手动安装的编译器
+- [cmake-tools插件关闭保存自动编译](https://www.cnblogs.com/feipeng8848/p/17309772.html)
 
 ## 配置
+
+- [括号匹配辅助线的开启](https://github.com/CoenraadS/Bracket-Pair-Colorizer-2?tab=readme-ov-file#bracket-pair-colorizer-2)：`setting => Editor => Guides: Bracket Pairs`，设置为activate，效果类似下图
+
+    ![Screenshot](images/example-1705206069501-3.png)
 
 - vsode server安装包下载：将下面的commit号换成对应vsode即可
 
