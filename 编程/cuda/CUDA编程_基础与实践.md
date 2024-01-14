@@ -793,24 +793,24 @@
       - 不同的数据传输（例如HostToDevice、DeviceToHost等）之间的并行
       - 不同核函数之间的并行：使用多个CUDA流
 - ==CUDA流（stream）==：由host（或者device，暂不考虑）发出的在一个device中执行的CUDA操作序列（即跟CUDA相关的操作）
-    
+  
     - 由类型为`cudaStream_t`的变量表示
     - 要么存在于 ==默认流（default stream）==，也称为==空流（null stream）==，要么在 明确指定的==非空流==
 - 非空流：在host端 产生和销毁
 
     ```cpp
     // 产生
-    __host__ ?cudaError_t cudaStreamCreate ( cudaStream_t* pStream );
+    __host__ cudaError_t cudaStreamCreate ( cudaStream_t* pStream );
     // 销毁：CUDA 11.2的doc说也能在device上销毁？
-    __host__ ?__device__?cudaError_t cudaStreamDestroy ( cudaStream_t stream );
+    __host__ __device__ cudaError_t cudaStreamDestroy ( cudaStream_t stream );
     ```
 - 检查CUDA流中所有的操作是否都在device中完成
 
     ```cpp
     // 强制阻塞host，直到操作都完成
-    __host__ ?cudaError_t cudaStreamSynchronize ( cudaStream_t stream );
+    __host__ cudaError_t cudaStreamSynchronize ( cudaStream_t stream );
     // 不阻塞，只检查操作是否完成
-    __host__?cudaError_t cudaStreamQuery ( cudaStream_t stream );
+    __host__cudaError_t cudaStreamQuery ( cudaStream_t stream );
     ```
 
 - 一个CUDA流 中的CUDA操作 按顺序执行，前一个完成了才进行下一个
@@ -826,9 +826,9 @@
     - 不同计算能力GPU中，并发数量上限不同（见[官方表格](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications-technical-specifications-per-compute-capability)的第一行）
 - 异步数据传输：由GPU中的==DMA（direct memory access）==实现
     - 非默认流的数据传输 必须使用`cudaMemcpy()`的异步版本：
-  
+    
       ```cpp
-      __host__ ?__device__?cudaError_t cudaMemcpyAsync ( 
+      __host__ __device__cudaError_t cudaMemcpyAsync ( 
             void* dst, const void* src, 
             size_t count, cudaMemcpyKind kind, 
             cudaStream_t stream = 0     // 只比cudaMemcpy多了这一个函数
@@ -840,21 +840,21 @@
       
           ```cpp
           // 分配：二选一。第二个函数的最后参数若为cudaHostAllocDefault，则跟第一个函数等价
-          __host__ ?cudaError_t cudaMallocHost ( void** ptr, size_t size );
-          __host__ ?cudaError_t cudaHostAlloc ( void** pHost, size_t size, unsigned int  flags ); // 注意没有M
+          __host__ cudaError_t cudaMallocHost ( void** ptr, size_t size );
+          __host__ cudaError_t cudaHostAlloc ( void** pHost, size_t size, unsigned int  flags ); // 注意没有M
           // 释放：要是误用了free()会出错
-          __host__ ?cudaError_t cudaFreeHost ( void* ptr ); 
+          __host__ cudaError_t cudaFreeHost ( void* ptr ); 
           ```
       
       - 如果将 可分页内存 传给`cudaMemcpyAsync()`，会退化成`cudaMemcpy`，进行同步传输
 - 重叠核函数执行与数据传输的方法：
     - 如果只使用一个CUDA流：CPU传数据到GPU（称H2D）、核函数计算（称KER）、GPU传数据到CPU（称D2H）的顺序为
-  
+    
       ```
       stream 0: H2D => KER => D2H
       ```
     - 使用多个CUDA流（假设3个）：可以将数据均分（比如分成3份），执行效率提升$\frac{3}{5/3}=1.8$倍；随着流数量的增加，理论最大加速比为3倍（假设H2D、KER、D2H的耗时一样）
-  
+    
       ```
       stream 0: H2D0 => KER0 => D2H0
       stream 1:         H2D1 => KER1 => D2H1
