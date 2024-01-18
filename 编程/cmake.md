@@ -1,3 +1,18 @@
+# 日常笔记
+
+- [指定target开启调试信息](https://stackoverflow.com/questions/24858792/how-to-make-cmake-to-set-visual-studio-linkers-option-generate-debug-info-as-ye)：以windows为例
+
+    ```cmake
+    add_executable(foo ${FOO_SOURCES})
+    target_compile_options(foo PUBLIC /Zi /Od)
+    set_property(TARGET foo APPEND PROPERTY LINK_FLAGS /DEBUG)  # 方法一
+    target_link_options(foo PUBLIC /DEBUG)                      # 方法二
+    ```
+
+    > /Zi: 生成包含调试信息的程序数据库（PDB）文件
+    >
+    > /Od：禁用所有优化
+
 # CMake Practice
 
 > https://gavinliu6.github.io/CMake-Practice-zh-CN/#/
