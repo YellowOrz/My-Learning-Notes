@@ -6,7 +6,8 @@
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------------------------------- |
 | [字幕组机翻小助手](https://github.com/1c7/Translate-Subtitle-File) | 给字幕文件翻译（[网页版](https://tern.1c7.me/#/)），可配合腾讯云的[机器翻译](https://www.tencentcloud.com/zh/products/tmt)（每月有500万字的免费额度） | [KeymouseGo](https://github.com/taojy123/KeymouseGo) | 精简绿色版的按键精灵                               |
 | [git-sim](https://github.com/initialcommit-com/git-sim)      | 可视化模拟 Git 操作                                          | [Pandora](https://github.com/pengzhile/pandora)      | 顺畅体验ChatGPT（[网页版](https://chat.zhile.io)） |
-| [EasySpider](https://github.com/NaiboWang/EasySpider)        | 可视化爬虫（浙大人写的）                                     |                                                      |                                                    |
+| [EasySpider](https://github.com/NaiboWang/EasySpider)        | 可视化爬虫（浙大人写的）                                     | [paraview](https://www.paraview.org/download/)       | 可视化软件                                         |
+| [pix2tex](https://github.com/lukas-blecher/LaTeX-OCR)        | LaTeX OCR，本地部署，mathpix snip的替代品                    |                                                      |                                                    |
 
 
 
@@ -124,9 +125,18 @@
  ## cmake设置
 
 - 添加编译器：linux上编辑~/.local/shared/cmake-tools-kits.json，windows上编辑`%userprofile%\AppData\Local\CMakeTools\cmake-tools-kits.json`，可以添加手动安装的编译器
-- [cmake-tools插件关闭保存自动编译](https://www.cnblogs.com/feipeng8848/p/17309772.html)
+- [cmake-tools插件关闭保存自动编译](https://www.cnblogs.com/feipeng8848/p/17309772.html)：设置中找到`Cmake: Configure On Edit`，取消勾选
+- 状态栏中显示cmake按钮：设置中找到`Cmake > Options: Status Bar Visibility`，根据需求选择cmake按钮的显示程度。比如选择"visible"则显示所有的cmake按钮
 
 ## 配置
+
+- [vscode + cmake开发，找不到头文件](https://blog.csdn.net/lizy_fish/article/details/106376080)：在setting.json中添加如下内容
+
+    ```json
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    ```
+
+    
 
 - [括号匹配辅助线的开启](https://github.com/CoenraadS/Bracket-Pair-Colorizer-2?tab=readme-ov-file#bracket-pair-colorizer-2)：`setting => Editor => Guides: Bracket Pairs`，设置为activate，效果类似下图
 
@@ -137,7 +147,7 @@
     -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable
 
     -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32-x64/stable
-    -  [https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux_x64/stable](https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable)
+    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux_x64/stable
     -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux-arm64/stable
 
 - 让标签页更紧凑：setting=> tab sizing，改为shrink
@@ -267,13 +277,38 @@
 
 # CLion
 
+## 新
+
 - 插件
 
-    - String Manipulation：快速转换代码命名风格，如转换大小写，驼峰变下划线等
-    
-    - Quick File Preview ：单击文件即可打开预览，类似VSCode
-    - CodeGlance Pro：代码预览，类似VSCode
-    
+| 插件                                                         | 简介                                               | 插件                                                         | 简介                             |
+| ------------------------------------------------------------ | -------------------------------------------------- | ------------------------------------------------------------ | -------------------------------- |
+| [String Manipulation](https://plugins.jetbrains.com/plugin/2162-string-manipulation) | 快速转换代码命名风格，如转换大小写，驼峰变下划线等 | [Quick File Preview](https://plugins.jetbrains.com/plugin/12778-quick-file-preview) | 单击文件即可打开预览，类似VSCode |
+| [CodeGlance Pro](https://plugins.jetbrains.com/plugin/18824-codeglance-pro) | 代码预览，类似VSCode                               | [Smart Input](https://plugins.jetbrains.com/plugin/20575-smart-input) | 自动切换中英文                   |
+| [OpenCV Image Viewer](https://plugins.jetbrains.com/plugin/14371-opencv-image-viewer/versions) | debug的时候可视化opencv的变量                      | [VSCode Keymap](https://plugins.jetbrains.com/plugin/12062-vscode-keymap) | vscode快捷键                     |
+| [GitHub Theme](https://plugins.jetbrains.com/plugin/15418-github-theme) | github主题                                         | Key Promoter X                                               | 快捷键提示                       |
+
+- 快捷键：将快捷键换成VSCode，然后修改如下的快捷键
+
+| 快捷键             | 说明          | 快捷键 | 说明 |
+| ------------------ | ------------- | ------ | ---- |
+| Ctrl + J           | Terminal      |        |      |
+| Ctrl + K, Ctrl + F | Reformat Code |        |      |
+|                    |               |        |      |
+
+- 双击标签页让窗口最大化：setting => advanced settings => Editor Tabs => Perform 'Maximize Editor''Normalize Splits'with double-click on editor tab
+
+- 注释添加高亮规则：setting => Editor => TODO，添加新的Pattern，取消勾选“Use color scheme TODO default colors”来自定义颜色
+
+    | Pattern    | 颜色   | Pattern | 颜色   |
+    | ---------- | ------ | ------- | ------ |
+    | \bnote\b.* | 00FF00 |         |        |
+    | !\s.*      | FF0000 | ?\s.*   | 0000FF |
+
+- [设置函数分割线](https://blog.csdn.net/xudahai513/article/details/126960141)：setting => Editor => General => Appearance，打钩"Show method sep"
+
+## 旧
+
 - 快捷键
 
     | 快捷键                       | 作用                                                         | 说明                                                       |
@@ -293,9 +328,8 @@
     Icon=/opt/CLion/clion-2021.2.2/bin/clion.svg
     Comment=C++ IDE
     Categories=IDE;
-    
     ```
-
+    
 - 与WSL连接：[WSL - Help | CLion - JetBrains](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
 
 - 设置自动补全提示不区分大小写：File -> Settings -> Editor -> General -> Code Completion -> Match case **打开**，并选择 All letters
@@ -312,10 +346,6 @@
 
     ![image-20220826095647068](images/image-20220826095647068.png) 
 
-- 设置注释高亮关键词：`Setting->Editor->TODO`
-
-    <img src="images/image-20220828100633309.png" alt="image-20220828100633309" style="zoom:67%;" />
-    
 - [设置谷歌代码风格](https://jasonkayzk.github.io/2022/07/05/%E9%85%8D%E7%BD%AEClion%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/)：`Setting`=>`Editor` => `Code Style` => `C/C++` => `Set From`，选择 `Google` 保存即可！
 
 - [关闭参数提示（parameters hints）](https://blog.csdn.net/Geeker_boy/article/details/105127321)：`Setting`=>`Editor` => `Inlay Hints`，取消勾选`Parameter names`

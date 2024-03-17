@@ -19,6 +19,7 @@
     - [添加反向代理后报错400 Bad Request](https://bbs.hassbian.com/forum.php?mod=viewthread&tid=13487)：到 配置=>系统=>日志 里查看所需IP（好像不用带子网掩码）
     - [适配国内环境的安卓客户端](https://github.com/nesror/Home-Assistant-Companion-for-Android)
 - [**xiaoyaliu/alist**](https://hub.docker.com/r/xiaoyaliu/alist)：资源大全
+- [shinobisystems/shinobi](shinobisystems/shinobi)：监控摄像头录像系统。[官方文档](https://gitlab.com/Shinobi-Systems/Shinobi/-/tree/dev/Docker)，第三方教程（[文档](https://post.smzdm.com/p/a259dnwp/)、[视频](https://www.bilibili.com/video/BV1f4411n73x)）
 
 ### 放弃
 
