@@ -63,8 +63,6 @@
 
 ## 1.6 开始学习Vulkan编程模型
 
-
-
 - 应用程序编程模型：采用自顶向下的实现过程
 
     ![image-20240504171817644](images/image-20240504171817644.png)
@@ -130,5 +128,132 @@
     - 提交的工作通 过异步的方式执行
     - 多个command buffer可以被压送到独立、兼容的队列 里，从而实现并行的执行
 
+# 第2章 你的第一个Vulkan伪代码程序
 
+## 2.2 Hello World伪代码
 
+- 初始化过程：包括validtion layer（验证层）属性的初始化，以及`vk::Instance`（实例对象）的构建，然后检查是否有可用物理设备（vk::PhysicalDeveice），接着通过实例对象创建一个对应的逻辑设备（vk::Device）
+
+    ![image-20240505103309148](images/image-20240505103309148.png)
+
+    ![image-20240505112844550](images/image-20240505112844550.png)
+
+    - Vulkan通过错误信息和验证层提供了调试功能。这类功能扩展分成2类
+        - 实例相关（Instance-specific）：全局级别。通过`vk::enumerateInstanceLayerProperties()`获取layer信息，通过`vk::enumerateInstanceExtensionProperties()`获取extension信息
+        - 设备相关（Device-specific）：物理设备相关。**获取layer信息的API已经废弃**，通过vk::enumerate**Device**ExtensionProperties()获取extension信息
+
+    ==初始化的示意代码==如下：
+
+    ```c++
+      /*** 1. Enumerate Instance Layer properties ***/
+      vector<vk::LayerProperties> layper_property = vk::enumerateInstanceLayerProperties();
+      for (auto &lp : layper_property)
+        vector<vk::ExtensionProperties> extension_property =
+            vk::enumerateInstanceExtensionProperties(vk::Optional<const std::string>(lp.layerName));
+      /*** 2. Instance Creation ***/
+      vk::ApplicationInfo app_info; // 可选
+      app_info.setApiVersion(VK_API_VERSION_1_3);
+      std::vector<const char *> layers = {"VK_LAYER_KHRONOS_validation"};
+      vk::InstanceCreateInfo instance_info;
+      instance_info.setPApplicationInfo(&app_info).setPEnabledLayerNames(layers); // 还可以设置ExtensionNames
+      vk::Instance instance = vk::createInstance(instance_info);
+      /*** 3. Enumerate physical devices ***/
+      vector<vk::PhysicalDevice> devices = instance.enumeratePhysicalDevices();
+      vk::PhysicalDevice phy_device = devices[0]; // 随便选一个
+      cout << "[INFO] pick up physical deivce " << phy_device.getProperties().deviceName << endl;
+      /*** 4. Create Device ***/
+      vk::PhysicalDeviceMemoryProperties mem_properties = phy_device.getMemoryProperties();	// 物理设备中可用内存类型
+      vk::PhysicalDeviceProperties phy_device_properties = phy_device.getProperties();	// 物理设备属性
+      vector<vk::QueueFamilyProperties> queue_props = phy_device.getQueueFamilyProperties();	// 物理设备中的队列以及其属性
+      vk::DeviceCreateInfo create_info = {};  // 必须要设置vk::DeviceQueueCreateInfo
+      vk::Device device = phy_device.createDevice(create_info);
+    ```
+
+- 指令缓存初始化：首先创建command pool，然后分配command buffer
+
+    > 代码见第5章
+
+- 资源对象：分成buffer和image
+
+    ![image-20240505115951203](images/image-20240505115951203.png)
+
+    - buffer view：表示数据缓存自身。它可 以将数据用连续的方式保存起来，并设置一个特定的数据解析格式
+    - image view: 类似buffer view
+    - 应用程序中并不会直接访问vk::Buffer和vk::kImage对象，而是使用对应的视图对象（VkBufferView以及 VkImageView）来完成
+
+- 资源分配：
+
+    - 资源（缓存为VkBuffer，图像为VkImage）刚被创建 时，并没有关联任何的内存空间。
+    - 内存需求：每种资源对象都有 自己的内存创建需求，可以通过vk::Device::getBufferMemoryRequirements()或 者vk::Device::GetImageMemoryRequirements()来进行查询。这个函数有助于计 算内存分配的大小
+    - 分配：使用vk::Device::allocateMemory()
+    - 绑定：将资源对象绑定到这个刚分配 的内存上，对应的函数为vk::Device::bindBufferMemory()或者 vk::Device::bindImageMemory()。
+    - 内存映射：负责更新物理设备内存数据。首先， 使用函数vk::Device::mapMemory()将设备内存映射到宿主机内存。然后更新 映射内存区域（在宿主机上）的数据，最后调用vk::Device::unmapMemory() 函数。这个API函数会将映射内存区域的数据更新到设备内存中
+
+- 着色器支持
+
+    ```c++
+    vector<char> source_code = ReadWholeFile(spv_path);
+    vk::ShaderModuleCreateInfo module_info;
+    module_info.setCodeSize(source_code.size()).setPCode((uint32_t *)source_code.data());
+    vk::ShaderModule compute_module = device.createShaderModule(module_info);
+    ```
+
+- 构建descriptor set layout：
+
+    - descriptor负责将资源与着色器通过布局绑定的方式关联起来
+    - 一个descriptor set里可以包含多个布局绑定的descriptor，它相当于是数组的代码块
+    - 一个descriptor set layout表示这个descriptor set所包含的信息的类型
+
+    ```c++
+    vector<vk::DescriptorSetLayoutBinding> binding(2);
+    binding[0].setBinding(0).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eStorageBuffer)
+        .setStageFlags(vk::ShaderStageFlagBits::eCompute);
+    binding[1].setBinding(1).setDescriptorCount(1).setDescriptorType(vk::DescriptorType::eStorageBuffer)
+        .setStageFlags(vk::ShaderStageFlagBits::eCompute);
+    vk::DescriptorSetLayoutCreateInfo layout_info;
+    layout_info.setBindings(binding);
+    vk::DescriptorSetLayout descriptor_layout = device.createDescriptorSetLayout(layout_info);
+    std::array<vk::DescriptorSetLayout, 2> layouts = {descriptor_layout}; // 这么写对吗？
+    ```
+
+- 构建pipeline layout：decriptor set被创建之后，还不能够直接被底层的流水线访问到。pipeline layout就是 让底层pipeline可以访问到 descriptor set 的信息
+
+    > pipeline用到decriptor set layout，但不会用到decriptor set
+
+    ```c++
+    vk::PipelineLayoutCreateInfo pipe_layout_info;
+    pipe_layout_info.setSetLayouts(descriptor_layout);  // 不能用layouts
+    vk::PipelineLayout pipeline_layout = device.createPipelineLayout(pipe_layout_info);
+    ```
+
+- 创建流水线：流水线是一系列状态（state）的集合。每个状态都包括了一组属性（用来 定义状态的执行协议）。分成 Graphics pipeline和Compute pipeline
+
+    - 定义状态：
+        - Dynamic states（动态状态）：提示流水线在运行过程中观察状态的变 化情况。此时流水线会使用一个特殊的过程去更新各个状态量，而不 是直接使用初始值。使用结构体vk::PipelineDynamicStateCreateInfo设置
+        - 还有顶点输入状态、光栅化状态、颜色融混附件状态、视口状态、深度模板状态、多重采样状态
+    - **从流水线缓存 （vk::PipelineCache）中构建pipeline 对象来获得最大的性能**
+
+    ```c++
+    vk::PipelineCacheCreateInfo pipeline_cache_info;
+    vk::PipelineCache pipeline_cache = device.createPipelineCache(pipeline_cache_info);
+    vk::ComputePipelineCreateInfo pipeline_info;
+    pipeline_info.setLayout(pipeline_layout).setStage(stage_info);
+    auto result = device.createComputePipeline(pipeline_cache, pipeline_info); // pipeline cache可选
+    if (result.result != vk::Result::eSuccess)
+    	throw std::runtime_error("failed to create compute pipeline!");
+    vk::Pipeline compute_pipeline = result.value;
+    ```
+
+-  队列的提交和同步:
+
+    ```c++
+    vk::FenceCreateInfo fence_info = {...};
+    vk::Fence fence = device_.createFence(fence_info);
+    vk::SubmitInfo submit_info;
+    submit_info.setCommandBuffers(cmd_buffer);
+    compute_queue.submit(submit_info);
+    ```
+
+## 2.3 全部整合到一起
+
+![image-20240505143733468](images/image-20240505143733468.png)
