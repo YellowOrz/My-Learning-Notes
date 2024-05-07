@@ -16,7 +16,7 @@
 
 ## 1.4 vulkan的原理
 - （简化的）执行模型：vulkan程序控制一组vulkan设备，将多个command记录到 多个command buffer 中，并发送到多个queue。设备的驱动会读取queue并按照记录的顺序依次执行各个command
-    
+  
     ![image-20240504170458134](images/image-20240504170458134.png)
     
     - 指令队列的构件需要代价 而一旦构建完成就可以 被缓存 和 发送到队列，根据自己的需要多次执行
@@ -24,12 +24,12 @@
     - vulkan程序还负责：各种准备（资源、着色器、流水线）、内存管理、同步、风险管理
     
 - **queue（队列）**: 一种中间层机制，负责接收指令缓存并传递给设备。指令缓存的发送分成两类
-    
+  
     - 单一对列：按照指令缓存发送的顺序进行维护、执行或者回放
     - 多重队列：指令缓存 以并行的方式在多个队列中执行。除非有同步操作，否则无法保证发送和执行的顺序不变
     
 - 同步
-    
+  
     - **semaphore (信号量)**: 跨队列，或在单一队列中以粗粒度执行？
     - **event (事件)**: 单个队列中，以细粒度执行，确保单一指令缓存中或多个指令缓存之间的同步要求
     - **fence (栅栏)**: 允许host和device之间同步
@@ -257,3 +257,160 @@
 ## 2.3 全部整合到一起
 
 ![image-20240505143733468](images/image-20240505143733468.png)
+
+# 第3章 连接硬件设备
+
+## 3.1 学习使用LunarG SDK
+
+- Installable Client Driver (ICD)：兼容vulkan的显示驱动。不同ICD（例如nvidia和intel的驱动）可以互不影响地共存；
+- layer（层）：这是一种插件式的组件，可以捕捉或着拦截vulkan的指令，提供诸如调试、验证、跟踪等方面的服务功能
+- loader（加载器）：定位显示驱动的位置，并通过 与平台无关的方式提供layer所用的库文件。在Windows上，加载库（vulkan-1.dll）使用注册表来定位ICD和layer的配置信息
+
+## 3.3 扩展简介
+
+- layer（层）：层会捕捉当前的Vulkan API并且将自己注入到 Vulkan指令的执行链中，使其与指定的层关联在一起。我们通常使用layer来进行开发过程当中的验证工作。例如，驱动程序不会检查Vulkan API 所传入的参数，所以我们可以通过层来完成输入参数的验证，判断它 们正确与否。 
+- extension（扩展）：扩展提供了额外的功能或者特性，它可能未 来会成为标准的一部分，也可能不会。扩展也可以作为设备或实例的 一部分存在。扩展指令的链接无法通过静态的方式实现，我们需要首 先进行查询，然后动态地将它们链接为函数指针。
+
+## 3.4 创建一个Vulkan实例
+
+- 创建vulkan实例：
+
+    ```c++
+    vk::Instance createInstance(vk::InstanceCreateInfo const &createInfo,
+                                vk::Optional<const vk::AllocationCallbacks> allocator = nullptr) const;
+    ```
+
+    - 实例的创建信息：vk::InstanceCreateInfo = VkInstanceCreateInfo
+
+        ```
+        InstanceCreateInfo(vk::InstanceCreateFlags flags_,
+                           const vk::ApplicationInfo *pApplicationInfo_,
+                           vk::ArrayProxyNoTemporaries<const char *const> const &pEnabledLayerNames_,
+                           vk::ArrayProxyNoTemporaries<const char *const> const &pEnabledExtensionNames_ = {},
+                           const void *pNext_ = nullptr)
+        ```
+
+    - 创建所需的application信息：
+
+        ```c+=
+        ApplicationInfo(const char *pApplicationName_ = {}, uint32_t applicationVersion_ = {},
+                        const char *pEngineName_ = {}, uint32_t engineVersion_ = {},
+                        uint32_t apiVersion_ = {}, const void *pNext_ = nullptr);
+        ```
+
+- 获取实例的
+
+- 销毁实例：`vk::Instance::clear()` => 内部调用`vkDestroyInstance()`
+
+> 可以直接显式地启用层，设置环境变量VK_INSTANCE_LAYERS=VK_LAYER_LUNARG_api_dump
+
+## 3.5 理解物理设备和逻辑设备
+
+- 枚举物理设备：
+
+    ```c++
+    std::vector<vk::PhysicalDevice> vk::Instance::enumeratePhysicalDevices();
+    ```
+
+- 查询物理设备的扩展：输入为 准备查询扩展的layer的名称
+
+    ```c++
+    std::vector<vk::ExtensionProperties> vk::PhysicalDevice::enumerateDeviceExtensionProperties(
+        Optional<const std::string> layerName) const;
+    ```
+
+- 获取物理设备的属性：包含设备名称、类型等
+
+    ```c++
+    vk::PhysicalDeviceProperties vk::PhysicalDevice::getProperties() const;
+    ```
+
+- 获取物理设备的内存属性
+
+    ```c++
+    vk::PhysicalDeviceMemoryProperties vk::PhysicalDevice::getMemoryProperties() const;
+    ```
+
+- 获取物理设备支持的queue family：根据QueueFamilyProperties::queueFlags判断queue的类型，记录所需queue的id（int类型）
+
+    ```c++
+    std::vector<vk::QueueFamilyProperties> PhysicalDevice::getQueueFamilyProperties() const;
+    ```
+
+- 创建逻辑设备：DeviceCreateInfo包含扩展的名称（也有layer的名称，但是已经废弃，仅用于兼容）、需要创建和关联的队列
+
+    ```c++
+    vk::Device PhysicalDevice::createDevice( vk::DeviceCreateInfo const & createInfo, vk::Optional<const vk::AllocationCallbacks> allocator) const;
+    ```
+
+    - 逻辑设备的创建信息：主要设置QueueCreateInfos
+
+        ```c++
+        DeviceCreateInfo(vk::DeviceCreateFlags flags_ = {}, uint32_t queueCreateInfoCount_ = {},
+                         const vk::DeviceQueueCreateInfo *pQueueCreateInfos_ = {}, uint32_t enabledLayerCount_ = {},
+                         const char *const *ppEnabledLayerNames_ = {}, uint32_t enabledExtensionCount_ = {},
+                         const char *const *ppEnabledExtensionNames_ = {},
+                         const vk::PhysicalDeviceFeatures *pEnabledFeatures_ = {}, const void *pNext_ = nullptr);
+        ```
+
+    - 逻辑设备的queue创建信息：主要设置queueFamilyIndex和queueCount
+
+        ```c++
+        DeviceQueueCreateInfo(vk::DeviceQueueCreateFlags flags_ = {}, uint32_t queueFamilyIndex_ = {},
+                uint32_t queueCount_ = {}, const float *pQueuePriorities_ = {}, const void *pNext_ = nullptr);
+        ```
+
+        > queueFamilyIndex是前面通过getQueueFamilyProperties找到的所需queue的id
+        >
+        > QueuePriorities表示优先级
+
+- host端等待：等待所有队列进入空闲
+
+    ```c++
+    void Device::waitIdle()
+    ```
+
+> 如果physical device丢失，创建的device会失败；但是device丢失，某些指令会返回VK_ERROR_DEVICE_LOST，但是physical device不受影响，不会重置device
+
+## 3.6 理解队列和队列族
+
+- queue: 应用程序和物理设备之间的通信过程
+
+    - 应用程序通过将cmd buffer提交到quere的方式来发布工作任务。
+    - 物理设备读取queue中的任务，然后异步地处理
+
+    ![image-20240507203905699](images/image-20240507203905699.png)
+
+    - 物理设备中可能包括一个或者多个queue family，每个queue family所支持的queue类型各不相同、可能包含一个或者多个queue
+
+- 查询queue family：根据QueueFamilyProperties::queueFlags判断queue的类型，记录所需queue的id（int类型）
+
+    ```c++
+    std::vector<vk::QueueFamilyProperties> PhysicalDevice::getQueueFamilyProperties() const;
+    ```
+
+    ![image-20240507210915446](images/image-20240507210915446.png)
+
+    - 根据QueueFamilyProperties::queueFlags判断queue的类型，记录所需queue的id（int类型）
+
+        ```c++
+        int queue_indices_ = -1;
+        for (int i = 0; i < queue_props.size(); i++) 
+            if (queue_props[i].queueFlags & vk::QueueFlagBits::eCompute) {
+                queue_indices_ = i;
+                break;
+            }
+        ```
+
+- 创建queue：提前创建device，创建的时候传入DeviceQueueCreateInfo（将3.5节）
+
+    ```c++
+    vk::Queue Device::getQueue( uint32_t queueFamilyIndex, uint32_t queueIndex ) const;
+    ```
+
+    > 一个queue family有多个queue，每个queue有唯一id。queueIndex设置queue family（对应queueFamilyIndex）中的queue id
+
+# 第4章 调试Vulkan程序
+
+
+
