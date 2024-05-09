@@ -412,5 +412,59 @@
 
 # 第4章 调试Vulkan程序
 
+## 4.1 初探Vulkan中的调试方法
+
+- 开启调试功能：实例级添加扩展名`VK_EXT_DEBUG_REPORT_EXTENSION_NAME`
+
+- Vulkan的调试API并不属于核心指令，不能通过loader直接静态加载。可以通过扩展API，在运行过程中通过动态链接的形式获取预定义的函数指针。使用如下调试功能扩展API函数创建和销毁调试报告
+
+    ```c++
+    vk::DebugReportCallbackEXT vk::Instance::createDebugReportCallbackEXT(vk::DebugReportCallbackCreateInfoEXT const &createInfo,vk::Optional<const vk::AllocationCallbacks> allocator ) const;
+    void vk::DebugReportCallbackEXT::clean(); // 内部调用的vkDestroyDebugReportCallbackEXT
+    ```
+
+## 4.2 了解LunarG验证层及其特性
+
+- VK_LAYER_GOOGLE_unique_objects：不可分发的Vulkan对象句柄并不需要自身是唯一的。驱动程序可能会为它认为等价的多个对象分配同一个句柄，导致跟踪对象变得困难。该层会将Vulkan创建的对象打包到一个统一的标识符中，当应用程序需要使用对象时再进行分包。这样的话，我们进行验证的时候就可以跟踪到正确的对象生命周期了。
+    - LunarG官方推荐将该层放置在验证层的最后，这样它可以更为靠近显示驱动程序。
+- VK_LAYER_LUNARG_api_dump：判断传入Vulkan API的参数值是否存在。会将所有的数据结构体参数及其值直接打印出来。
+- VK_LAYER_LUNARG_core_validation：验证和打印描述符集合、流水线状态、动态状态等。可以跟踪和验证GPU内存、对象绑定，以及指令缓存。还负责验证图形流水线和计算流水线。
+- VK_LAYER_LUNARG_image：验证纹理格式、渲染目标的格式等。例如，可以验证给定的格式是否可以被当前设备所支持。还可以验证图像视图的创建参数，对于这个视图对应的图像来说是否是合法的。
+- VK_LAYER_LUNARG_object_tracker：负责跟踪对象的创建、使用和销毁过程，因此可以避免内存泄漏的问题。还可以验证被引用的对象是否已经创建，以及它是否当前有效
+- VK_LAYER_LUNARG_parameter_validation：确保所有传递给API函数的参数都是正确的，负责检查参数值是否一致，并且判断它是否在Vulkan标准定义的可用范围之内。此外，还会检查Vulkan控制结构体中的类型参数，是否和标准中所指定的参数相符。
+- VK_LAYER_LUNARG_swapchain：验证WSI交换链扩展的用法是否正确。例如，在使用WSI扩展的函数之前，检查WSI扩展是否可用。也可以验证传递给交换链的图像索引号是否在可用范围之内。
+- VK_LAYER_GOOGLE_threading：判断线程环境的安全性。可以检查多线程API的使用，保证对象的同步调用过程是在多个不同的线程中发生的。会检查和汇报线程的违规操作，并且强制对相关的调用使用互斥锁。在已经发生线程问题的情况下，依然让应用程序继续执行后续的代码。
+- VK_LAYER_LUNARG_standard_validation：按照正确的顺序，启用所有的标准层。
+
+## 4.3 在Vulkan程序中实现调试
+
+- 验证层的种类与供应商以及SDK版本都是有直接关系
+
+- `vk::Instance::createDebugReportCallbackEXT()`不属于Vulkan核心指令的一部分，不能直接调用（或者说不能通过loader直接静态加载），会报错“未定义符号”
+
+- 所有调试相关的API都需要先通过`Instance::getProcAddr()`进行查询得到函数指针（或者说 动态链接），即PFN_vkCreateDebugReportCallbackEXT。销毁同理。
+
+    ```c++
+    PFN_vkVoidFunction vk::Instance::getProcAddr( const std::string & name ) const
+    /* -------------------------------------------- 以下是示例代码 ------------------------------------------- */
+    PFN_vkCreateDebugReportCallbackEXT dbgCreateDebugReportCallback =
+        (PFN_vkCreateDebugReportCallbackEXT)instance.getProcAddr("vkCreateDebugReportCallbackEXT");
+    ```
+
+- 调用上面的函数指针，需要通过如下结构体 定义调试的具体行为模式，例如调试信息的内容（错误、常规警告、信息、性能相关的警告），还引用了一个用户自定义的函数（debugFunction）。可以在系统获取了数据之后直接将它们过滤并打印输出
+
+    ```c++
+    DebugReportCallbackCreateInfoEXT(vk::DebugReportFlagsEXT flags_ = {}, PFN_vkDebugReportCallbackEXT pfnCallback_ = {}, void *pUserData_ = {}, const void *pNext_ = nullptr);
+    /* -------------------------------------------- 以下是示例代码 ------------------------------------------- */
+    vk::DebugReportCallbackEXT debugReportCallback;
+    // Debug report callback create information control structure
+    vk::DebugReportCallbackCreateInfoEXT dbgReportCreateInfo(VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT | VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_DEBUG_BIT_EXT, /*用户自定义*/debugFunction, NULL, NULL);
+    result = dbgCreateDebugReportCallback(*instance, &dbgReportCreateInfo, NULL, &debugReportCallback); // TODO: 不知道c++版本的怎么写
+    ```
+
+    - 结构体VkDebugReportFlagBitsEXT可以定义一个按位整合的标识变量
+
+        ![image-20240508225719360](images/image-20240508225719360.png)
+
 
 
