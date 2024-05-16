@@ -331,6 +331,8 @@
     vk::PhysicalDeviceMemoryProperties vk::PhysicalDevice::getMemoryProperties() const;
     ```
 
+    > PhysicalDeviceMemoryProperties见5.5节
+
 - 获取物理设备支持的queue family：根据QueueFamilyProperties::queueFlags判断queue的类型，记录所需queue的id（int类型）
 
     ```c++
@@ -466,5 +468,356 @@
 
         ![image-20240508225719360](images/image-20240508225719360.png)
 
+# 第5章 Vulkan中的指令缓存和内存管理
 
+## 5.1 开始使用指令缓存
 
+- 指令缓存可以录制多种不同的Vulkan API指令，创建之后可以重复使用。分为如下两类
+
+    - 主指令缓存（primary command buffer）：包含次指令缓存，负责执行它们，并且直接发送它们到队列中。
+    - 次指令缓存（secondary command buffer）：通过主指令缓存执行，自己不能直接提交到队列
+
+- 指令缓存的分配必须通过指令池来完成
+
+- 某一个指令缓存不使用时，可以休眠指令恢复到可复用的状态（重置？），从而让另一个录制流程就可以使用
+
+- 多线程创建多个指令缓存时，为每个线程引入单独的指令池来确保它们的同步运行。可以更高效，并且不需要在线程之间执行同步操作
+
+    ![image-20240509125636192](images/image-20240509125636192.png)
+
+    - 若多个线程之间共享的指令缓存，必须由应用程序进行同步
+
+    > OpenGL中的指令缓存提交在幕后进行管理的，应用程序不能控制，因此不能保证这些指令都被系统执行，因为OpenGL按批次来执行指令缓存
+
+- 指令缓存中的指令类型
+
+    - 行为（action）：执行诸如绘制、分发、清屏、复制、查询/时间戳，以及子通道的开始/结束等操作。
+    - 状态管理（state management）：包括描述符集合、绑定流水线、缓存，用于设置动态状态、推送常量，以及设置渲染通
+        道/子通道的状态。
+    - 同步（synchronization）：执行各种同步、流水线屏障、设置事件、等待事件，以及渲染通道/子通道的依赖
+
+- 执行顺序
+
+    - 单队列提交（single queue submission）：按照具体操作的顺序排列
+    - 多队列提交（multiple queue submission）：按照任何一种顺序执行，除非使用信号量、屏障等同步机制
+
+## 5.2 理解指令池和指令缓存API
+
+- command pool的创建信息：结构体，构造函数如下
+
+    ```c++
+    CommandPoolCreateInfo(vk::CommandPoolCreateFlags flags_ = {}, uint32_t queueFamilyIndex_ = {},
+            const void *pNext_ = nullptr);
+    ```
+
+    > flags是按位的枚举量，表示指令池和分配指令缓存的方式。取值如下
+    >
+    > - VK_COMMAND_POOL_CREATE_TRANSIENT_BIT：指令池中分配的频率较高，生命周期较短。可以用来控制内存池中的内存分配方式
+    > - VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT：表示指令缓存从指令池当中分配完成之后，只能通过两种方式来重置，即显式调用`vk::CommandBuffer::reset()`，或者隐式完成（通过`vk::CommandBuffer::begin()`）
+    >     - 不使用该标志位的话，只能通过`vk::CommandPool::reset()`重置???
+    >
+    > queueFamilyIndex_表示队列族的id，指令缓会被发送给这个队列族
+
+- 创建command pool：
+
+    ```c++
+    vk::CommandPool vk::Device::createCommandPool(vk::CommandPoolCreateInfo const &createInfo,
+            vk::Optional<const vk::AllocationCallbacks> allocator = nullptr) const;
+    ```
+
+    > AllocationCallbacks用于宿主机内存的管理，见5.5节
+
+- 重置command pool
+
+    ```c++
+    void vk::CommandPool::reset( vk::CommandPoolResetFlags flags ) const;
+    ```
+
+    > flags控制重置的行为
+
+- 销毁command pool：也可以销毁device的时候自动销毁command pool
+
+    ```c++
+    void vk::Device::destroyCommandPool(vk::CommandPool commandPool,
+                                    Optional<const vk::AllocationCallbacks> allocator,
+                                    Dispatch const &d) const;
+    ```
+
+- command buffer的分配信息：结构体，构造函数如下
+
+    ```c++
+    CommandBufferAllocateInfo(vk::CommandPool commandPool_ = {},
+                              vk::CommandBufferLevel level_ = vk::CommandBufferLevel::ePrimary,
+                              uint32_t commandBufferCount_ = {}, const void *pNext_ = nullptr);
+    ```
+
+    > level_是按位枚举量，表示command buffer为主级别or次级别
+
+- 分配command buffer
+
+    ```c++
+    std::vector<vk::CommandBuffer, CommandBufferAllocator> Device::allocateCommandBuffers( 
+            const vk::CommandBufferAllocateInfo & allocateInfo, Dispatch const & d ) const;
+    ```
+
+- 重置command buffer
+
+    ```c++
+    void CommandBuffer::reset( vk::CommandBufferResetFlags flags ) const;
+    ```
+
+    > flags只有一个取值VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT，表示指令缓存所对应的内存也会被返回到它的父指令池当中
+    >
+    > - 但是看源码，在有些情况还可以取值VK_COMMAND_BUFFER_RESET_FLAG_BITS_MAX_ENUM
+
+- 释放command buffer：
+
+    ```c++
+    void Device::freeCommandBuffers(vk::CommandPool commandPool,
+            vk::ArrayProxy<const vk::CommandBuffer> const &commandBuffers, Dispatch const &d) const;
+    void Device::freeCommandBuffers(vk::CommandPool commandPool, uint32_t commandBufferCount,
+            const vk::CommandBuffer *pCommandBuffers, Dispatch const &d) const;
+    ```
+
+## 5.3 记录指令缓存
+
+![image-20240512171328310](images/image-20240512171328310.png)
+
+- 开始录制
+
+    ```c++
+    void CommandBuffer::begin(const vk::CommandBufferBeginInfo &beginInfo, Dispatch const &d) const;
+    ```
+
+    - 开始录制信息：构造函数如下
+
+        ```c++
+        CommandBufferBeginInfo(vk::CommandBufferUsageFlags flags_ = {},
+                               const vk::CommandBufferInheritanceInfo *pInheritanceInfo_ = {},
+                               const void *pNext_ = nullptr);
+        ```
+
+        > flags_是按位的掩码，表示指令缓存使用时的特性
+        >
+        > - eOneTimeSubmit：command buffer只能提交一次。因此不用保留状态信息，可以提高性能；
+        > - eRenderPassContinue：允许command buffer在同一个渲染传递中被多次执行
+        > - eSimultaneousUse：允许command buffer在不同queue中同时提交，可以提高并行度，但需要硬件支持
+        >
+        > pInheritanceInfo_只在次级指令缓存生效
+
+- 停止录制
+
+    ```c++
+    void CommandBuffer::end( Dispatch const & d ) const;
+    ```
+
+- 队列提交：将指令记录到vk::CommandBuffer之后，就可以将它提交给一个队列
+
+    ```c++
+    void Queue::submit(vk::ArrayProxy<const vk::SubmitInfo> const & submits, vk::Fence fence, Dispatch const & d ) const;
+    ```
+
+    > submits和fence都非空，则fence会在所有command buffer结束后发出信号
+
+    - 提交信息：构造函数如下
+
+        ```c++
+        SubmitInfo(vk::ArrayProxyNoTemporaries<const vk::Semaphore> const &waitSemaphores_,
+                   vk::ArrayProxyNoTemporaries<const vk::PipelineStageFlags> const &waitDstStageMask_ = {},
+                   vk::ArrayProxyNoTemporaries<const vk::CommandBuffer> const &commandBuffers_ = {},
+                   vk::ArrayProxyNoTemporaries<const vk::Semaphore> const &signalSemaphores_ = {},
+                   const void *pNext_ = nullptr);
+        ```
+
+        > waitSemaphores_：执行command buffer之前要等待的信号量
+        >
+        > waitDstStageMask_：流水线阶段，在各个阶段发生的时候都需要等待信号量
+        >
+        > signalSemaphores_：执行command buffer之后要等待的信号量
+
+- 等待队列完成
+
+    ```c++
+    void Queue::waitIdle( Dispatch const & d ) const;
+    ```
+
+## 5.5 管理Vulkan内存
+
+- Vulkan使用宿主机内存来存储API的内部数据结构
+
+- 宿主机内存的管理：通过如下数据结构进行手动管理。非必要，vulkan有默认的
+
+    ```c++
+    AllocationCallbacks(void *pUserData_ = {}, PFN_vkAllocationFunction pfnAllocation_ = {},
+                        PFN_vkReallocationFunction pfnReallocation_ = {}, PFN_vkFreeFunction pfnFree_ = {},
+                        PFN_vkInternalAllocationNotification pfnInternalAllocation_ = {},
+                        PFN_vkInternalFreeNotification pfnInternalFree_ = {});
+    ```
+
+    > - pUserData：AllocationCallbacks中任何一个回调调用的时候，第一个参数都是pUserData，而且取值可以不同
+    >
+    > - 除了pUserData之外其余的参数都是内存相关的函数指针
+    >
+    > - pfnAllocation_：自定义的内存分配的函数指针
+    >
+    >     ```c++
+    >     typedef void *(VKAPI_PTR *PFN_vkAllocationFunction)(void *pUserData, 
+    >     	size_t size, 							// 分配内存的字节大
+    >     	size_t alignment,						// 内存分配的对齐方式，以字节为单位，必须是2的倍数
+    >     	VkSystemAllocationScope allocationScope); // 内存分配的生命周期
+    >     /*内存生命周期如下*/
+    >     typedef enum VkSystemAllocationScope {
+    >       VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = 0,     //在Vulkan命令期间
+    >       VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = 1,      //在对象被创建和使用期间
+    >       VK_SYSTEM_ALLOCATION_SCOPE_CACHE = 2,       //与VkPipelineCache对象关联
+    >       VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = 3,      //在Vulkan device期间
+    >       VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = 4,    //在Vulkan instance期间
+    >     } VkSystemAllocationScope;
+    >     ```
+    >
+    > - pfnReallocation_：自定义的内存重分配的函数指针
+    >
+    >     ```c++
+    >     typedef void *(VKAPI_PTR *PFN_vkReallocationFunction)(void *pUserData, 
+    >     	void *pOriginal, 	// 必须是NULL或者是同一个内存分配器的pfnReallocation或pfnAllocation返回的指针
+    >     	size_t size, 		// =0, 等价于free；大于pOriginal的size时，多余的内存是未指定的
+    >     	size_t alignment, VkSystemAllocationScope allocationScope);
+    >     ```
+    >
+    > - pfnFree_：自定义的内存释放的函数指针
+    >
+    >     ```c++
+    >     typedef void(VKAPI_PTR *PFN_vkFreeFunction)(void *pUserData, 
+    >     	void *pMemory);	// 要释放的内存地址
+    >     ```
+    >
+    > - pfnInternalAllocation_：自定义的分配内存时额外调用的函数指针，可用来通知
+    >
+    >     ```c++
+    >     typedef void(VKAPI_PTR *PFN_vkInternalAllocationNotification)(void *pUserData, size_t size,
+    >     	VkInternalAllocationType allocationType, VkSystemAllocationScope allocationScope);
+    >     ```
+    >
+    >     - VkInternalAllocationType只有VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE一个取值，表示分配的内存给CPU使用
+    >
+    > - pfnInternalFree_：自定义的释放内存时额外调用的函数指针，可用来通知
+    >
+    >     ```c++
+    >     typedef void(VKAPI_PTR *PFN_vkInternalFreeNotification)(void *pUserData, size_t size,
+    >     	VkInternalAllocationType allocationType, VkSystemAllocationScope allocationScope);
+    >     ```
+
+- 获取物理设备的可用内存以及属性
+
+    ```c++
+    vk::PhysicalDeviceMemoryProperties vk::PhysicalDevice::getMemoryProperties() const;
+    ```
+
+    - 内存属性 定义如下
+
+        ```c++
+        typedef struct VkPhysicalDeviceMemoryProperties {
+            uint32_t                 memoryTypeCount;                       // 可用内存类型的数量
+            VkMemoryType             memoryTypes [ VK_MAX_MEMORY_TYPES ];   // 可用内存类型的类型   
+            uint32_t                 memoryHeapCount;                       // 可用的内存堆的数量
+            VkMemoryHeap             memoryHeaps [ VK_MAX_MEMORY_HEAPS ];   // 可用的内存堆
+        } VkPhysicalDeviceMemoryProperties;
+        ```
+
+    - 内存类型 定义如下：
+
+        ```c++
+        typedef struct VkMemoryType {
+            VkMemoryPropertyFlags    propertyFlags;  // 内存类型的相关属性标识量
+            uint32_t                 heapIndex;      // 堆的索引
+        } VkMemoryType;
+        ```
+
+        > VkMemoryPropertyFlags可能的取值如下
+        >
+        > - VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT：效率最高（显存？寄存器？共享内存？）
+        > - VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT：可被host访问（通过vk::Device::mapMemory()）
+        > - VK_MEMORY_PROPERTY_HOST_COHERENT_BIT：不需要通过Device::[flush|invalidate]MappedMemoryRanges()设置host可见性
+        > - VK_MEMORY_PROPERTY_HOST_CACHED_BIT：在host端缓存，从而提高host端的读取速度（锁页内存？）
+        > - VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT：只在device端使用，延迟分配，只用于vk::Image
+        > - VK_MEMORY_PROPERTY_PROTECTED_BIT
+        > - VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD
+        > - VK_MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD
+        > - VK_MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV
+
+    - 内存堆 定义如下
+
+        ```c++
+        typedef struct VkMemoryHeap {
+            VkDeviceSize             size;     // 堆中内存的总大小，单位字节
+            VkMemoryHeapFlags        flags;    // 按位的掩码，堆的属性，类型为VkMemoryHeapFlagBits
+        } VkMemoryHeap;
+        ```
+
+    - 内存堆的属性 如下
+
+        ```c++
+        typedef enum VkMemoryHeapFlagBits {
+            VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = 1,
+            VK_MEMORY_HEAP_MULTI_INSTANCE_BIT = 2,          // TODO: ???
+            VK_MEMORY_HEAP_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
+        } VkMemoryHeapFlagBits;
+        ```
+
+- 分配设备内存
+
+    ```c++
+    DeviceMemory Device::allocateMemory(const vk::MemoryAllocateInfo &allocateInfo,
+                                        Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+    ```
+
+    - 分配信息：构造函数如下
+
+        ```c++
+        MemoryAllocateInfo(VULKAN_HPP_NAMESPACE::DeviceSize allocationSize_ = {}, // 分配内存大小
+                           uint32_t memoryTypeIndex_ = {},                        // 设置内存所在堆及内存类型
+                           const void *pNext_ = nullptr);
+        ```
+
+        > 内存分配后，它还没初始化。需要创建vk::DeviceMemory并且进一步进行子内存分配
+
+- 释放设备内存
+
+    ```c++
+    void Device::freeMemory(VULKAN_HPP_NAMESPACE::DeviceMemory memory,
+                            Optional<const VULKAN_HPP_NAMESPACE::AllocationCallbacks> allocator, 
+                            Dispatch const &d);
+    ```
+
+- host端访问设备内存：host只能访问支持映射的设备内存（内存属性包含VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT）
+
+    - 宿主机对设备内存的映射访问：如下函数（二选一）会返回一个虚拟地址的指针
+
+        ```c++
+        void *Device::mapMemory(vk::DeviceMemory memory, 
+                                vk::DeviceSize offset,     // 起始地址，单位字节
+                                vk::DeviceSize size,       // 内存大小
+                                vk::MemoryMapFlags flags,  // 暂时保留
+                                Dispatch const &d) const;
+        void *DeviceMemory::mapMemory(vk::DeviceSize offset, vk::DeviceSize size,
+                                      vk::MemoryMapFlags flags) const;
+        ```
+
+        > 该接口不会主动检查内存区域是否已经被映射过
+
+    - 结束映射
+
+        ```c++
+        void Device::unmapMemory( vk::DeviceMemory memory, Dispatch const & d ) const
+        void DeviceMemory::unmapMemory() const;
+        ```
+
+- 延迟分配内存：内存flag为VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT，内存可以根据实际需要动态增长，但是只适用于vk::Image。使用如下函数查询已经提交的内存大小
+
+    ```c++
+    void Device::getMemoryCommitment(vk::DeviceMemory memory, vk::DeviceSize *pCommittedMemoryInBytes,
+                                     Dispatch const &d) const;
+    vk::DeviceSize Device::getMemoryCommitment(vk::DeviceMemory memory, Dispatch const &d) const;
+    ```
+
+    
