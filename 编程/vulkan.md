@@ -820,4 +820,201 @@
     vk::DeviceSize Device::getMemoryCommitment(vk::DeviceMemory memory, Dispatch const &d) const;
     ```
 
+## 第7章 缓存资源、渲染通道、帧缓存以及SPIR-V着色器
+
+## 7.1 理解Vulkan的缓存资源类型
+
+- vk::Buffer可以直接作为顶点数据的数据源访问，或者通过shader的描述符进行访问。
+
+- 如果shader需要按照某种固定格式去访问vk::Buffer中的数据，可能要显式地转换到vk::BufferView
+
+- 创建buffer
+
+    ```c++
+    vk::Buffer Device::createBuffer(const vk::BufferCreateInfo &createInfo,
+                                    Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+    ```
+
+    - buffer的创建信息：构造函数如下
+
+        ```c++
+        BufferCreateInfo(vk::BufferCreateFlags flags_ = {}, vk::DeviceSize size_ = {}, 
+                         vk::BufferUsageFlags usage_ = {},
+                         vk::SharingMode sharingMode_ = vk::SharingMode::eExclusive, 
+                         uint32_t queueFamilyIndexCount_ = {},
+                         const uint32_t *pQueueFamilyIndices_ = {}, 
+                         const void *pNext_ = nullptr);
+        BufferCreateInfo(vk::BufferCreateFlags flags_, vk::DeviceSize size_, 
+                         vk::BufferUsageFlags usage_,
+                         vk::SharingMode sharingMode_, 
+                         vk::ArrayProxyNoTemporaries<const uint32_t> const &queueFamilyIndices_,
+                         const void *pNext_ = nullptr) 
+        ```
+
+        > flags_：类型为[BufferCreateFlagBits](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferCreateFlagBits.html)
+        >
+        > - eSparseBinding (VK_BUFFER_CREATE_SPARSE_BINDING_BIT)：绑定稀疏内存
+        > - eSparseResidency (VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT): 部分绑定稀疏内存，必须跟eSparseBinding同时使用
+        > - eSparseAliased (VK_BUFFER_CREATE_SPARSE_ALIASED_BIT): 
+        > - eProtected (VK_BUFFER_CREATE_PROTECTED_BIT): 表示当前buffer受保护
+        > - eDeviceAddressCaptureReplay  (VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT): 
+        > - eDeviceAddressCaptureReplayEXT (VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT): 
+        > - eDeviceAddressCaptureReplayKHR (VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR): 
+        > - eDescriptorBufferCaptureReplayEXT  (VK_BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT): 
+        > - eVideoProfileIndependentKHR  (VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR): 
+        >
+        > usage_：描述buffer的内在用途。具体见后
+        >
+        > sharingMode_：被多个 queue family访问时的共享模式
+        >
+        > - eExclusive (VK_SHARING_MODE_EXCLUSIVE): 不可共享
+        > - eConcurrent (VK_SHARING_MODE_CONCURRENT): 可以共享
     
+- 销毁buffer
+
+    ```c++
+    void Device::destroyBuffer(vk::Buffer buffer, Optional<const vk::AllocationCallbacks> allocator,
+                               Dispatch const &d) const;
+    ```
+
+- 创建buffer viewer：通常在调试阶段使用，发布的时候不需要
+
+    ```c++
+    vk::BufferView Device::createBufferView(const vk::BufferViewCreateInfo &createInfo,
+                                            Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d);
+    ```
+
+    - buffer viewer的创建信息
+
+        ```c++
+        BufferViewCreateInfo(vk::BufferViewCreateFlags flags_ = {}, vk::Buffer buffer_ = {},
+                             vk::Format format_ = vk::Format::eUndefined, vk::DeviceSize offset_ = {},
+                             vk::DeviceSize range_ = {}, const void *pNext_ = nullptr)
+        ```
+
+        > flags_：暂时没用上
+        >
+        > format_: 可用的图像格式，比如几个通道、每个通道用几位表示等
+        >
+        > offset\_和range\_：buffer中的范围
+
+- 销毁buffer viewer
+
+    ```c++
+    void Device::destroyBufferView(vk::BufferView bufferView, Optional<const vk::AllocationCallbacks> allocator,
+                                   Dispatch const &d);
+    ```
+
+## 7.2 使用缓存资源创建几何体
+
+- 完整的buffer创建流程
+
+    ![image-20240518231833717](images/image-20240518231833717.png)
+
+    ![image-20240518232533079](images/image-20240518232533079.png)
+
+## 7.6 在Vulkan中实现着色器
+
+- 顶点、细分控制、细分计算、几何着色器，都用于顶点处理阶段；之后是片元着色器的阶段，它需要在光栅化结束之后执行。
+
+- SPIR-V是一个二进制、平台无关的中间语言，为一组32位数组成的数据流，包括两个部分
+
+    - 头部分：数据流的前五个数（5×4字节=20字节），可以用来标识SPIR-V输入数据的类型
+    - 负载部分：包含各种输入的变量数据
+
+    ![image-20240519100642714](images/image-20240519100642714.png)
+
+- ，它可以用来执行，程序用法为
+
+    ```bash
+    
+    ```
+
+- 不同shader对应的glsl文件格式如下
+
+    ![image-20240519101718650](images/image-20240519101718650.png)
+
+- GLSL到SPIR-V的.spv格式的转换
+
+    - 方法一：使用可执行文件glslangValidator提前（比如在cmake的时候）将glsl文件编译成.spv文件，用法
+
+        ```shell
+        glslangValidator [option]...[file]....
+        #例如
+        glslangValidator -V Tri.vert -o Tri-Vert.spv
+        ```
+
+    - 方法二：使用Lunar SDK提供的GLslang库编译空间，在程序中读取glsl文件，然后转成spv的数据流
+
+        - [CMakeLists.txt中添加如下内容](https://github.com/PacktPublishing/Learning-Vulkan/blob/master/Chapter%2007/7e_ShadersWithSPIRV/CMakeLists.txt)
+
+            ```c++
+            set(GLSLANGDIR "${VULKAN_PATH}/Include/glslang")
+            get_filename_component(GLSLANG_PREFIX "${GLSLANGDIR}" ABSOLUTE)
+            include_directories( ${GLSLANG_PREFIX} )
+            target_link_libraries( ${Recipe_Name} SPIRV glslang)
+            ```
+
+        - 程序中包含头文件"SPIRV/GlslangToSpv.h"和"Public/ShaderLang.h"
+
+        - 首先glslang::InitializeProcess()初始化GLSL着色器库。该函数在每个进程中只能调用一次
+
+        - 然后将GLSL代码（char类型）转换成SPIR-V（uint32类型）
+
+            ```c++
+            bool GLSLtoSPV(const VkShaderStageFlagBits shaderType, const char* pshader,
+                                         std::vector<unsigned int>& spirv) {
+            	glslang::TProgram program;
+            	const char* shaderStrings[1];
+            	TBuiltInResource Resources;
+            	initializeResources(Resources);
+            
+            	// Enable SPIR-V and Vulkan rules when parsing GLSL
+            	EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
+            
+            	EShLanguage stage = getLanguage(shaderType);
+            	glslang::TShader shader(stage);
+            
+            	shaderStrings[0] = pshader;
+            	shader.setStrings(shaderStrings, 1);
+                // 解析GLSL源代码
+            	if (!shader.parse(&Resources, 100, false, messages)) return false;
+            	// 将解析的着色器添加到程序
+            	program.addShader(&shader);
+            	// 链接到程序对象
+            	if (!program.link(messages)) return false;
+                // 格式转换
+            	glslang::GlslangToSpv(*program.getIntermediate(stage), spirv);
+            	return true;
+            }
+            ```
+
+        - 创建shader模块
+
+            ```c++
+            vk::ShaderModule Device::createShaderModule(const vk::ShaderModuleCreateInfo &createInfo,
+                                                        Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+            ```
+
+            - shader模块的创建信息：构造函数如下
+
+                ```c++
+                ShaderModuleCreateInfo(vk::ShaderModuleCreateFlags flags_ = {}, size_t codeSize_ = {}, const uint32_t *pCode_ = {},
+                                       const void *pNext_ = nullptr);
+                ```
+
+                > flags_：暂时不用
+                >
+                > pCode_
+
+        - 函数glslang::FinalizeProcess()结束整个过程。该函数在每个进程中只能调用一次
+
+        - 销毁shader模块：将shader模块添加到PipelineShaderStageCreateInfo，然后添加到Pipeline后就可以销毁了
+
+            ```c++
+            void Device::destroyShaderModule(VULKAN_HPP_NAMESPACE::ShaderModule shaderModule,
+                                             Optional<const VULKAN_HPP_NAMESPACE::AllocationCallbacks> allocator,
+                                             Dispatch const &d) const;
+            ```
+
+            
