@@ -279,7 +279,15 @@
 
 ## 新
 
-- 插件
+- 插件：离线下载：
+
+    - 方法一：在有网络的电脑上安装相同版本的clion，然后在其中的插件市场中下载插件，不同系统的插件安装包存放路径为
+
+        ```c++
+        win => C:\Users\{用户名}\AppData\Local\JetBrains\CLion2023.3\plugins
+        ```
+
+    - 方法二：[官方插件网站](https://plugins.jetbrains.com/clion)上搜索，然后打开插件页面，点击“VERSION”按钮，根据自己的版本下载
 
 | 插件                                                         | 简介                                               | 插件                                                         | 简介                             |
 | ------------------------------------------------------------ | -------------------------------------------------- | ------------------------------------------------------------ | -------------------------------- |
@@ -290,11 +298,11 @@
 
 - 快捷键：将快捷键换成VSCode，然后修改如下的快捷键
 
-| 快捷键             | 说明          | 快捷键 | 说明 |
-| ------------------ | ------------- | ------ | ---- |
-| Ctrl + J           | Terminal      |        |      |
-| Ctrl + K, Ctrl + F | Reformat Code |        |      |
-|                    |               |        |      |
+| 快捷键             | 说明          | 快捷键   | 说明                  |
+| ------------------ | ------------- | -------- | --------------------- |
+| Ctrl + Shift + E   | Project       | Ctrl + J | Hide All Tool Windows |
+| Ctrl + K, Ctrl + F | Reformat Code | Ctrl + ` | Ternimal              |
+|                    |               |          |                       |
 
 - 双击标签页让窗口最大化：setting => advanced settings => Editor Tabs => Perform 'Maximize Editor''Normalize Splits'with double-click on editor tab
 
@@ -306,6 +314,11 @@
     | !\s.*      | FF0000 | ?\s.*   | 0000FF |
 
 - [设置函数分割线](https://blog.csdn.net/xudahai513/article/details/126960141)：setting => Editor => General => Appearance，打钩"Show method sep"
+
+- [注释靠近代码](https://blog.51cto.com/u_15127627/3280936)：Settings => Code Style => C/C++ ，在右边选择 “Code Generation” Tab，取消勾选`Line comment at first column`、`Block comment at first column`，勾选`Add a space at line comment start`
+
+- [手动加载CMakePresets.json](https://www.jetbrains.com/help/clion/cmake-presets.html#load-preset)：开启全局搜索（快捷键双击shift或者ctrl+shift+A），搜索Load CMake Presets
+
 
 ## 旧
 
