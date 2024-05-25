@@ -1018,3 +1018,144 @@
             ```
 
             
+
+# 第8章 流水线和流水线状态管理
+
+## 8.1 开始学习流水线
+
+- ==流水线==：由一系列固定阶段组成，输入数据流，每一个阶段对数据处理、传递下一阶段。最终的成果是光栅化后的绘制图形（图形流水线），或者通过某种计算逻辑（计算流水线）完成更新的资源信息（缓存或者图像）
+
+    <img src="images/image-20240519125410598.png" alt="image-20240519125410598" style="zoom:67%;" />
+
+- ==流水线状态对象（Pipeline State Object，PSO）==：控制有硬件加成的某些操作（比如光栅化、条件更新等）的属性
+
+- ==流水线缓冲对象（Pipeline Cache Object，PCO）==：用于快速获取合、复用之前的流水线
+
+- ==流水线布局（Pipeline layout）==：管理多个descriptor set layout
+
+- ==descriptor（描述符）==：已有资源和着色器阶段之间的一种接口
+
+- ==descriptor set layout==：将资源关联到逻辑（shader？）对象上
+
+## 8.2 通过PCO缓冲流水线对象
+
+- Pipeline cache有两种方式
+
+    - 多个pipeline之间：创建pipeline的时候输入pipeline cache
+    - 多个程序之间：对pipeline cache进行序列化（存在文件、内存？）
+
+- 创建pipeline cache
+
+    ```c++
+    vk::PipelineCache Device::createPipelineCache(const vk::PipelineCacheCreateInfo &createInfo,
+                                                  Optional<const vk::AllocationCallbacks> allocator,
+                                                  Dispatch const &d) const;
+    ```
+
+    - pipeline cache的创建信息
+
+        ```c++
+        PipelineCacheCreateInfo(vk::PipelineCacheCreateFlags flags_ = {}, size_t initialDataSize_ = {},
+                                const void *pInitialData_ = {}, const void *pNext_ = nullptr);
+        ```
+
+        > flags_：暂时用不到
+        >
+        > initialDataSize\_：初始数据长度（字节）。若为空，表示pipeline cache刚开始是空的，会忽略pInitialData\_
+        >
+        > pInitialData_：之前pipeline cache信息。若不兼容，则自动设为空
+
+- 合并pipeline cache
+
+    ```c++
+    void Device::mergePipelineCaches(vk::PipelineCache dstCache, vk::ArrayProxy<const vk::PipelineCache> const &srcCaches,
+                                     Dispatch const &d) const;
+    ```
+
+- 获取pipeline cache的数据（字节流）：保存后，可以在其他程序使用。可以通过数据的头信息查看是否兼容
+
+    ```c++
+    std::vector<uint8_t> Device::getPipelineCacheData(vk::PipelineCache pipelineCache, Dispatch const &d) const;
+    ```
+
+- 销毁pipeline cache
+
+    ```c++
+    void Device::destroyPipelineCache(vk::PipelineCache pipelineCache, Optional<const vk::AllocationCallbacks> allocator,
+                                      Dispatch const &d) const;
+    ```
+
+- pipeline cache数据包含2个部分
+
+    - 头数据：包含五个数据域，根据标准的变更可能会变。头数据的大小不固定，通过前4个字节获取。提供必要信息保证运行程序的兼容性
+
+        <img src="images/image-20240519164338287.png" alt="image-20240519164338287" style="zoom:67%;" />
+
+        <img src="images/image-20240519164518167.png" alt="image-20240519164518167" style="zoom:67%;" />
+
+    - 负载数据
+
+## 8.4 理解计算流水线
+
+- 创建计算流水线
+
+    ```c++
+    vk::Pipeline Device::createComputePipeline(vk::PipelineCache pipelineCache,	// 可选
+                                               const vk::ComputePipelineCreateInfo &createInfo,
+                                               Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+    ```
+
+    - 计算流水线的创建信息：构造函数如下
+
+        ```c++
+        ComputePipelineCreateInfo(vk::PipelineCreateFlags flags_ = {}, vk::PipelineShaderStageCreateInfo stage_ = {},
+                                  vk::PipelineLayout layout_ = {}, vk::Pipeline basePipelineHandle_ = {},
+                                  int32_t basePipelineIndex_ = {}, const void *pNext_ = nullptr);
+        ```
+
+        > flags_：判断流水线生成方式，由[VkPipelineCreateFlagBits](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCreateFlagBits.html)组成，常见的几种如下
+        >
+        > - eDisableOptimization (VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT)：关闭优化（用于调试）
+        > - eAllowDerivatives (VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT)：可作为父pipeline
+        > - eDerivative (VK_PIPELINE_CREATE_DERIVATIVE_BIT)：可作为子pipeline
+        >
+        > stage_：shader相关信息
+        >
+        > basePipelineHandle_：父pipeline
+        >
+        > basePipelineIndex_：父pipeline中createInfo的索引位置（？）
+
+        - pipeline中shader信息：
+
+            ```c++
+            PipelineShaderStageCreateInfo(vk::PipelineShaderStageCreateFlags flags_ = {},
+                                          vk::ShaderStageFlagBits stage_ = vk::ShaderStageFlagBits::eVertex,
+                                          vk::ShaderModule module_ = {}, const char *pName_ = {},
+                                          const vk::SpecializationInfo *pSpecializationInfo_ = {}, const void *pNext_ = nullptr);
+            ```
+
+            > flags_：暂时不用
+            >
+            > stage_：流水线阶段，比如Vertex、Fragment、Compute等
+            >
+            > module_： 包含SPIR-V格式的shader源码信息
+            >
+            > pName_：shader中入口函数的名称（UTF-8格式）
+            >
+            > pSpecializationInfo_：==特化常量（Specialization Constants）==，允许在运行时修改SPIR-V模块中的常量，从而为shader提供可配置的参数，而无需重新编译shader
+
+## 8.5 Vulkan的流水线状态对象
+
+- ==pipeline state（流水线状态）==：控制物理设备的硬件设置接口的方法
+    - dynamic state（动态状态）：设置流水线中用到的动态状态
+    - vertex input state（顶点输入状态）：设置数据输入的频率和解析方法
+    - input assembly state （输入装配状态）：将顶点数据装配成为不同的几何图元拓扑结构（线、点、各种三角形）
+    - rasterization state（光栅化状态）：有关光栅化的操作，例如多边形填充的模式、面的朝向设置、裁减模式，等等
+    - color blend state（颜色融混状态）：设置源片元和目标片元之间的融混因子和操作方式
+    - viewport state（视口状态）：定义视口的裁切方式和维度
+    - depth stencil state（深度/模板状态）：定义深度/模板的操作方式
+    - multi sample state（多重采样状态）：控制光栅化过程中的像素采样方式，实现抗锯齿的需求
+
+## 8.6 实现流水线
+
+<img src="images/image-20240522125346894.png" alt="image-20240522125346894" style="zoom:67%;" />
