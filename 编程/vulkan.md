@@ -1159,3 +1159,185 @@
 ## 8.6 实现流水线
 
 <img src="images/image-20240522125346894.png" alt="image-20240522125346894" style="zoom:67%;" />
+
+# 第9章 绘制对象
+
+## 9.2 准备绘制对象
+
+- 绑定pipeline
+
+    ```c++
+    void CommandBuffer::bindPipeline(vk::PipelineBindPoint pipelineBindPoint, vk::Pipeline pipeline,
+                                     Dispatch const &d) const;
+    ```
+
+    > pipelineBindPoint取值为
+    >
+    > - eGraphics = VK_PIPELINE_BIND_POINT_GRAPHICS：如果是这个，则只能用CommandBuffer::dispatch()和
+    >     CommandBuffer::dispatchIndirect()
+    > - eCompute  = VK_PIPELINE_BIND_POINT_COMPUTE：如果是这个，则能用CommandBuffer::draw()、CommandBuffer::drawIndexed()、CommandBuffer::drawIndirect()、CommandBuffer::drawIndexedIndirect()
+
+## 9.5 理解Vulkan中的同步图元
+
+- 同步类型
+
+    - 栅栏（Fence）：提供宿主机和设备之间的同步
+    - 信号量（Semaphore）：提供队列之间，以及队列内的同步
+    - 事件（Event）：队列提交时的同步
+    - 屏障（Barrier）：指令缓存中各个指令之间的同步
+
+- Fence：类似cudaDeviceSyncthorize()
+
+    - 目的：对GPU后续的指令队列进行控制，避免与之前已经发送的指令产生重叠，进而引发不可预知的结果或者异常的内存访问
+
+    - 创建fence
+
+        ```c++
+        vk::Fence Device::createFence(const vk::FenceCreateInfo &createInfo, Optional<const vk::AllocationCallbacks> allocator,
+                                      Dispatch const &d) const;
+        ```
+
+        - fence的创建信息：构造函数如下
+
+            ```c++
+            FenceCreateInfo( vk::FenceCreateFlags flags_ = {}, const void * pNext_ = nullptr );
+            ```
+
+            > flags_：表示fence处于已发送信号还是未发送信号的状态。取值只能为eSignaled = VK_FENCE_CREATE_SIGNALED_BIT？
+            >
+            > pNext_暂时没有作用
+
+    - 创建了fence之后，宿主机可以将它插入到指令当中
+
+    - 等待fence
+
+        ```c++
+        vk::Result Device::waitForFences(vk::ArrayProxy<const vk::Fence> const &fences, vk::Bool32 waitAll, uint64_t timeout,
+                                         Dispatch const &d) const;
+        ```
+
+        > waitAll：控制阻塞状态。=VK_TRUE，所有fences都要收到信号后，才能解锁阻塞状态；=VK_FALSE只要有一个fence收到信号就能解锁阻塞
+        >
+        > timeout：超过该时间自动解锁，单位纳秒
+
+    - 销毁fence
+
+        ```c++
+        void Device::destroyFence(vk::Fence fence, Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+        ```
+
+    - 重置fence
+
+        ```c++
+        void Device::resetFences(vk::ArrayProxy<const vk::Fence> const &fences, Dispatch const &d) const;
+        ```
+
+- Semaphore：可以对一个或者多个队列进行同步
+
+    - 有两种状态：收到信号和未收到信号
+
+    - 信号量通过Queue::submit()中的vk::SubmitInfo设置的，它会阻塞之后的指令数据，直到信号量收到信号为止
+
+    - 若多个队列提交指令在等待同一个信号量，那么每次只会产生一个收到信号的消息，其他队列仍需等待，确保操作的原子性
+
+    - 创建semaphore
+
+        ```c++
+        vk::Semaphore Device::createSemaphore(const vk::SemaphoreCreateInfo &createInfo,
+                                              Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+        ```
+
+        - semaphore创建信息：构造函数如下
+
+            ```c++
+            SemaphoreCreateInfo( vk::SemaphoreCreateFlags flags_ = {}, const void * pNext_ = nullptr );
+            ```
+
+            > flags_暂时没有用
+            >
+            > pNext_：扩展功能相关指针
+
+    - 销毁semaphore
+
+        ```c++
+        void Device::destroySemaphore(vk::Semaphore semaphore, Optional<const vk::AllocationCallbacks> allocator,
+                                      Dispatch const &d) const;
+        ```
+
+    - 没有重置操作
+
+- Event
+
+    - 可以更为细致地实现同步，并同时存在收到信号和未收到信号的状态
+
+    - 允许在同一个指令缓存中存在同步的需求，或者在一组准备提交到队列的指令缓存之间进行同步
+
+    - 宿主机和设备端都可以给事件发送信号、重设事件、等待事件（设备端只能在流水线的某些特定阶段中等待）
+
+    - 创建event
+
+        ```c++
+        vk::Event Device::createEvent(const vk::EventCreateInfo &createInfo, Optional<const vk::AllocationCallbacks> allocator,
+                                      Dispatch const &d) const;
+        ```
+
+        - event创建信息：构造信息如下
+
+            ```c++
+            EventCreateInfo(vk::EventCreateFlags flags_ = {}, const void *pNext_ = nullptr);
+            ```
+
+            > flags_暂时没有用
+            >
+            > pNext_：扩展功能相关指针
+
+    - 销毁event
+
+        ```c++
+        void Device::destroyEvent(vk::Event event, Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+        ```
+
+    - 查询event状态：判断是否收到信号
+
+        ```c++
+        vk::Result Device::getEventStatus( vk::Event event, Dispatch const & d ) const;
+        ```
+
+        > 返回VK_EVENT_SET，表示收到信号；返回VK_EVENT_RESET，没有收到
+
+    - host端设置（发送）和重置event
+
+        ```c++
+        void Device::setEvent(vk::Event event, Dispatch const &d);
+        void Device::resetEvent(vk::Event event, Dispatch const &d);
+        ```
+
+    - device端设置（发送）和重置event
+
+        ```c++
+        void CommandBuffer::setEvent(vk::Event event, vk::PipelineStageFlags stageMask, Dispatch const &d) const;
+        void CommandBuffer::resetEvent(vk::Event event, vk::PipelineStageFlags stageMask, Dispatch const &d) const;
+        ```
+
+        > stageMask为流水线阶段，表示这个事件在什么阶段进行更新
+
+    - device端等待event
+
+        ```c++
+        void CommandBuffer::waitEvents(vk::ArrayProxy<const vk::Event> const &events, vk::PipelineStageFlags srcStageMask,
+                                       vk::PipelineStageFlags dstStageMask,
+                                       vk::ArrayProxy<const vk::MemoryBarrier> const &memoryBarriers,
+                                       vk::ArrayProxy<const vk::BufferMemoryBarrier> const &bufferMemoryBarriers,
+                                       vk::ArrayProxy<const vk::ImageMemoryBarrier> const &imageMemoryBarriers,
+                                       Dispatch const &d) const;
+        ```
+
+        > srcStageMask：需要获取event信号的流水线阶段，按位与的掩码
+        >
+        > dstStageMask：需要等待event信号的流水线阶段，按位与的掩码
+        >
+        > memoryBarriers：通用的内存屏障，用于同步对所有内存类型（包括图像资源、缓冲区等）的访问
+        >
+        > bufferMemoryBarriers：用于同步缓冲区（Buffer）的访问
+        >
+        > imageMemoryBarriers：用于同步图像资源的访问
