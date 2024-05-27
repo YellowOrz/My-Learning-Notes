@@ -838,19 +838,13 @@
     - buffer的创建信息：构造函数如下
 
         ```c++
-        BufferCreateInfo(vk::BufferCreateFlags flags_ = {}, vk::DeviceSize size_ = {}, 
-                         vk::BufferUsageFlags usage_ = {},
-                         vk::SharingMode sharingMode_ = vk::SharingMode::eExclusive, 
-                         uint32_t queueFamilyIndexCount_ = {},
-                         const uint32_t *pQueueFamilyIndices_ = {}, 
-                         const void *pNext_ = nullptr);
         BufferCreateInfo(vk::BufferCreateFlags flags_, vk::DeviceSize size_, 
                          vk::BufferUsageFlags usage_,
                          vk::SharingMode sharingMode_, 
                          vk::ArrayProxyNoTemporaries<const uint32_t> const &queueFamilyIndices_,
                          const void *pNext_ = nullptr) 
         ```
-
+        
         > flags_：类型为[BufferCreateFlagBits](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferCreateFlagBits.html)
         >
         > - eSparseBinding (VK_BUFFER_CREATE_SPARSE_BINDING_BIT)：绑定稀疏内存
@@ -863,7 +857,9 @@
         > - eDescriptorBufferCaptureReplayEXT  (VK_BUFFER_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT): 
         > - eVideoProfileIndependentKHR  (VK_BUFFER_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR): 
         >
-        > usage_：描述buffer的内在用途。具体见后
+        > usage_：描述buffer的内在用途，GPGPU中常用的有eUniformBuffer、eStorageBuffer
+        >
+        > ![image-20240526180248402](images/image-20240526180248402.png)
         >
         > sharingMode_：被多个 queue family访问时的共享模式
         >
@@ -1341,3 +1337,296 @@
         > bufferMemoryBarriers：用于同步缓冲区（Buffer）的访问
         >
         > imageMemoryBarriers：用于同步图像资源的访问
+
+# 第10章 描述符与推送常数
+
+- ==一致变量（Uniform）==：shader中只读的数据块
+    - 通过描述符和描述符池来进行管理
+- ==描述符（descriptor）==将资源和着色器关联起来，本质是用于通信
+- ==描述符池（descriptor pool）==：描述符的缓存区域，方便经常性地修改变量的值
+- 推送常数：有助于更新着色器中的常量数据，并且可以优化更新的速度使其更快
+
+## 10.1 理解描述符的概念
+
+> [一张图形象理解Vulkan DescriptorSet](https://zhuanlan.zhihu.com/p/450434645)：在DescriptorSetLayout的指导下，利用Descriptor Pool提供的Descriptors，组装成一个符合DescriptorSetLayout的Set
+
+- 描述符（descriptor）由描述符集（descriptor set）构成
+
+- ==描述符集（descriptor set）==：关联着色器和相关用户资源，例如一致变量缓存、采样图像、存储图像等，进而在着色器中读取和解析资源中的数据，着色器中需要通过描述符集布局（descriptor set layout）来定义对应的布局绑定信息
+
+- 描述符（descriptor）是一种不透明的对象，它定义了一种和着色器进行通信的通信协议。在系统内部，描述符通过位置绑定的方式来关联资源内存和着色器
+
+- 描述符集布局（descriptor set layout）：一组描述符绑定信息，数量可为0。它提供了一个在着色器中读取特定位置的资源的接口
+
+    ![image-20240526162242952](images/image-20240526162242952.png)
+
+- 创建descriptor set layout：
+
+    ```c++
+    vk::DescriptorSetLayout Device::createDescriptorSetLayout(const vk::DescriptorSetLayoutCreateInfo &createInfo,
+                                                              Optional<const vk::AllocationCallbacks> allocator,
+                                                              Dispatch const &d) const;
+    ```
+
+    - descriptor set layout的创建信息：构造函数如下
+
+        ```c++
+        DescriptorSetLayoutCreateInfo(vk::DescriptorSetLayoutCreateFlags flags_,
+                                      vk::ArrayProxyNoTemporaries<const vk::DescriptorSetLayoutBinding> const &bindings_,
+                                      const void *pNext_ = nullptr);
+        ```
+
+        > flags_：目前用不到
+        >
+        > bindings_：descriptor set layout绑定信息的数组
+
+    - 单个descriptor set layout绑定信息：构造函数如下
+
+        ```c++
+        DescriptorSetLayoutBinding(uint32_t binding_ = {}, vk::DescriptorType descriptorType_ = vk::DescriptorType::eSampler,
+                                   uint32_t descriptorCount_ = {}, vk::ShaderStageFlags stageFlags_ = {},
+                                   const vk::Sampler *pImmutableSamplers_ = {});
+        ```
+
+        > binding_：绑定descriptor在pool中的起始id号（相当于是全局id），跟shader中保持一致
+        >
+        > descriptorType_：描述符的类型（直接反应了绑定资源的类型）
+        >
+        > <img src="images/image-20240526164430843.png" alt="image-20240526164430843" style="zoom:67%;" /> 
+        >
+        > descriptorCount_：绑定的描述符的数量
+        >
+        > stageFlags_：可以访问描述符的shader阶段（或者说类型？），按位的掩码
+        >
+        > <img src="images/image-20240526170115026.png" alt="image-20240526170115026" style="zoom: 67%;" /> 
+        >
+        > pImmutableSamplers\_：一组不变采样器，只有descriptorType\_为eSampler或者eCombinedImageSampler才有效
+        >
+        > - 采样器：定义如何从一个纹理中读取数据，包括过滤模式、坐标变换等
+
+        
+
+- 销毁descriptor set layout：
+
+    ```c++
+    void Device::destroyDescriptorSetLayout(vk::DescriptorSetLayout descriptorSetLayout,
+                                            Optional<const vk::AllocationCallbacks> allocator, Dispatch const &d) const;
+    ```
+
+- ==流水线布局（pipeline layout）==：包含了一组descriptor set layout和推送常数，允许一个流水线（图形或者计算）对象直接访问描述符集（相当于是资源）
+
+    - 可以连续包含零个或者多个描述符集
+
+    ![image-20240526171227882](images/image-20240526171227882.png)
+
+- 创建pipeline layout：
+
+    ```c++
+    vk::PipelineLayout Device::createPipelineLayout(const vk::PipelineLayoutCreateInfo &createInfo,
+                                                    Optional<const vk::AllocationCallbacks> allocator,
+                                                    Dispatch const &d) const;
+    ```
+
+    - pipeline layout的创建信息：构造函数如下
+
+        ```c++
+        PipelineLayoutCreateInfo(vk::PipelineLayoutCreateFlags flags_,
+                                 vk::ArrayProxyNoTemporaries<const vk::DescriptorSetLayout> const &setLayouts_,
+                                 vk::ArrayProxyNoTemporaries<const vk::PushConstantRange> const &pushConstantRanges_ = {},
+                                 const void *pNext_ = nullptr);
+        ```
+
+        > flags_：按位的掩码，选的话只有eIndependentSetsEXT = VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT（表示descriptor set不会影响pipeline layout）
+        >
+        > pushConstantRanges_：推送常数范围的数组，见10.3节
+
+- 销毁pipeline layout：
+
+    ```c++
+    void Device::destroyPipelineLayout(vk::PipelineLayout pipelineLayout, Optional<const vk::AllocationCallbacks> allocator,
+                                       Dispatch const &d) const;
+    ```
+
+- ==描述符池（descriptor pool）==：描述符集不能被直接创建的。它们需要从一个特定的缓冲池中被分配得到
+
+- 创建descriptor pool
+
+    ```c++
+    vk::DescriptorPool Device::createDescriptorPool(const vk::DescriptorPoolCreateInfo &createInfo,
+                                                    Optional<const vk::AllocationCallbacks> allocator,
+                                                    Dispatch const &d) const;
+    ```
+
+    - descriptor pool的创建信息：构造函数如下
+
+        ```c++
+        DescriptorPoolCreateInfo(vk::DescriptorPoolCreateFlags flags_, uint32_t maxSets_,
+                                 vk::ArrayProxyNoTemporaries<const vk::DescriptorPoolSize> const &poolSizes_,
+                                 const void *pNext_ = nullptr);
+        ```
+
+        > flags_：按位的掩码，表示descriptor pool启用的功能
+        >
+        > ![image-20240526174834340](images/image-20240526174834340.png)
+        >
+        > maxSets_：描述符池中分配描述符的最大数量
+        >
+        > poolSizes_：记录每种类型的描述符预先分配数量
+
+    - 描述符池中某种类型的描述符的预分配信息：构造函数如下
+
+        ```c++
+        DescriptorPoolSize(vk::DescriptorType type_ = vk::DescriptorType::eSampler, uint32_t descriptorCount_ = {});
+        ```
+
+        > type_：描述符的类型，见DescriptorSetLayoutBinding()
+        >
+        > descriptorCount_：预分配的数量
+
+- 销毁descriptor pool
+
+    ```c++
+    void Device::destroyDescriptorPool(vk::DescriptorPool descriptorPool, Optional<const vk::AllocationCallbacks> allocator,
+                                       Dispatch const &d) const;
+    ```
+
+- 创建uniform buffer：在vk::Device::createBuffer()的BufferCreateInfo中，令BufferUsageFlags=eUniformBuffer
+
+- 创建descriptor set：包含两个步骤，描述符集的分配 和 资源的关联
+
+- 从descriptor pool中分配descriptor set：
+
+    ```c++
+    std::vector<vk::DescriptorSet, DescriptorSetAllocator>
+    Device::allocateDescriptorSets(const vk::DescriptorSetAllocateInfo &allocateInfo, Dispatch const &d) const;
+    std::vector<vk::DescriptorSet, DescriptorSetAllocator>
+    Device::allocateDescriptorSets(const vk::DescriptorSetAllocateInfo &allocateInfo,
+                                   DescriptorSetAllocator &descriptorSetAllocator, Dispatch const &d) const;
+    ```
+
+    - descriptor set的分配信息：构造函数如下
+
+        ```c++
+        DescriptorSetAllocateInfo(vk::DescriptorPool descriptorPool_,
+                                  vk::ArrayProxyNoTemporaries<const vk::DescriptorSetLayout> const &setLayouts_,
+                                  const void *pNext_ = nullptr);
+        ```
+
+- 释放descriptor set
+
+    ```c++
+    void Device::freeDescriptorSets(vk::DescriptorPool descriptorPool,
+                                    vk::ArrayProxy<const vk::DescriptorSet> const &descriptorSets, Dispatch const &d) const;
+    ```
+
+- 关联资源与descriptor set：完成后，descriptor set就创建完成了
+
+    ```c++
+    void Device::updateDescriptorSets(vk::ArrayProxy<const vk::WriteDescriptorSet> const &descriptorWrites,
+                                      vk::ArrayProxy<const vk::CopyDescriptorSet> const &descriptorCopies,
+                                      Dispatch const &d) const;
+    ```
+
+    > descriptorWrites：描述符集的写入过程，相当于描述符集不是个空壳了、是有资源关联的
+    >
+    > descriptorCopies：将已有的描述符集复制到目标描述符集
+    >
+    > 调用updateDescriptorSets()的时候先执行写入，再执行复制
+
+    - 描述符集的写入（更新）信息：构造函数如下
+
+        ```c++
+        WriteDescriptorSet(vk::DescriptorSet dstSet_ = {}, uint32_t dstBinding_ = {}, uint32_t dstArrayElement_ = {},
+                           uint32_t descriptorCount_ = {}, vk::DescriptorType descriptorType_ = vk::DescriptorType::eSampler,
+                           const vk::DescriptorImageInfo *pImageInfo_ = {}, const vk::DescriptorBufferInfo *pBufferInfo_ = {},
+                           const vk::BufferView *pTexelBufferView_ = {}, const void *pNext_ = nullptr);
+        ```
+
+        > dstSet_：要更新的描述符集
+        >
+        > dstBinding\_：dstSet\_在pool中的起始id号（相当于是全局id），跟DescriptorSetLayoutBinding()中的binding\_保持一致
+        >
+        > dstArrayElement\_：大于0、小于DescriptorSetLayoutBinding()中的descriptorCount\_，dstSet\_中的起始id（相当于是局部id）
+        >
+        > descriptorCount_：如果下面的类型为VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK，则是要更新的字节数；否则为pImageInfo\_、pBufferInfo\_、或者pTexelBufferView\_中的元素数量
+        >
+        > descriptorType_：dstSet\_的类型（[官方文档](https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkWriteDescriptorSet.html)说是每个描述符的类型，但是它不是数组啊？？？）。跟DescriptorSetLayoutBinding()中descriptorType\_一致，除非那里为VK_DESCRIPTOR_TYPE_MUTABLE_EXT
+        >
+        > pImageInfo\_、pBufferInfo\_、pTexelBufferView_是Image、buffer、buffer view的相关信息
+
+        - descriptor中buffer的信息：构造函数如下
+
+            ```c++
+            DescriptorBufferInfo(vk::Buffer buffer_ = {}, vk::DeviceSize offset_ = {}, vk::DeviceSize range_ = {});
+            ```
+
+            > offset\_和range\_要绑定的buffer的偏移量和范围
+
+    - 描述符集的复制信息：构造函数如下
+
+        ```c++
+        CopyDescriptorSet(vk::DescriptorSet srcSet_ = {}, uint32_t srcBinding_ = {}, uint32_t srcArrayElement_ = {},
+                          vk::DescriptorSet dstSet_ = {}, uint32_t dstBinding_ = {}, uint32_t dstArrayElement_ = {},
+                          uint32_t descriptorCount_ = {}, const void *pNext_ = nullptr);
+        ```
+
+## 10.2 如何在Vulkan中实现一致变量
+
+- 映射（vk::mapMemory）了一致变量缓存之后，除非应用程序停止使用一致变量缓存，否则不用主动逆映射（vk::unmapMemory）
+
+    - 确保host能够看到device所做的更改，使用如下函数
+
+        ```c++
+        void Device::invalidateMappedMemoryRanges(vk::ArrayProxy<const vk::MappedMemoryRange> const &memoryRanges,
+                                             Dispatch const &d) const;
+        ```
+
+    - 确保device能够看到host所做的更改，使用如下函数
+
+        ```c++
+        void Device::flushMappedMemoryRanges(vk::ArrayProxy<const vk::MappedMemoryRange> const &memoryRanges,
+                                             Dispatch const &d) const;
+        ```
+
+## 10.3 推送常数的更新
+
+- ==推送常数（push constant）==：一种特殊的更新着色器常量数据的方法，使用指令缓存的方式、而非资源的写入或者复制描述符来完成更新的操作，高效地更新流水线中的常量数据
+
+- shader中推送常数资源使用关键字push_constant来定义，例如
+
+    ```c++
+    layout(push_constant) uniform ColorBlock{
+        int value;
+    }PushConstantColorBlock;
+    ```
+
+- 在PipelineLayoutCreateInfo（见10.1节）中记录推送常数的范围：构造函数如下
+
+    ```c++
+    PushConstantRange( vk::ShaderStageFlags stageFlags_ = {}, uint32_t offset_ = {}, uint32_t size_ = {} );
+    ```
+
+    > stageFlags_：shader阶段（或者说类型）
+    >
+    > offset\_和range\_：偏移量和范围，单位字节，都必须是4的倍数
+
+- 更新推送常数
+
+    ```c++
+    void CommandBuffer::pushConstants(vk::PipelineLayout layout, vk::ShaderStageFlags stageFlags, uint32_t offset,
+                                      uint32_t size, const void *pValues, Dispatch const &d) const;
+    template <typename ValuesType>
+    void CommandBuffer::pushConstants(vk::PipelineLayout layout, vk::ShaderStageFlags stageFlags, uint32_t offset,
+                                      vk::ArrayProxy<const ValuesType> const &values, Dispatch const &d) const;
+    ```
+
+    > layout：管理推送常数的更新逻辑的pipeline layout
+    >
+    > stageFlags：更新推送常数的shader阶段，按位的掩码
+    >
+    > pValues：一次性推送的所有常量（在内存上连续？）的首地址
+
+- 推送常数的大小不可超过vk::PhysicalDeviceProperties::limits::maxPushConstantsSize所定义的最大值
+
+
+
