@@ -1,0 +1,27 @@
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+---
+BasedOnStyle: Google
+---
+Language: Cpp
+ColumnLimit: 120
+TabWidth: 2
+# 缩进宽度
+IndentWidth: 2
+# 延续的行的缩进宽度
+ContinuationIndentWidth: 2
+# 访问说明符(public、private等)的偏移
+AccessModifierOffset: -1
+# 允许短的if语句保持在同一行
+AllowShortIfStatementsOnASingleLine: true
+# 允许短的块放在同一行
+AllowShortBlocksOnASingleLine: Never
+# 允许短的循环while保持在同一行
+AllowShortLoopsOnASingleLine: true
+# 允许短的case标签放在同一行
+AllowShortCaseLabelsOnASingleLine: true
+# 尾随的注释对齐
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
+# 对齐数组列
+AlignArrayOfStructures: Right
