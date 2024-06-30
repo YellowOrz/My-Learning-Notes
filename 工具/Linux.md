@@ -14,7 +14,7 @@
 apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl
 apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot smplayer mpv kdenlive cloc xournalpp
 apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang baobab
-snap install meshlab stretchly moonlight
+snap install meshlab stretchly moonlight wireguard-gui
 # apt装不了的就用snap
 apt install x2goserver x2goserver-xsession x2goclient
 
@@ -56,7 +56,7 @@ sudo apt install polychromatic  # Full installation
 | [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                             | 命令快速查询工具，**强力推荐**！          |
 | [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | Kdenlive                                             | 视频编辑软件                              |
 | [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine) | deepin-wine环境与应用在Ubuntu上的移植仓库 |
-| [smplayer](https://www.smplayer.info/) && [mpv](https://mpv.io/) | 跨平台的视频播放器 && 逐帧播放引擎                           |                                                      |                                           |
+| [smplayer](https://www.smplayer.info/) && [mpv](https://mpv.io/) | 跨平台的视频播放器 && 逐帧播放引擎                           | wireguard-gui                                        | wireguard vpn客户端的UI                   |
 | [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                            | 命令行删除文件到回收站                    |
 | btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)              | 三维模型查看                              |
 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                          | 基于ssh的远程图形界面                     |
@@ -709,6 +709,17 @@ apt install libgtk-3-dev
   
 
 # ~~WSL~~
+
+- [wsl自动使用win的代理](https://github.com/microsoft/WSL/issues/10753): 编辑文件`%USERPROFILE%\.wslconfig`
+
+    ```c++
+    [experimental]
+    autoMemoryReclaim=gradual  # gradual  | dropcache | disabled
+    networkingMode=mirrored
+    dnsTunneling=true
+    firewall=true
+    autoProxy=true
+    ```
 
 - **安装**：现在BIOS打开虚化，然后控制面板 -> 启用或关闭Windows功能 中，打开虚拟机平台、适用于Linux的Windows子系统、Hyper-V，重启。
 

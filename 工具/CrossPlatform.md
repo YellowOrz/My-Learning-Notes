@@ -136,19 +136,38 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
     ```
 
-    
-
 - [括号匹配辅助线的开启](https://github.com/CoenraadS/Bracket-Pair-Colorizer-2?tab=readme-ov-file#bracket-pair-colorizer-2)：`setting => Editor => Guides: Bracket Pairs`，设置为activate，效果类似下图
 
     ![Screenshot](images/example-1705206069501-3.png)
 
-- vsode server安装包下载：将下面的commit号换成对应vsode即可
+- vsode server安装包下载：根据系统、CPU架构选择连接，然后将其中的commit号换成对应vsode的即可
 
     -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable
 
     -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32-x64/stable
     -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux_x64/stable
     -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux-arm64/stable
+    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-darwin-arm64/stable
+
+- [修改C++中访问限定符（public、private等）的颜色](https://blog.csdn.net/NEKOic/article/details/118855221)：在设置的json中加入如下内容
+
+    ```json
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": [
+                    "storage.modifier.access.control.public.cpp",
+                    "storage.modifier.access.control.private.cpp",
+                    "storage.modifier.access.control.protected.cpp",
+                ],
+                "settings": {
+                    "foreground": "#FFFF00",
+                    "fontStyle": "bold underline" 
+                }
+            }
+        ]
+    },
+    ```
 
 - 让标签页更紧凑：setting=> tab sizing，改为shrink
 
@@ -226,6 +245,8 @@
 
     
 
+
+
 # Typora
 
 - 偏好设置：
@@ -298,11 +319,19 @@
 
 - 快捷键：将快捷键换成VSCode，然后修改如下的快捷键
 
-| 快捷键             | 说明          | 快捷键   | 说明                  |
-| ------------------ | ------------- | -------- | --------------------- |
-| Ctrl + Shift + E   | Project       | Ctrl + J | Hide All Tool Windows |
-| Ctrl + K, Ctrl + F | Reformat Code | Ctrl + ` | Ternimal              |
-|                    |               |          |                       |
+| 快捷键             | 说明                             |                            |
+| ------------------ | -------------------------------- | -------------------------- |
+| Ctrl + Shift + E   | Project                          | 项目文件管理窗口打开/关闭  |
+| Ctrl + K, Ctrl + F | Reformat Code                    | 格式化代码                 |
+| Ctrl + `           | Ternimal                         | 终端开启/关闭              |
+| Ctrl + J           | Hide All Tool Windows            | 隐藏所有侧边窗口           |
+| F9                 | Toggle Line Breakpoint           | 启用/取消break point       |
+| Alt + F9           | Toggle Temporary Line Breakpoint | 启用一次性的break point    |
+| Shift + F9         | Toggle Breakpoint Enabled        | 禁用/启用 break point      |
+| Ctrl + F9          | View Breakpoints...              | 查看所有的break points信息 |
+|                    |                                  |                            |
+|                    |                                  |                            |
+|                    |                                  |                            |
 
 - 双击标签页让窗口最大化：setting => advanced settings => Editor Tabs => Perform 'Maximize Editor''Normalize Splits'with double-click on editor tab
 
@@ -318,6 +347,10 @@
 - [注释靠近代码](https://blog.51cto.com/u_15127627/3280936)：Settings => Code Style => C/C++ ，在右边选择 “Code Generation” Tab，取消勾选`Line comment at first column`、`Block comment at first column`，勾选`Add a space at line comment start`
 
 - [手动加载CMakePresets.json](https://www.jetbrains.com/help/clion/cmake-presets.html#load-preset)：开启全局搜索（快捷键双击shift或者ctrl+shift+A），搜索Load CMake Presets
+
+- 块注释修改颜色：setting=>Editor=>Color Scheme=>Language Defaults，找到Commnets=>Block comment以及Commnets=>Doc comment=>Text，将Foreground改成98C379（来自vscode的插件Better Comments）
+
+- doxygen注释模板添加@brief：setting=>Editor=>Code Style=>C/C++=>Code Generation=>Docummentation Comments，勾选"Add @brief tag"
 
 
 ## 旧
