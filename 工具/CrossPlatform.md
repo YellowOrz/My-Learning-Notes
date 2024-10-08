@@ -310,12 +310,13 @@
 
     - 方法二：[官方插件网站](https://plugins.jetbrains.com/clion)上搜索，然后打开插件页面，点击“VERSION”按钮，根据自己的版本下载
 
-| 插件                                                         | 简介                                               | 插件                                                         | 简介                             |
-| ------------------------------------------------------------ | -------------------------------------------------- | ------------------------------------------------------------ | -------------------------------- |
-| [String Manipulation](https://plugins.jetbrains.com/plugin/2162-string-manipulation) | 快速转换代码命名风格，如转换大小写，驼峰变下划线等 | [Quick File Preview](https://plugins.jetbrains.com/plugin/12778-quick-file-preview) | 单击文件即可打开预览，类似VSCode |
-| [CodeGlance Pro](https://plugins.jetbrains.com/plugin/18824-codeglance-pro) | 代码预览，类似VSCode                               | [Smart Input](https://plugins.jetbrains.com/plugin/20575-smart-input) | 自动切换中英文                   |
-| [OpenCV Image Viewer](https://plugins.jetbrains.com/plugin/14371-opencv-image-viewer/versions) | debug的时候可视化opencv的变量                      | [VSCode Keymap](https://plugins.jetbrains.com/plugin/12062-vscode-keymap) | vscode快捷键                     |
-| [GitHub Theme](https://plugins.jetbrains.com/plugin/15418-github-theme) | github主题                                         | Key Promoter X                                               | 快捷键提示                       |
+| 插件                                                         | 简介                                                         | 插件                                                         | 简介                             |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------------------- |
+| [String Manipulation](https://plugins.jetbrains.com/plugin/2162-string-manipulation) | 快速转换代码命名风格，如转换大小写，驼峰变下划线等           | [Quick File Preview](https://plugins.jetbrains.com/plugin/12778-quick-file-preview) | 单击文件即可打开预览，类似VSCode |
+| [CodeGlance Pro](https://plugins.jetbrains.com/plugin/18824-codeglance-pro) | 代码预览，类似VSCode                                         | [Smart Input](https://plugins.jetbrains.com/plugin/20575-smart-input) | 自动切换中英文                   |
+| [OpenCV Image Viewer](https://plugins.jetbrains.com/plugin/14371-opencv-image-viewer/versions) | debug的时候可视化opencv的变量                                | [VSCode Keymap](https://plugins.jetbrains.com/plugin/12062-vscode-keymap) | vscode快捷键                     |
+| [GitHub Theme](https://plugins.jetbrains.com/plugin/15418-github-theme) | github主题                                                   | Key Promoter X                                               | 快捷键提示                       |
+| CodeGeeX                                                     | AI助手（可能要[手动设置](https://zhipu-ai.feishu.cn/docx/CKXrdaLUFoqlhfxn9eGc36Bqnyb)） |                                                              |                                  |
 
 - 快捷键：将快捷键换成VSCode，然后修改如下的快捷键
 
@@ -323,14 +324,14 @@
 | ------------------ | -------------------------------- | -------------------------- |
 | Ctrl + Shift + E   | Project                          | 项目文件管理窗口打开/关闭  |
 | Ctrl + K, Ctrl + F | Reformat Code                    | 格式化代码                 |
-| Ctrl + `           | Ternimal                         | 终端开启/关闭              |
+| Ctrl + `           | Terminal                         | 终端开启/关闭              |
 | Ctrl + J           | Hide All Tool Windows            | 隐藏所有侧边窗口           |
 | F9                 | Toggle Line Breakpoint           | 启用/取消break point       |
 | Alt + F9           | Toggle Temporary Line Breakpoint | 启用一次性的break point    |
 | Shift + F9         | Toggle Breakpoint Enabled        | 禁用/启用 break point      |
 | Ctrl + F9          | View Breakpoints...              | 查看所有的break points信息 |
-|                    |                                  |                            |
-|                    |                                  |                            |
+| Ctrl + Alt + /     | Comment with Block Comment       | 块注释                     |
+| Ctrl + Alt + F5    | Attach to Process                | 附加到进程进行调试         |
 |                    |                                  |                            |
 
 - 双击标签页让窗口最大化：setting => advanced settings => Editor Tabs => Perform 'Maximize Editor''Normalize Splits'with double-click on editor tab
@@ -350,7 +351,11 @@
 
 - 块注释修改颜色：setting=>Editor=>Color Scheme=>Language Defaults，找到Commnets=>Block comment以及Commnets=>Doc comment=>Text，将Foreground改成98C379（来自vscode的插件Better Comments）
 
-- doxygen注释模板添加@brief：setting=>Editor=>Code Style=>C/C++=>Code Generation=>Docummentation Comments，勾选"Add @brief tag"
+- doxygen注释模板添加@brief：
+
+    - 旧版：setting=>Editor=>Code Style=>C/C++=>Code Generation=>Docummentation Comments，勾选"Add @brief tag"
+    - 新版：setting=>Languages & Frameworks=>C/C++=>Code Generation=>Docummentation Comment Template，勾选"Add @brief tag"
+
 
 
 ## 旧
@@ -506,7 +511,12 @@ pip install scipy pprint albumentations json-py imageio kornia torch-summary
 # Zotero
 
 - 安装[zotfile](http://zotfile.com/)：下载后是xpi格式。在zotero中，`工具`=>`附加组件`=>右上角齿轮=>`Install Add-on From File`，找到xpi文件，即可
-- 修改文件命名方式：在zotero中，`工具`=>`ZotFile Preferences`=>`Renaming Rules`，取消勾选`Use Zotero to Rename`，将其下面两个空格填入`{%y_}{%t_}{%a}`
+- 【≤ v6.x】修改文件命名方式：在zotero中，`工具`=>`ZotFile Preferences`=>`Renaming Rules`，取消勾选`Use Zotero to Rename`，将其下面两个空格填入`{%y_}{%t_}{%a}`
+- 【≥ v7.x】修改文件命名方式：编辑=> 常规=>文件重命名=>自定义文件名格式=>文件名模板，改成
+
+    ```
+    {{ year suffix="_" }}{{ title truncate="100" suffix="_" }}{{ firstCreator }}
+    ```
 - 显示列：刊名缩写、档案、短标题
 
 # clash for windows

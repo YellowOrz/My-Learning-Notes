@@ -49,20 +49,22 @@ sudo apt install polychromatic  # Full installation
 # apt install indicator-cpufreq
 ```
 
-| 软件名                                                       | 介绍                                                         | 软件名                                               | 介绍                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | ----------------------------------------- |
-| [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                  | 截图软件                                  |
-| [SimpleScreenRecorder](https://github.com/MaartenBaert/ssr)  | 录屏软件，apt安装                                            | gnome-shell-extensions                               | GNOME的插件                               |
-| [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                             | 命令快速查询工具，**强力推荐**！          |
-| [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | Kdenlive                                             | 视频编辑软件                              |
-| [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine) | deepin-wine环境与应用在Ubuntu上的移植仓库 |
-| [smplayer](https://www.smplayer.info/) && [mpv](https://mpv.io/) | 跨平台的视频播放器 && 逐帧播放引擎                           | wireguard-gui                                        | wireguard vpn客户端的UI                   |
-| [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                            | 命令行删除文件到回收站                    |
-| btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)              | 三维模型查看                              |
-| [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                          | 基于ssh的远程图形界面                     |
-| cloc                                                         | 代码统计                                                     | [xournalpp](https://github.com/xournalpp/xournalpp)  | pdf编辑                                   |
-| baobab                                                       | 分析磁盘使用情况（即文件大小）                               | [moonlight](https://moonlight-stream.org/)           | 串流客户端                                |
-| ~~[VLC](https://www.videolan.org/vlc/download-ubuntu.html)~~ | ~~视频播放器（跨平台）~~                                     | ~~indicator-cpufreq~~                                | ~~CPU性能调节~~                           |
+| 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                                      |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------- |
+| [guake](http://guake-project.org/)                           | [GNOME](https://www.bilibili.com/video/BV1Mx411U7cc)雷神终端（[教程](https://linux.cn/article-5507-1.html)） | [flameshot](https://flameshot.org/)                          | 截图软件                                  |
+| [SimpleScreenRecorder](https://github.com/MaartenBaert/ssr)  | 录屏软件，apt安装                                            | gnome-shell-extensions                                       | GNOME的插件                               |
+| [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                                     | 命令快速查询工具，**强力推荐**！          |
+| [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | Kdenlive                                                     | 视频编辑软件                              |
+| [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine)         | deepin-wine环境与应用在Ubuntu上的移植仓库 |
+| [smplayer](https://www.smplayer.info/) && [mpv](https://mpv.io/) | 跨平台的视频播放器 && 逐帧播放引擎                           | wireguard-gui                                                | wireguard vpn客户端的UI                   |
+| [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                                    | 命令行删除文件到回收站                    |
+| btop                                                         | top、htop的替代品，功能更强大                                | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                              |
+| [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                                  | 基于ssh的远程图形界面                     |
+| cloc                                                         | 代码统计                                                     | [xournalpp](https://github.com/xournalpp/xournalpp)          | pdf编辑                                   |
+| [poppler-utils](https://blog.csdn.net/Leon_Jinhai_Sun/article/details/139151611) | PDF处理工具集                                                | [pdftk](https://blog.csdn.net/weixin_43147145/article/details/104771580) | PDF处理工具集                             |
+| baobab                                                       | 最新推荐文章于 2024-07-19 16:17:47 发布分析磁盘使用情况（即文件大小） | [moonlight](https://moonlight-stream.org/)                   | 串流客户端                                |
+| [tlp](https://linrunner.de/tlp/installation/ubuntu.html)     | 电源管理工具（可降低功耗，[其他资料](https://www.reddit.com/r/linuxquestions/comments/116pc8u/lower_ryzen_frequency_and_tdp_on_linux_how_much/)） |                                                              |                                           |
+| ~~[VLC](https://www.videolan.org/vlc/download-ubuntu.html)~~ | ~~视频播放器（跨平台）~~                                     | ~~indicator-cpufreq~~                                        | ~~CPU性能调节~~                           |
 
 ## 手动安装
 
@@ -367,11 +369,15 @@ apt install libgtk-3-dev
 
 ## 软件
 
-| 快捷键          | 作用                | 快捷键 | 作用 |
-| --------------- | ------------------- | ------ | ---- |
-| `super + enter` | gTile多分屏窗口管理 |        |      |
-|                 |                     |        |      |
-|                 |                     |        |      |
+| 快捷键              | 作用                | 命令                                                  |
+| ------------------- | ------------------- | ----------------------------------------------------- |
+| `super + enter`     | gTile多分屏窗口管理 |                                                       |
+| `super + E`         | nautilus            | /usr/bin/nautilus                                     |
+| `Shift+Ctrl+Escape` | 任务管理器          | gnome-system-monitor                                  |
+| `Shift+Ctrl+Alt+W`  | 打开微信            | /opt/apps/com.qq.weixin.mejituu/files/shortcut_key.sh |
+| `Alt+F2`            | guake               |                                                       |
+| `Super + V`         | copyq               | /usr/bin/copyq toggle                                 |
+| `Shift+Print`       | flameshot截图       | /usr/bin/flameshot gui                                |
 
 
 
