@@ -29,9 +29,7 @@
 
     - 若只有SSD：C盘至少150G，剩下所有的容量都分给D盘
     - SSD+HDD：SSD全分给C盘，HDD全分给其他盘
-
-- OneDrive：将OneDrive文件夹存放在C盘以外的地方，然后桌面文件夹放在OneDrive下面
-
+    
 - 开启剪贴板历史记录：按`Windows 键` + `V`
 
 - 开机启动管理：任务管理器 -> 启动
@@ -110,7 +108,7 @@
 |[ventoy](https://www.lanzoui.com/b01bd54gb)|系统盘制作|[MulimgViewer](https://github.com/nachifur/MulimgViewer/releases)|同时查看多张图|
 |uTools|好用工具集合|[Zotero](https://www.zotero.org/download/)|跨平台文献查看工具|
 |Geomagic Wrap|三维模型处理工具|[Mellow Multi Player](http://mellow.official.jp/blog/archives/3081)|同时播放多个视频|
-|[WinDirStat](https://windirstat.net/download.html)|磁盘分析工具|[Sumatra PDF](https://www.sumatrapdfreader.org/download-free-pdf-viewer)|PDF阅读器，支持黑暗模式|
+|[WinDirStat](https://windirstat.net/download.html)|磁盘分析工具|[Sumatra PDF](https://www.sumatrapdfreader.org/download-free-pdf-viewer)|PDF阅读器，支持黑暗模式(快捷键I)|
 |[QTTabBar](https://github.com/indiff/qttabbar)|用浏览器的方式管理 Windows 资源管理器|          [HWiNFO](https://www.hwinfo.com/download/)          |查看电脑硬件，包含温度、功耗等|
 |||                                                              ||
 
@@ -158,6 +156,18 @@
 
         
 
+# Git Bash
+
+- 使用tmux：[How to run Tmux in GIT Bash on Windows | PJSen Blog](https://blog.pjsen.eu/?p=440#:~:text=This is what you do%3A Install before-mentioned msys2,Git for Windows directory%2C mine is C%3AProgram FilesGitusrbin.)
+
+- [使用page up、page down搜索历史命令](https://stackoverflow.com/questions/60153457/how-to-enable-history-search-by-page-up-down-in-git-bash-like-in-linux)：在`~/.inputrc`中添加如下内容
+
+    ```
+        "\e[5~": history-search-backward
+        "\e[6~": history-search-forward
+    ```
+
+    
 # Visual Studio
 
 ## 配置

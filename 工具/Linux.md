@@ -11,10 +11,17 @@
 ## apt安装
 
 ```shell
-apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl
-apt install git gedit copyq ncdu tldr guake gnome-shell-extensions trash-cli flameshot smplayer mpv kdenlive cloc xournalpp
-apt install cmake cmake-curses-gui gcc g++ gdb build-essential make libpng-dev libboost-all-dev clang baobab
-snap install meshlab stretchly moonlight wireguard-gui
+# 基础
+apt install vim openssh-server tmux net-tools btop unzip zip rar unrar tree libssl-dev curl tldr trash-cli
+# 开发
+apt install git cmake cmake-curses-gui gcc g++ gdb build-essential make cloc meshlab
+apt install  libpng-dev libboost-all-dev clang 
+# 工具
+apt install copyq flameshot xournalpp vlc wireguard-gui
+snap install stretchly mission-center
+
+# gnome
+apt install gedit guake gnome-shell-extensions   
 # apt装不了的就用snap
 apt install x2goserver x2goserver-xsession x2goclient
 
@@ -24,6 +31,8 @@ wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
 # sudo apt-get install com.qq.office.deepin
 
 ### 以下可选 ###
+snap install moonlight
+apt install kdenlive ncdu baobab smplayer mpv 
 # 远程传输
 apt install lrzsz samba smbclient cifs-utils
 # win自带远程	
@@ -56,13 +65,14 @@ sudo apt install polychromatic  # Full installation
 | [CopyQ](https://hluk.github.io/CopyQ/)                       | 剪切板管理，**强力推荐**！                                   | [tldr](https://tldr.sh/)                                     | 命令快速查询工具，**强力推荐**！          |
 | [openrazer-meta](https://openrazer.github.io/#ubuntu)        | 第三方Razer驱动                                              | Kdenlive                                                     | 视频编辑软件                              |
 | [polychromatic](https://github.com/polychromatic/polychromatic) | 第三方Razer GUI                                              | [deepin-wine](https://github.com/zq1997/deepin-wine)         | deepin-wine环境与应用在Ubuntu上的移植仓库 |
-| [smplayer](https://www.smplayer.info/) && [mpv](https://mpv.io/) | 跨平台的视频播放器 && 逐帧播放引擎                           | wireguard-gui                                                | wireguard vpn客户端的UI                   |
+| [smplayer](https://www.smplayer.info/) && [mpv](https://mpv.io/) | 跨平台的视频播放器 && 逐帧播放引擎                           | [mission-center](https://gitlab.com/mission-center-devs/mission-center) | 好看的任务管理器                          |
+| wireguard-gui                                                | wireguard vpn客户端的UI                   |||
 | [ncdu](https://dev.yorhel.nl/ncdu)                           | 磁盘使用分析查看工具                                         | trash-cli                                                    | 命令行删除文件到回收站                    |
-| btop                                                         | top、htop的替代品，功能更强大                                | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                              |
+| btop                                                         | top、htop的替代品<br/>功能更强大                             | [MeshLab](https://snapcraft.io/meshlab)                      | 三维模型查看                              |
 | [Stretchly](https://github.com/hovancik/stretchly/releases)  | 休息提醒                                                     | X2Go Client                                                  | 基于ssh的远程图形界面                     |
 | cloc                                                         | 代码统计                                                     | [xournalpp](https://github.com/xournalpp/xournalpp)          | pdf编辑                                   |
 | [poppler-utils](https://blog.csdn.net/Leon_Jinhai_Sun/article/details/139151611) | PDF处理工具集                                                | [pdftk](https://blog.csdn.net/weixin_43147145/article/details/104771580) | PDF处理工具集                             |
-| baobab                                                       | 最新推荐文章于 2024-07-19 16:17:47 发布分析磁盘使用情况（即文件大小） | [moonlight](https://moonlight-stream.org/)                   | 串流客户端                                |
+| baobab                                                       | 分析磁盘使用情况（即文件大小）                               | [moonlight](https://moonlight-stream.org/)                   | 串流客户端                                |
 | [tlp](https://linrunner.de/tlp/installation/ubuntu.html)     | 电源管理工具（可降低功耗，[其他资料](https://www.reddit.com/r/linuxquestions/comments/116pc8u/lower_ryzen_frequency_and_tdp_on_linux_how_much/)） |                                                              |                                           |
 | ~~[VLC](https://www.videolan.org/vlc/download-ubuntu.html)~~ | ~~视频播放器（跨平台）~~                                     | ~~indicator-cpufreq~~                                        | ~~CPU性能调节~~                           |
 
@@ -93,15 +103,15 @@ sudo apt install polychromatic  # Full installation
 | [腾讯会议](https://source.meeting.qq.com/download/)          | 官方                                                         | [XDM](https://xtremedownloadmanager.com/#downloads)          | 下载软件。[浏览器插件地址](https://subhra74.github.io/xdm/redirect.html?target=chrome)（跨平台） |
 | [Thunderbird](https://www.thunderbird.net/zh-CN/)            | 邮箱                                                         | [zotero](https://www.zotero.org/download/)                   | 文献管理                                                     |
 | [ToDesk](https://www.todesk.com/download.html)               | 远程控制软件                                                 | [向日葵](https://sunlogin.oray.com/download)                 | 远程控制软件（跨平台）                                       |
-| [XnView MP](https://www.xnview.com/en/xnviewmp/#downloads)   | 图片查看软件（跨平台）                                       | Pycharm                                                      | python IDE                                                   |
+| [XnView MP](https://www.xnview.com/en/xnviewmp/#downloads)   | 图片查看软件（跨平台）                                       |                                                              |                                                              |
 | [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads) | 虚拟机                                                       | [TeamViewer](https://www.teamviewer.cn/cn/download/linux/)   | 远程控制软件                                                 |
-| [PyCharm 社区版](https://www.jetbrains.com/zh-cn/pycharm/)   | python IDE                                                   | VNC Viewer                                                   | VNC远程                                                      |
+|                                                              | python IDE                                                   | VNC Viewer                                                   | VNC远程                                                      |
 | 微信(wine)                                                   | [双屏需将左屏作为主屏，否则图标显示异常](https://github.com/wszqkzqk/deepin-wine-ubuntu/issues/135#issuecomment-530186788) | [Steam](https://store.steampowered.com/about/)               | 官方                                                         |
 | [Motirx](https://motrix.app/zh-CN/)                          | 下载软件。支持多种协议（包含BT、磁力）                       |                                                              |                                                              |
 |                                                              |                                                              |                                                              |                                                              |
 | ~~[mendeley](https://www.mendeley.com/download-desktop-new/)~~ | 论文管理工具                                                 | ~~[Free Download Manager](https://www.freedownloadmanager.org/zh/download-fdm-for-linux.htm)~~ | 下载工具                                                     |
 | ~~[微信](https://blog.csdn.net/OTZ_2333/article/details/122368735)~~ | 官方微信（从优麒麟镜像安装）                                 |                                                              |                                                              |
-| [UEngine运行器](https://gitee.com/gfdgd-xi/uengine-runner)   | 运行安卓应用                                                 | ~~[Mark Text](https://github.com/marktext/marktext/releases)~~ | Markdown编辑器，开源，跨平台(似乎不维护了)                   |
+| ~~[UEngine运行器](https://gitee.com/gfdgd-xi/uengine-runner)~~ | 运行安卓应用                                                 | ~~[Mark Text](https://github.com/marktext/marktext/releases)~~ | Markdown编辑器，开源，跨平台(似乎不维护了)                   |
 
 ## 有意思的小工具
 
@@ -177,7 +187,7 @@ cd ../..
 # ceres
 git clone -b 2.1.0 --depth=1 https://github.com/ceres-solver/ceres-solver.git
 cd ceres-solver
-mkdir build_
+mkdir build
 cd build_
 cmake ..
 make -j4
@@ -476,8 +486,59 @@ apt install libgtk-3-dev
     - 软件内设置：clash for windows、
     - 手动添加：xdm、stretchly、utools、Guake、flameshot、thunderbird、钉钉、indicator-sysmonitor
 
-- 
+- 设置nautilus自带终端：参考[nautilus-terminal](https://github.com/flozz/nautilus-terminal)，注意必须要用apt安装的python，不能用conda安装的python
 
+    <img src="images/image-20220916141444464.png" alt="image-20220916141444464" style="zoom:67%;" />
+
+## XFCE
+
+- [安装xrdp](https://www.golinuxcloud.com/install-xrdp-with-xfce4-on-ubuntu/)：
+
+    ```bash
+    sudo apt install xrdp -y
+    sudo systemctl enable xrdp
+    sudo systemctl start xrdp
+    echo xfce4-session >> ~/.xsession
+    ```
+
+    编辑`/etc/xrdp/startwm.sh`，在`test -x /etc/X11/Xsession && exec /etc/X11/Xsession`之前加入内容
+
+    ```bash
+    unset DBUS_SESSION_BUS_ADDRESS
+    unset XDG_RUNTIME_DIR
+    ```
+
+    最后重启服务
+
+    ```bash
+    sudo systemctl restart xrdp
+    ```
+
+- 开机自启：设置 => Session and Startup => Application Autostart
+
+- 快捷键设置：设置=>Keyboard=>Application Shortcuts
+
+    | 名称          | 命令                             | 快捷键               | 系统默认功能                  |
+    | ------------- | -------------------------------- | -------------------- | ----------------------------- |
+    | flameshot截图 | /usr/bin/flameshot gui           | `shift + prtsc`      | xfce4-screenshooter -r        |
+    | 任务管理器    | /snap/bin/mission-center         | `ctrl + shift + esc` | xfce4-taskmanager             |
+    | nautilus      | /usr/bin/thunar                  | `windows + e`        | exo-open --launch FileManager |
+    | copyq主界面   | /usr/bin/copyq toggle            | `windows + v`        |                               |
+    | 下拉终端      | xfce4-terminal --drop-down       | `Alt + F2`           | xfrun4                        |
+    | utools        | 不需要添加，把系统默认的禁止即可 | `Alt + Space`        | Window operations menu        |
+
+- 系统代理：编辑`/etc/environment`
+
+    ```bash
+    no_proxy=localhost,127.0.0.0/8,*.local,192.168.0.0./16
+    http_proxy=http://192.168.1.2:7890
+    https_proxy=http://192.168.1.2:7890
+    NO_PROXY=localhost,127.0.0.0/8,*.local,192.168.0.0./16
+    HTTP_PROXY=http://192.168.1.2:7890
+    HTTPS_PROXY=http://192.168.1.2:7890
+    ```
+
+- 设置锁屏时间：设置=>Xfce Screensaver=>Lock Screen=>Lock Screen with Screeensaver
 
 # 通用配置
 
@@ -526,14 +587,44 @@ apt install libgtk-3-dev
         ```
         
 
-- 美化Bash：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
+- [双拼输入法](https://blog.nickwhyy.top/post/ubuntudoublepin/)：小鹤双拼
 
     ```bash
-    PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
-    PS1='\[\033[0;31m\]\342\224\214\342\224\200$([[ $? != 0 ]] && echo "[\[\033[1;31m\]\342\234\227\[\033[0;31m\]]\342\224\200")[\[\033[0;9m\]\u@\h\[\033[0;31m\]]\342\224\200[\[\033[0;32m\]\w\[\033[0;31m\]]\n\[\033[0;31m\]\342\224\224\342\224\200\342\224\200\342\225\274 \[\033[0m\]\[\e[01;33m\]\$\[\e[0m\] '
+    sudo apt install ibus-rime librime-data-double-pinyin
+    mkdir -p ~/.config/ibus/rime
     ```
 
-    > [最好看的Bash美化——打造ParrotOS风格的Bash](https://blog.csdn.net/u011145574/article/details/105160496)
+    编辑文件`~/.config/ibus/rime/default.custom.yaml`，内容如下
+
+    ```bash
+    patch:
+        schema_list:
+            - schema: double_pinyin_flypy # 小鹤双拼  
+        menu: 
+            page_size: 4 				# 设置后选词的个数
+    ```
+
+    在`~/.bashrc`添加如下内容
+
+    ```bash
+    export GTK_IM_MODULE=ibus
+    export XMODIFIERS=@im=ibus
+    export QT_IM_MODULE=ibus
+    ```
+
+- 美化Bash：
+
+    - 方法一：编辑`~/.bashrc`，取消`force_color_prompt=yes`前的注释
+
+    - 方法二：在任意一个环境变量文件（比如`/etc/bash.bashrc`or `/etc/bashrc`，如果里面已经有一个PS1了，可以注释掉）添加如下代码，添加完后重新注入环境变量
+
+        ```bash
+        PS1="\[\e[36;1m\]\u\[\e[0m\]@\[\e[33;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\$ "
+        PS1='\[\033[0;31m\]\342\224\214\342\224\200$([[ $? != 0 ]] && echo "[\[\033[1;31m\]\342\234\227\[\033[0;31m\]]\342\224\200")[\[\033[0;9m\]\u@\h\[\033[0;31m\]]\342\224\200[\[\033[0;32m\]\w\[\033[0;31m\]]\n\[\033[0;31m\]\342\224\224\342\224\200\342\224\200\342\225\274 \[\033[0m\]\[\e[01;33m\]\$\[\e[0m\] '
+        ```
+
+        > [最好看的Bash美化——打造ParrotOS风格的Bash](https://blog.csdn.net/u011145574/article/details/105160496)
+
 
 - Tmux：在配置文件`~/.tmux.conf `中加入如下内容，然后重启tmux，或者按`ctrl+b`后输入`:source-file ~/.tmux.conf`
 
@@ -601,9 +692,7 @@ apt install libgtk-3-dev
 
 - 英伟达显卡驱动安装：[我的博客](https://blog.csdn.net/OTZ_2333/article/details/108604064)
 
-- 设置nautilus自带终端：参考[nautilus-terminal](https://github.com/flozz/nautilus-terminal)，注意必须要用apt安装的python，不能用conda安装的python
-
-    <img src="images/image-20220916141444464.png" alt="image-20220916141444464" style="zoom:67%;" />
+- 
 
 - [swap扩容](https://blog.csdn.net/wdwangye/article/details/109371782)
 
@@ -624,7 +713,7 @@ apt install libgtk-3-dev
     num=$(xinput list-props $id| grep Speed|head -1|awk '{printf $4 "\n"}'| cut -d"(" -f2|cut -d")" -f1)
     xinput set-prop $id $num -1.0 
     ```
-    
+
 - 笔记本触控板多指功能失效：安装fusuma（[18.04](https://hirosht.medium.com/gestures-on-ubuntu-18-04-xorg-2fe05efb05fc)）
 
 - **关闭fcitx的中文简体繁体切换快捷键：**
@@ -677,9 +766,9 @@ apt install libgtk-3-dev
       echo "proxy off"
     }
     ```
-    
+
     注意：git就不要添加类似这种的代理了，使用http代理或者ssh的代理
-    
+
 - utools搜索硬盘文件：https://github.com/shenzhuoyan/utools_linux_find
 
 - SMPlayer设置：
@@ -687,9 +776,9 @@ apt install libgtk-3-dev
   - 使用快捷键`.`和`,`逐帧前进、后退：“首选项”=>"常规"=>"常规"=>"多媒体引擎"，改成mpv。如果提示找不到，则安装`sudo apt install mpv`
   - 播放暂停切换窗口黑屏的解决方法：“首选项”=>"高级"=>"高级"=>"重绘视频窗口背景"，取消勾选
   - 音量调节：“首选项”=>"键盘和鼠标"=>"键盘"，找到"音量-"和"音量+"，分别改成↑和↓
-  
+
   > 参考：[Ubuntu下SMPlayer播放器安装配置以及常用快捷键记录](https://blog.csdn.net/zhanghm1995/article/details/109408954)
-  
+
 - [code-server使用官方插件](https://blog.csdn.net/qq_45689158/article/details/125461308)：在文件`/usr/lib/code-server/lib/vscode/product.json`中最大的花括号内，新增如下内容（记得在前面一行的后面加个逗号）
 
   ```json

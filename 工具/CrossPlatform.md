@@ -510,6 +510,8 @@ pip install scipy pprint albumentations json-py imageio kornia torch-summary
 
 # Zotero
 
+## 旧版
+
 - 安装[zotfile](http://zotfile.com/)：下载后是xpi格式。在zotero中，`工具`=>`附加组件`=>右上角齿轮=>`Install Add-on From File`，找到xpi文件，即可
 - 【≤ v6.x】修改文件命名方式：在zotero中，`工具`=>`ZotFile Preferences`=>`Renaming Rules`，取消勾选`Use Zotero to Rename`，将其下面两个空格填入`{%y_}{%t_}{%a}`
 - 【≥ v7.x】修改文件命名方式：编辑=> 常规=>文件重命名=>自定义文件名格式=>文件名模板，改成
@@ -518,6 +520,10 @@ pip install scipy pprint albumentations json-py imageio kornia torch-summary
     {{ year suffix="_" }}{{ title truncate="100" suffix="_" }}{{ firstCreator }}
     ```
 - 显示列：刊名缩写、档案、短标题
+
+## 新版
+
+- 文件命名方式：设置=>常规=>文件重命名=>自定义文件名格式，改成`{{ year suffix="_" }}{{ title suffix="_"}}{{ authors }}`
 
 # clash for windows
 
