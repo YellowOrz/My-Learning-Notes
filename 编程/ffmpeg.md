@@ -82,4 +82,26 @@ ffmpeg [全局参数] [输入文件参数] -i [输入文件] [输出文件参数
   #0,          2,          2,        1,   460800, ee0709942f24b458fd2380d134dcb59d
   ```
   
-  
+- [拼接多个视频](https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg)
+
+  ```bash
+  ffmpeg -f concat -i mylist.txt -c copy output.mp4
+  ```
+
+  mylist.txt的格式如下
+
+  ```c++
+  file '/path/to/file1'
+  file '/path/to/file2'
+  file '/path/to/file3'
+  ```
+
+  > [如果报错Unsafe file name](https://stackoverflow.com/questions/38996925/ffmpeg-concat-unsafe-file-name)：在`-i`之前加上`-safe 0`
+
+- [将单个视频分隔成多个固定长度的视频](https://unix.stackexchange.com/questions/1670/how-can-i-use-ffmpeg-to-split-mpeg-video-into-10-minute-chunks)：
+
+    ```bash
+    ffmpeg -i input.mp4 -c copy -map 0 -segment_time 00:20:00 -f segment output%03d.mp4
+    ```
+
+    
