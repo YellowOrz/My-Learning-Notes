@@ -1,6 +1,4 @@
-# Docker
-
-> 参考资料：[Docker — 从入门到实践](http://docker-practice.github.io/zh-cn)
+# [Docker — 从入门到实践](http://docker-practice.github.io/zh-cn)
 
 ## 使用Docker镜像
 
@@ -126,4 +124,28 @@
     $ docker import URL链接|目录 仓库:标签
     ```
 
+    # 杂
     
+    - [配置docker通过代理服务器拉取镜像](https://www.lfhacks.com/tech/pull-docker-images-behind-proxy/#problem)：创建文件夹/etc/systemd/system/docker.service.d，添加文件proxy.conf，内容如下
+    
+        ```bash
+        [Service]
+        Environment="HTTP_PROXY=http://192.168.1.2:1234/"
+        Environment="HTTPS_PROXY=http://192.168.1.2:1234/"
+        Environment="NO_PROXY=localhost,127.0.0.1,.192.168.0.0"
+        ```
+    
+        然后重启docker服务
+    
+        ```bash
+        systemctl daemon-reload
+        systemctl restart docker
+        ```
+    
+        确认环境变量设置成功
+    
+        ```bash
+        systemctl show --property=Environment docker
+        ```
+    
+    - 

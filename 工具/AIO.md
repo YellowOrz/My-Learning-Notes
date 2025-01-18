@@ -52,11 +52,27 @@
 ## 主板设置
 
 - 由于我买的PCIE转4个M2的转接卡，需要在MSI B450I主板的BIOS中，设置 高级=>PCIe=>PCI子系统设备=>PCI_E1 Lanes Configuration=>x8+x4+x4
+
 - 主板中开启VT虚拟化技术：以MSI B450i为例，Overclocking settings(OC) =>高级CPU配置=>SVM Mode，设置为允许
-- 主板中关闭secure boot：以MSI B450i为例，Settings=>高级=>Windows操作系统的配置=>安全启动，设置为禁止
+
+- 主板中关闭secure boot：以MSI B450i为例，Settings=>高级=>Windows操作系统的配置=>安全引导=>安全启动，设置为禁止
+
 - 主板设置来电自启：以MSI B450i为例，Settings=>高级=>电源管理设置=>AC电源掉电再来电的状态，设置为开机
+
 - 主板设置wol：以MSI B450i为例，Settings=>高级=>唤醒事件设置=>PCIE设备唤醒，设置为允许
-- 主板设置省电模式：以MSI B450i为例，Settings=>高级=>电源管理设置=>ErR Ready
+
+- 主板设置省电模式：以MSI B450i为例
+
+    - Settings=>高级=>电源管理设置=>ErR Ready
+
+    - Overclocking settings(OC) =>高级CPU配置=>AMD CBS=>Global C-state Control，设为Enabled
+
+        ![image-20250104214028372](images/image-20250104214028372.png)
+
+    - Overclocking settings(OC) =>高级CPU配置=>AMD CBS=>Opcache Control，设为Enabled
+
+        ![image-20250104214054987](images/image-20250104214054987.png)
+
 
 ## Proxmox Virtual Environment (PVE)
 
@@ -255,7 +271,24 @@
     fi
     ```
 
-    
+- [开启ipv6](https://cokebar.info/archives/2738)：
+
+    - 在路由器设置中，将ipv6的连接方式改成“naive”，相关设置默认。
+
+    - 编辑/etc/network/inferface，添加如下内容
+
+        ```c++
+        iface vmbr0 inet6 auto
+        	dhcp 1
+        	accept_ra 2
+        	request_prefix 1
+        ```
+
+    - 然后到pve的管理界面，节点=>系统=>网络，点击应用配置
+
+        - 如果“应用配置”点不了，尝试刷新、把inferface复制成inferface.new、把inferface里面新增的内容调整顺序到原来vmbr0的下面（没有空行）
+
+- 
 
 # 虚拟机
 
@@ -503,7 +536,32 @@
     >     - no_root_squash：关闭root_squash，通常用于diskless clients
     > - no_subtree_check：禁用subtree checking，可能轻微影响安全，但是某些情况下可以增加可靠性
     >
-    > 具体参数的解释见[官网](https://linux.die.net/man/5/exports)
+    >     具体参数的解释见[官网](https://linux.die.net/man/5/exports)
+    >
+    
+- alist配置：[阿里云盘 Open](https://alist.nn.ci/zh/guide/drivers/aliyundrive_open.html)、[百度网盘](https://alist.nn.ci/zh/guide/drivers/baidu.html)、[夸克网盘](https://alist.nn.ci/zh/guide/drivers/quark.html)
+
+- [docker安装vnc版本百度网盘](https://club.fnnas.com/forum.php?mod=viewthread&tid=6180&highlight=)
+
+    - 下载镜像johngong/baidunetdisk
+    - UI界面添加容器后直接启动
+        - 端口设置：只需要5800映射到本地。5900端口因为用不到VNC客户端，直接删除掉
+        - 容器的/config路径映射到本地`/vol1/1000/Docker/baidunetdisk/config`，然后容器再加一个路径`/config/baidunetdiskdownload`
+        
+        对应的bash命令是
+        
+        ```bash
+        docker run -d \
+            --name=baidunetdisk \
+            -p 5800:5800 \
+            -v /vol1/1000/docker/baidu/config:/config \
+            -v /vol1/1000/docker/baidu/百度下载:/config/baidunetdiskdownload \
+            --restart unless-stopped \
+            johngong/baidunetdisk:latest
+        ```
+        
+        
+
 
 ## DSM
 
