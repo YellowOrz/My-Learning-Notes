@@ -264,12 +264,10 @@
 
 ## OpenWrt
 
-
-
 - 镜像下载：[Index of /releases/23.05.5/targets/x86/64/ (openwrt.org)](https://downloads.openwrt.org/releases/23.05.5/targets/x86/64/)
     - 选择**ext4-combined.img.gz**结尾的，说明在[这儿](https://openwrt.org/docs/guide-user/installation/openwrt_x86)
 
-- 教程：~~[【利用PVE虚拟机，来打造属于自己的All In One系统吧！】 【精准空降到 05:47】]( https://www.bilibili.com/video/BV1bc411v7A3/?share_source=copy_web&vd_source=31f11ba822b8d6c2d924c85d5b2cba06&t=347)~~、[PVE 安装 OpenWrt 作为旁路由 - 冰棒实验室 (beanbang.cn)](https://blog.beanbang.cn/2023/11/26/pve-install-openwrt-as-secondary-router/)、[ProxmoxVE（PVE）安装OpenWRT系统（旁路由模式）_pve安装openwrt-CSDN博客](https://blog.csdn.net/sunky7/article/details/138198347)
+- 创建虚拟机：~~[【利用PVE虚拟机，来打造属于自己的All In One系统吧！】 【精准空降到 05:47】]( https://www.bilibili.com/video/BV1bc411v7A3/?share_source=copy_web&vd_source=31f11ba822b8d6c2d924c85d5b2cba06&t=347)~~、[PVE 安装 OpenWrt 作为旁路由 - 冰棒实验室 (beanbang.cn)](https://blog.beanbang.cn/2023/11/26/pve-install-openwrt-as-secondary-router/)、[ProxmoxVE（PVE）安装OpenWRT系统（旁路由模式）_pve安装openwrt-CSDN博客](https://blog.csdn.net/sunky7/article/details/138198347)
 
     - 创建虚拟机的时候，不要添加磁盘
 
@@ -282,6 +280,27 @@
     - 再通过GParted 镜像，把新增的4G分给rootfs
 
     - 记得到启动项中把硬盘放在第一个
+
+    ```
+    boot: order=scsi1;ide2;net0
+    cores: 2
+    cpu: host
+    ide2: none,media=cdrom
+    machine: q35
+    memory: 2048
+    meta: creation-qemu=8.1.5,ctime=1729943126
+    name: OpenWrt
+    net0: virtio=xx:xx:xx:xx:xx:xx,bridge=vmbr0,firewall=1
+    numa: 0
+    onboot: 1
+    ostype: l26
+    scsi1: local-lvm:vm-100-disk-1,iothread=1,size=4220M,ssd=1
+    scsihw: virtio-scsi-single
+    smbios1: uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    sockets: 1
+    startup: order=1
+    vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
 
 - 修改IP：编辑/etc/config/network，然后重启网络`service network restart`
 
@@ -302,7 +321,37 @@
 
 - [更换主题](https://blog.csdn.net/sunky7/article/details/138198347)：`opkg install luci-compat luci-lib-ipkg`，然后下载主题（.ipk格式，比如[这个](https://github.com/jerrykuku/luci-theme-argon/releases/download/v2.2.9.4/luci-theme-argon-master_2.2.9.4_all.ipk)）通过software upload package就可以了，默认上传直接生效
 
-- [安装v2raya](https://v2raya.org/docs/prologue/installation/openwrt/)：
+- [安装OpenClash](https://github.com/vernesong/OpenClash/wiki/%E5%AE%89%E8%A3%85)：
+
+    - 允许如下命令查看openwrt用的是iptables还是nftables，大概率是nftables
+
+        ```bash
+        opkg list-installed | grep -E 'iptables|nftables'
+        ```
+
+    - 安装依赖
+
+        ```bash
+        opkg update
+        # iptables
+        opkg install coreutils-nohup bash iptables dnsmasq-full curl ca-certificates ipset ip-full iptables-mod-tproxy iptables-mod-extra libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip luci-compat luci luci-base
+        # nftables
+        opkg install coreutils-nohup bash dnsmasq-full curl ca-certificates ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base
+        ```
+
+    - 下载[.ipk文件](https://github.com/vernesong/OpenClash/releases)，上传到openwrt
+
+        ```bash
+        opkg install ./luci-app-openclash_0.33.7-beta_all.ipk
+        ```
+
+    - 到openwrt的网页后台，服务=>OpenClash，即为OpenClash的管理界面
+
+    - 下载内核？：
+
+    - 添加订阅：OpenClash的管理界面，配置订阅=>添加
+
+- ~~[安装v2raya](https://v2raya.org/docs/prologue/installation/openwrt/)~~：
 
     ```bash
     opkg update
@@ -319,6 +368,33 @@
 ## Windows
 
 > [【利用PVE虚拟机，安装Windows和Linux系统，并优化配置】 【精准空降到 00:57】](https://www.bilibili.com/video/BV1vU421Z7RH/?share_source=copy_web&vd_source=31f11ba822b8d6c2d924c85d5b2cba06&t=57)
+
+- 创建虚拟机
+
+    ```
+    affinity: 0-11
+    agent: 1
+    args: -cpu 'host,+kvm_pv_unhalt,+kvm_pv_eoi,hv_vendor_id=NV43FIX,kvm=off'
+    bios: ovmf
+    boot: order=scsi0;net0
+    cores: 12
+    cpu: host,hidden=1,flags=+pcid
+    efidisk0: local-lvm:vm-101-disk-0,efitype=4m,pre-enrolled-keys=1,size=4M
+    machine: pc-q35-5.1
+    memory: 16384
+    meta: creation-qemu=8.1.5,ctime=1728655711
+    name: Windows
+    net0: virtio=xx:xx:xx:xx:xx:xx,bridge=vmbr0,firewall=1
+    numa: 0
+    ostype: win11
+    scsi0: local-lvm:vm-101-disk-1,cache=writeback,iothread=1,size=512G,ssd=1
+    scsihw: virtio-scsi-single
+    smbios1: uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    sockets: 1
+    tpmstate0: local-lvm:vm-101-disk-2,size=4M,version=v2.0
+    vga: virtio
+    vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
 
 - virtual io驱动下载：https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers#Installation
 
@@ -351,11 +427,34 @@
 
 ## Linux
 
-- 机型选择q35
+- 安装虚拟机
 
+    ```
+    affinity: 0-11
+    agent: 1
+    balloon: 8196
+    bios: ovmf
+    boot: order=scsi0;net0
+    cores: 12
+    cpu: host
+    efidisk0: local-lvm:vm-102-disk-1,efitype=4m,pre-enrolled-keys=1,size=4M
+    machine: q35
+    memory: 20480
+    meta: creation-qemu=8.1.5,ctime=1733547556
+    name: Ubuntu
+    net0: virtio=xx:xx:xx:xx:xx:xx,bridge=vmbr0,firewall=1
+    numa: 0
+    ostype: l26
+    scsi0: local-lvm:vm-102-disk-0,cache=writeback,iothread=1,size=512G,ssd=1
+    scsihw: virtio-scsi-single
+    smbios1: uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    sockets: 1
+    vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
+    
 - [动态内存](https://bolg.wltechlab.top/archives/1243)：[开启直通后不能使用动态内存](https://www.right.com.cn/forum/thread-8380789-1-1.html)
 
-    - 虚拟机-硬件-内存-勾选 `Ballooning设备`
+    - 虚拟机=>硬件=>内存=>勾选 `Ballooning设备`，`最小内存(MiB)`根据自己需求选择
 
     - [在虚拟机中安装qemu-guest-agent](https://blog.xm.mk/posts/0d5a/) ：根据 [PVE 的文档](https://pve.proxmox.com/wiki/Qemu-guest-agent)，qemu-guest-agent 是一个安装在客户机中的辅助守护程序，用于在宿主机和客户机之间交换信息，并在客户机中执行命令。
 
@@ -374,36 +473,9 @@
         > - 在进行备份 / 快照时冻结客户机的文件系统（在 Windows 上，使用卷影复制服务 VSS）。如果启用了客户机代理并且它正在运行，它会调用 guest-fsfreeze-freeze 和 guest-fsfreeze-thaw 来提高一致性。
         > - 在客户机（虚拟机）暂停后恢复（例如在快照之后）的阶段，它会立即使用 qemu-guest-agent 与超级管理程序同步时间（作为第一步）。
 
-    - 最后，虚拟机-选项-QEMU Guest Agent-勾选 `使用 QEMU Guest Agent`
+    - 最后，虚拟机=>选项=>QEMU Guest Agent-勾选 `使用 QEMU Guest Agent`
 
-    - 如下配置，设置了Balloon，内存最大20GB、最小8GB，没开 QEMU Guest Agent，内存占用21.5G
 
-        ```bash
-        balloon: 8196
-        bios: ovmf
-        boot: order=scsi0;net0
-        cores: 12
-        cpu: host
-        efidisk0: local-lvm:vm-102-disk-0,efitype=4m,pre-enrolled-keys=1,size=4M
-        hostpci0: 0000:10:00,pcie=1,x-vga=1
-        machine: q35
-        memory: 20480
-        meta: creation-qemu=8.1.5,ctime=1729393702
-        name: Ubuntu
-        net0: virtio=BC:24:11:FB:51:87,bridge=vmbr0,firewall=1
-        numa: 0
-        ostype: l26
-        scsi0: local-lvm:vm-102-disk-1,iothread=1,size=512G,ssd=1
-        scsihw: virtio-scsi-single
-        smbios1: uuid=b1a4bf47-9747-42f6-b02b-7be2c7978985
-        sockets: 1
-        usb0: host=1a81:2039
-        usb1: host=046d:c53f
-        vga: none
-        vmgenid: 8887376c-8635-4065-b841-cfe59c067163
-        
-        ```
-    
 - 连接固态NAS的NFS
 
     - 手动连接：``。如果没有mount.nfs4，则``
@@ -412,11 +484,11 @@
         sudo apt install nfs-common
         sudo mount.nfs4  192.168.1.222:/vol1/1000/TestDir/mnt
         ```
-    
+
         
-    
+
     - 自动连接：
-    
+
         - 【似乎无效】方法一：编辑/etc/fstab，添加如下内容
         
             ```bash
@@ -445,7 +517,7 @@
         
             
         
-    
+
     
 
 ## Android X86
@@ -458,6 +530,30 @@
 
     - 推荐使用Advance options => Android-x86 9.0-r2 Auto Install to specified harddisk 进行安装，简单的很
 
+- 安装虚拟机
+
+    ```
+    audio0: device=ich9-intel-hda,driver=none
+    bios: ovmf
+    boot: order=scsi0;net0
+    cores: 10
+    cpu: host
+    efidisk0: local-lvm:vm-104-disk-0,efitype=4m,pre-enrolled-keys=1,size=4M
+    machine: q35
+    memory: 8192
+    meta: creation-qemu=8.1.5,ctime=1728918574
+    name: Android-x86
+    net0: virtio=xx:xx:xx:xx:xx:xx,bridge=vmbr0,firewall=1
+    numa: 0
+    ostype: l26
+    scsi0: local-lvm:vm-104-disk-1,iothread=1,size=64G,ssd=1
+    scsihw: virtio-scsi-single
+    smbios1: uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    sockets: 1
+    vga: virtio-gl
+    vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
+    
 - ARM兼容库：[GitHub - SGNight/Arm-NativeBridge: ARM translation layer for Android x86](https://github.com/SGNight/Arm-NativeBridge?tab=readme-ov-file)
 
     - 把下载的houdini.sfs重命名为houdini9_y.sfs，然后用adb（默认打开）推送到虚拟机上
@@ -488,6 +584,30 @@
 
 ## fnos
 
+- 安装虚拟机
+
+    ```
+    boot: order=scsi0;ide2;net0
+    cores: 8
+    cpu: host
+    hostpci1: 0000:29:00
+    hostpci2: 0000:2a:00
+    ide2: local:iso/fnos.0.8.20-394_20241008.iso,media=cdrom,size=1680M
+    memory: 4096
+    meta: creation-qemu=8.1.5,ctime=1728657255
+    name: fnOS
+    net0: virtio=xx:xx:xx:xx:xx:xx,bridge=vmbr0,firewall=1
+    numa: 0
+    onboot: 1
+    ostype: l26
+    scsi0: local-lvm:vm-103-disk-0,iothread=1,size=64G,ssd=1
+    scsihw: virtio-scsi-single
+    smbios1: uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    sockets: 1
+    startup: order=10,down=30
+    vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
+    
 - 配置nfs：编辑`/etc/exports`，添加如下内容，其中192.168.1.111是允许访问的IP。然后到UI界面=>设置=>文件共享协议=>NFS，开启
 
     ```bash
@@ -504,6 +624,13 @@
     > - no_subtree_check：禁用subtree checking，可能轻微影响安全，但是某些情况下可以增加可靠性
     >
     > 具体参数的解释见[官网](https://linux.die.net/man/5/exports)
+    
+- 安装syncthing：和异地NAS使用公网IPV6直连
+
+    - 操作=>设置=>连接=>同步协议监听地址，填“default, tcp6://:22000”
+    - 远程设备=>选择异地NAS=>编辑=>高级=>地址，填“tcp6://xxxx.xxxx.xxx:22000”
+
+    > 记得到路由器的IPV6防火墙中允许22000端口通过
 
 ## DSM
 
@@ -543,10 +670,33 @@
 ## TrueNAS
 
 - 镜像：选择Scale版本（基于debain，Core版本基于FreeDBS）
-- 教程：[佛西博客 - PVE+TrueNAS+ZFS+10G内网方案 (buduanwang.vip)](https://foxi.buduanwang.vip/virtualization/pve/1183.html/)、[基于 PVE + TrueNAS 的私有云配置流程 - Pyrokine - 博客园 (cnblogs.com)](https://www.cnblogs.com/Pyrokine/p/14646478.html)、[安装PVE虚拟机并在PVE安装truenas | 故事 (storyxc.com)](https://storyxc.com/tinker/vm/安装PVE虚拟机并在PVE安装truenas.html)
+
+- 安装：[佛西博客 - PVE+TrueNAS+ZFS+10G内网方案 (buduanwang.vip)](https://foxi.buduanwang.vip/virtualization/pve/1183.html/)、[基于 PVE + TrueNAS 的私有云配置流程 - Pyrokine - 博客园 (cnblogs.com)](https://www.cnblogs.com/Pyrokine/p/14646478.html)、[安装PVE虚拟机并在PVE安装truenas | 故事 (storyxc.com)](https://storyxc.com/tinker/vm/安装PVE虚拟机并在PVE安装truenas.html)
     - 如果开机后不能正常镜像、or 不能正常安装系统，可以 机型选q35，BIOS选UEFI（不添加EFI磁盘）。磁盘类型不一定选SATA
         - 如果不添加EFI磁盘，虚拟机开机的时候可能会报警告`WARN: no efidisk configured! Using temporary efivars disk.`
     - 安装系统的时候如果选的是Adminnistator模式，则后续登录网页的时候，用户名是admin
+    
+    ```
+    balloon: 12288
+    bios: ovmf
+    boot: order=scsi0;net0
+    cores: 4
+    cpu: host
+    hostpci0: 0000:12:00,pcie=1
+    machine: q35
+    memory: 16384
+    meta: creation-qemu=8.1.5,ctime=1730011251
+    name: TrueNAS
+    net0: virtio=xx:xx:xx:xx:xx:xx,bridge=vmbr0,firewall=1
+    numa: 0
+    ostype: l26
+    scsi0: local-lvm:vm-105-disk-0,iothread=1,size=16G,ssd=1
+    scsihw: virtio-scsi-single
+    smbios1: uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    sockets: 1
+    vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
+    
 - 修改中文：System Setting => General => Localization
 
 ## Proxmox Backup Server (PBS)
@@ -562,40 +712,41 @@
 
     - 创建虚拟机：磁盘从local-lvm（pve所在硬盘）分配16G，用于安装PBS系统；再从ssd-nas（刚刚挂载的）分配1024G（按需）
 
-        ```c++
+        ```
         boot: order=scsi0;ide2;net0
         cores: 2
         cpu: host
         ide2: local:iso/proxmox-backup-server_3.2-1.iso,media=cdrom,size=1119264K
         machine: q35
-        memory: 2048
+        memory: 4096
         meta: creation-qemu=8.1.5,ctime=1729917683
         name: PBS
-        net0: virtio=BC:24:11:54:02:0D,bridge=vmbr0,firewall=1
+        net0: virtio=xx:xx:xx:xx:xx:xx,bridge=vmbr0,firewall=1
         numa: 0
         ostype: l26
         scsi0: local-lvm:vm-106-disk-0,iothread=1,size=32G,ssd=1
-        scsi1: ssd-nas:106/vm-106-disk-0.qcow2,iothread=1,size=1T,ssd=1
+        scsi2: TrueNAS_PBS:106/vm-106-disk-1.qcow2,iothread=1,size=2T
         scsihw: virtio-scsi-single
-        smbios1: uuid=216827a2-cb49-4bc3-a0db-b4b08d6a5e63
+        smbios1: uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         sockets: 1
-        vmgenid: c79f6c76-dead-4e5f-bdf9-e0c7b43115f4
+        startup: order=20,up=60,down=30
+        vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         ```
-
+    
     - 安装PBS：就正常下一步，安装磁盘选16G那个
-
+    
     - PBS中，管理=>存储/磁盘=>ZFS=>创建:ZFS，把刚刚分配的1024G的硬盘选中，假设名称为ZFS1。创建完成后，”数据存储“中会自动多出ZFS1
-
+    
     - PBS中，仪表盘=>显示指纹，复制下来
-
+    
     - 再到PVE中，数据中心=>存储=>添加=>Proxmox Backup Server，Datastore填ZFS1，指纹为刚刚复制的
-
+    
         ![image-20241026132314671](images/image-20241026132314671.png)
-
+    
     - PVE中，数据中心=>备份=>添加，[模式](https://foxi.buduanwang.vip/virtualization/pve/2124.html/) 选停止（先将虚拟机关机，备份完了后自动开机），存储 选刚刚添加的PBS，保留 选
-
+    
         - NOTE：不能备份固态NAS，因为PBS的存储来自
-
+    
     - 测试都没问题后，启用PBS虚拟机的自动开机，必须在固态NAS之后启动，而且最好有延时
 
 
@@ -604,12 +755,19 @@
 
 - [PVE中通过apt安装docker](https://docs.docker.com/engine/install/debian/#install-using-the-repository)
 
-    - [配置代理](https://www.cnblogs.com/Chary/p/18096678)：创建文件夹/etc/systemd/system/docker.service.d，编辑文件/etc/systemd/system/docker.service.d/proxy.conf添加如下内容
+    - [配置代理](https://www.cnblogs.com/Chary/p/18096678)：创建文件夹/etc/systemd/system/docker.service.d，编辑文件/etc/systemd/system/docker.service.d/proxy.conf添加如下内容，
 
         ```bash
         [Service]
         Environment="HTTP_PROXY=http://192.168.50.100:20172"
         Environment="HTTPS_PROXY=http://192.168.50.100:20172"
+        ```
+
+        然后运行命令重启docker
+
+        ```
+        systemctl daemon-reload
+        systemctl restart docker
         ```
 
     - 创建网络
@@ -623,56 +781,120 @@
 
         > [docker network create命令 - Docker教程 (yiibai.com)](https://www.yiibai.com/docker/network_create.html)、
 
-- [Firefly III](https://www.firefly-iii.org/)
+- alpine-mariadb：docker-compose.yml如下所示
 
-    ```c++
+    ```yaml
+    services:
+      app:
+        image: yobasystems/alpine-mariadb
+        hostname: alpine-mariadb
+        networks:
+          private-network:
+            ipv4_address: 172.18.11.12
+        restart: always
+        env_file: mariadb.env
+        volumes:
+          - /root/Docker/alpine-mariadb/mysql/:/var/lib/mysql
+        ports:
+          - '33306:3306'
+    
+    networks:
+      private-network:
+        external: true
+    ```
+    
+    其中，mariadb.env内容为
+    
+    ```
+    MYSQL_ROOT_PASSWORD=自定义
+    MYSQL_DATABASE=base
+    MYSQL_USER=自定义
+    MYSQL_PASSWORD=自定义
+    ```
+    
+- [Firefly III](https://www.firefly-iii.org/)：docker-compose.yml如下所示
+
+    ```yaml
     services:
       app:
         image: fireflyiii/core:latest
-        hostname: app
-        container_name: firefly_iii_core
-        restart: always
-        volumes:
-          - firefly_iii_upload:/var/www/html/storage/upload
-        env_file: .env
+        hostname: fireflyiii
         networks:
-          - firefly_iii
+          private-network:
+            ipv4_address: 172.18.11.13
+        restart: always
+        env_file: filrefly.env
+        volumes:
+          - /root/Docker/firefly_iii/upload/:/var/www/html/storage/upload
+          - /root/Docker/firefly_iii/export/:/var/www/html/storage/export
         ports:
-          - 80:8080
-        depends_on:
-          - db
-      db:
-        image: mariadb:lts
-        hostname: db
-        container_name: firefly_iii_db
-        restart: always
-        env_file: .db.env
-        networks:
-          - firefly_iii
-        volumes:
-          - firefly_iii_db:/var/lib/mysql
-      cron:
-        #
-        # To make this work, set STATIC_CRON_TOKEN in your .env file or as an environment variable and replace REPLACEME below
-        # The STATIC_CRON_TOKEN must be *exactly* 32 characters long
-        #
-        image: alpine
-        restart: always
-        container_name: firefly_iii_cron
-        command: sh -c "echo \"0 3 * * * wget -qO- http://app:8080/api/v1/cron/REPLACEME;echo\" | crontab - && crond -f -L /dev/stdout"
-        networks:
-          - firefly_iii
-    
-    volumes:
-       firefly_iii_upload:
-       firefly_iii_db:
+          - '7777:8080'
     
     networks:
-      firefly_iii:
-        driver: bridge
+      private-network:
+        external: true
+    ```
+    
+    其中，filrefly.env来自[这里](https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.env.example)，然后把以下几个变量进行修改
+    
+    ```bash
+    APP_KEY=SomeRandomStringOf32CharsExactly    	  # 自定义，32个字符
+    DB_HOST=172.18.11.12						    # mysql的IP地址
+    DB_DATABASE=filefly_iii							# mysql中给filefly用的数据库名称
+    DB_USERNAME=filefly_iii						    # mysql中给filefly用的用户名
+    DB_PASSWORD=plm123,.						    # mysql中给filefly用的用户名对应的密码
+    APP_URL=http://127.0.0.1:7777					 # firefly的URL
     ```
 
+- [小雅xiaoya](https://xiaoyaliu.notion.site/xiaoya-docker-69404af849504fa5bcf9f2dd5ecaa75f#6b42128605b841288455a52b8a06bc9f)：
 
+    - [一键部署](https://github.com/monlor/docker-xiaoya?tab=readme-ov-file#%E9%83%A8%E7%BD%B2%E6%88%96%E6%9B%B4%E6%96%B0%E8%84%9A%E6%9C%AC)的命令如下，安装路径为/root/Docker/xiaoyaliu，只安装alist，阿里云和夸克的配置方法见[alist文档](https://alist.nn.ci/zh/guide/drivers/aliyundrive_open.html)
+    
+        ```bash
+        export VERSION=main && bash -c "$(curl -fsSL ${GH_PROXY}https://raw.githubusercontent.com/monlor/docker-xiaoya/${VERSION:-main}/install.sh)"
+        ```
+
+    - [手动部署](https://github.com/monlor/docker-xiaoya?tab=readme-ov-file#%E6%89%8B%E5%8A%A8%E9%83%A8%E7%BD%B2)，[docker-compose.yml](https://github.com/monlor/docker-xiaoya/blob/main/docker-compose-alist.yml)如下所示。其中，env来自[这里](https://github.com/monlor/docker-xiaoya/blob/main/env)
+    
+        ```yaml
+        services:
+          alist:
+            image: ghcr.io/monlor/xiaoya-alist:latest
+            volumes:
+              - /root/Docker/xiaoyaliu/data/xiaoya:/data
+            ports:
+              - "5678:5678"
+              - "2345:2345"
+              - "2346:2346"
+            env_file:
+              - env
+            restart: unless-stopped
+            networks:
+              - default
+        
+        networks:
+          default:
+        ```
+
+    - env文件中，注意以下几个配置
+    
+        ```bash
+        # 自动更新小雅alist文件
+        AUTO_UPDATE_ENABLED=true
+        # 自动清理阿里云盘
+        AUTO_CLEAR_ENABLED=false
+        # 是否启用emby
+        EMBY_ENABLED=false
+        ```
+    
+    - 运行命令`crontab -e`，添加如下内容，每天重启xiaoya从而更新资源
+    
+        ```
+        30 1 * * * docker restart xiaoyaliu-alist-1
+        ```
+    
+        
+    
 
 
 # 备份
@@ -687,14 +909,44 @@
 
     - 数据分成三种类型：
 
-        |              | 文件内容             | 异地机械NAS备份策略 | 本地机械NAS备份策略 |
-        | ------------ | -------------------- | ------------------- | ------------------- |
-        | 共享数据     | 影视、软件包等       | 增量、不加密        | 增量、不加密        |
-        | 个人数据     | 个人照片、文档等     | 同步、加密          | 同步、不加密        |
-        | 个人冻结数据 | 长久用不到的个人数据 | 增量、加密          | 增量、不加密        |
+        |              | 文件内容                       | 本地固态NAS类型 | 异地机械NAS类型    | 本地机械NAS类型  |
+        | ------------ | ------------------------------ | --------------- | ------------------ | ---------------- |
+        | 共享数据     | 影视、软件包、学习资料、音乐等 | 仅发送          | 仅接收，忽略删除   | 仅接收，忽略删除 |
+        | 个人数据     | 个人照片、文档等               | 发送和接受      | 加密接收           | 发送和接收       |
+        | 个人冻结数据 | 长久用不到的个人数据           | 仅发送          | 加密接收，忽略删除 | 仅接收，忽略删除 |
 
     - “本地固态NAS”容量不够的时候，可以删除部分“共享数据”，也可以将“个人数据”部分转移至“个人冻结数据”，待同步完成后删除
 
     - 异地机械NAS的共享数据可以专供亲朋好友使用
 
+- 本地固态NAS 配置：
+
+    - 路由器的IPV6防火墙允许22000端口通过
+    - syncthing界面，操作=>设置=>连接，同步协议监听地址填"default,tcp://:22000"，开启“启用NAT穿透”、“全局发现”、“本地发现”
+    - syncthing界面，添加文件夹时，个人数据的文件夹类型选择 发送和接收，共享数据和个人冻结数据选择 仅发送
+
 - 异地机械NAS 配置：以极空间为例子
+
+    - 路由器的IPV6防火墙允许22000端口通过
+
+    - 首先关闭极空间自带的文档同步功能，因为端口和syncthing冲突（我尝试修改syncthing端口，不能正常工作？）
+
+    - 然后docker部署syncthing，网络选择host，文件夹路径设置如下
+
+        ![image-20250131200919115](./images/image-20250131200919115.png)
+
+    - syncthing界面，操作=>设置=>连接，同步协议监听地址填"default,tcp://:22000"，开启“启用NAT穿透”、“全局发现”、“本地发现”
+
+    - syncthing界面，添加文件夹时，个人数据和个人冻结数据的文件夹类型选择 加密接收，共享数据选择 仅接收
+
+    - syncthing界面，操作=>高级=>文件夹，找到所有的个人冻结数据和共享数据的文件夹，勾选"Ignore Delete"
+
+- 本地机械NAS 配置：
+
+    - syncthing界面，操作=>设置=>连接，同步协议监听地址填"default"，只开启“本地发现”
+    - syncthing界面，添加文件夹时，个人数据的文件夹类型选择 发送和接收，共享数据和个人冻结数据选择 仅接收
+    - syncthing界面，操作=>高级=>文件夹，找到所有的个人冻结数据和共享数据的文件夹，勾选"Ignore Delete"
+
+## docker备份
+
+TODO
