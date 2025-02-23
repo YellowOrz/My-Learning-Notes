@@ -186,38 +186,36 @@
     TrueNAS_store=storage/orz/TrueNAS_PBS
     PBS_id=106
     PBS_store=storage/orz/PBS
-    wait_min=5                                # 等待时间，单位min
+    wait_min=10                                # 等待时间，单位min
     backup_vid=(100 101 102 103 104)
     # 检测剩余内存(单位GB)，直到满足要求
     need_mem=14
     while true ; do
       left_mem=$(free -m|grep Mem|awk '{printf int($4/1024) "\n"}')
       if [ $need_mem -gt $left_mem ];then
-        echo "[WARNING] [$(date)] left memory $left_mem GB < need mem $need_mem GB, wait for $wait_num min" >> $log_file
+        echo "[WARNING] [$(date)] left memory $left_mem GB < need mem $need_mem GB, wait for $wait_min min" >> $log_file
         sleep "$wait_min"m
       else
         echo "[INFO] [$(date)] left memory $left_mem GB > need mem $need_mem GB" >> $log_file
         break
       fi
     done
-    # 启动TrueNAS
-    qm start $TrueNAS_id
-    # 保证TrueNAS_PBS存储在线
+    # 启动TrueNAS 保证TrueNAS_PBS存储在线
     while true; do
+      qm start $TrueNAS_id
       if [ -z "$(pvesh get /cluster/resources|grep $TrueNAS_store|grep available)" ]; then
-        echo "[WARNING] [$(date)] $TrueNAS_store is not available, wait for $wait_num min" >> $log_file
+        echo "[WARNING] [$(date)] $TrueNAS_store is not available, wait for $wait_min min" >> $log_file
         sleep "$wait_min"m
       else
         echo "[INFO] [$(date)] $TrueNAS_store is available" >> $log_file
         break
       fi
     done
-    # 启动PBS
-    qm start $PBS_id
-    # 保证PBS存储在线
+    # 启动PBS 保证PBS存储在线
     while true; do
+      qm start $PBS_id
       if [ -z "$(pvesh get /cluster/resources|grep $PBS_store|grep available)" ]; then
-        echo "[WARNING] [$(date)] $PBS_store is not available, wait for $wait_num min" >> $log_file
+        echo "[WARNING] [$(date)] $PBS_store is not available, wait for $wait_min min" >> $log_file
         sleep "$wait_min"m
       else
         echo "[INFO] [$(date)] $PBS_store is available" >> $log_file
@@ -251,8 +249,6 @@
     ```bash
     10      10      cron.auto_back  bash /root/auto_backup.sh 
     ```
-
-    
 
     > 参考：[vzdump命令](https://pve.proxmox.com/pve-docs/vzdump.1.html)、[『学了就忘』Linux系统定时任务 — 89、任务调度工具anacron - 繁华似锦Fighting - 博客园 (cnblogs.com)](https://www.cnblogs.com/liuyuelinfighting/p/15721568.html)
 
@@ -667,25 +663,24 @@
     
 - alist配置：[阿里云盘 Open](https://alist.nn.ci/zh/guide/drivers/aliyundrive_open.html)、[百度网盘](https://alist.nn.ci/zh/guide/drivers/baidu.html)、[夸克网盘](https://alist.nn.ci/zh/guide/drivers/quark.html)
 
-- [docker安装vnc版本百度网盘](https://club.fnnas.com/forum.php?mod=viewthread&tid=6180&highlight=)
+- Docker：
 
-    - 下载镜像johngong/baidunetdisk
-    - UI界面添加容器后直接启动
-        - 端口设置：只需要5800映射到本地。5900端口因为用不到VNC客户端，直接删除掉
-        - 容器的/config路径映射到本地`/vol1/1000/Docker/baidunetdisk/config`，然后容器再加一个路径`/config/baidunetdiskdownload`
-        
-        对应的bash命令是
-        
-        ```bash
-        docker run -d \
-            --name=baidunetdisk \
-            -p 5800:5800 \
-            -v /vol1/1000/docker/baidu/config:/config \
-            -v /vol1/1000/docker/baidu/百度下载:/config/baidunetdiskdownload \
-            --restart unless-stopped \
-            johngong/baidunetdisk:latest
+    - [vnc版本百度网盘](https://club.fnnas.com/forum.php?mod=viewthread&tid=6180&highlight=)：johngong/baidunetdisk，再加一个路径`/config/baidunetdiskdownload`
+    
+    
+    - downkyi: orz2333/downkyi，再加一个路径`/config/download`
+    - zotero: orz2333/zotero，再加一个路径`/config/Zotero`
+    - freecad：[linuxserver/freecad](linuxserver/freecad)，再加一个路径`/config/3d_models`，添加如下环境变量
+    
         ```
+        DOCKER_MODS=linuxserver/mods:universal-package-install 
+        INSTALL_PACKAGES=fonts-noto-cjk
+        LC_ALL=zh_CN.UTF-8
+        PASSWORD=    # 为空
+        ```
+    
         
+    
         
 
 

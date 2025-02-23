@@ -530,10 +530,10 @@ apt install libgtk-3-dev
 - 系统代理：编辑`/etc/environment`
 
     ```bash
-    no_proxy=localhost,127.0.0.0/8,*.local,192.168.0.0./16
+    no_proxy=localhost,127.0.0.0/8,*.local,192.168.0.0/16
     http_proxy=http://192.168.1.2:7890
     https_proxy=http://192.168.1.2:7890
-    NO_PROXY=localhost,127.0.0.0/8,*.local,192.168.0.0./16
+    NO_PROXY=localhost,127.0.0.0/8,*.local,192.168.0.0/16
     HTTP_PROXY=http://192.168.1.2:7890
     HTTPS_PROXY=http://192.168.1.2:7890
     ```
