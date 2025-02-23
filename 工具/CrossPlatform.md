@@ -523,7 +523,7 @@ pip install scipy pprint albumentations json-py imageio kornia torch-summary
 
 ## 新版
 
-- 文件命名方式：设置=>常规=>文件重命名=>自定义文件名格式，改成`{{ year suffix="_" }}{{ title suffix="_"}}{{ authors }}`
+- 文件命名方式：设置=>常规=>文件重命名=>自定义文件名格式，改成`{{ year suffix="_" }}{{ title suffix="_"}}{{ firstCreator }}`
 
 # clash for windows
 
