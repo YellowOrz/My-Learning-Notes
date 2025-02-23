@@ -77,7 +77,6 @@
 
     - [在task.json中，将“type”从cppbuild改成shell](https://blog.csdn.net/hacker_lpy/article/details/115536517)，防止出现乱码
 
-
 # 必装软件
 
 + 必装软件分三种：
@@ -92,14 +91,14 @@
 
 | 软件名 | 介绍                | 软件名      | 介绍|
 | :---: | :---: | :---: | :---: |
-|                 [iperf](https://iperf.fr/iperf-download.php) |      局域网测网速      | [X2Go](https://wiki.x2go.org/doku.php/download:start) | 远程连接Linux的图形界面 |
+|                 [iperf](https://iperf.fr/iperf-download.php) |      局域网测网速      | ~~[X2Go](https://wiki.x2go.org/doku.php/download:start)~~ | ~~远程连接Linux的图形界面~~ |
 |[flux](https://justgetflux.com/)|调节屏幕色温|[stretchly](https://github.com/hovancik/stretchly/releases)|休息提醒|
 |[MobaXTerm](https://mobaxterm.mobatek.net/download.html)|远程连接linux的好工具|[Typora](https://typora.io/#download)|Markdown编辑器，[旧版下载地址](https://typora.io/windows/dev_release.html)|
 |[cloc](https://github.com/AlDanial/cloc)|代码行数统计|[AIDA64](https://www.aida64.com/downloads)|显示电脑详细信息|
-|  [Mathpix Snip](https://mathpix.com/#downloads)  |     数学公式识别神器      |[clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases)|ShadowsocksR的替代品。更好用。<br/>[教程](https://merlinblog.xyz/wiki/cfw.html)，[汉化补丁](https://github.com/BoyceLig/Clash_Chinese_Patch/releases)，[ssr订阅链接转clash](https://bianyuan.xyz/)|
+|  [Mathpix Snip](https://mathpix.com/#downloads)  |    数学公式识别神器（[网页版](https://snip.mathpix.com/)    |[clash for windows](https://github.com/Fndroid/clash_for_windows_pkg/releases)|ShadowsocksR的替代品。更好用。<br/>[教程](https://merlinblog.xyz/wiki/cfw.html)，[汉化补丁](https://github.com/BoyceLig/Clash_Chinese_Patch/releases)，[ssr订阅链接转clash](https://bianyuan.xyz/)|
 |    [Microsoft To Do](https://to-do.microsoft.com/tasks/)     |        任务管理        | [PdgCntEditor](https://www.jianshu.com/p/498b0f8bb650) | 编辑PDF目录                        |
 | [DiskGenius](https://www.diskgenius.cn/download.php)  | 管理磁盘     | [Scrcpy_GUI](https://github.com/Tomotoes/scrcpy-gui/releases) | 手机投屏到电脑（可以媲美华为的投屏） |
-| [哔哩哔哩动画](https://www.microsoft.com/zh-cn/p/%e5%93%94%e5%93%a9%e5%93%94%e5%93%a9%e5%8a%a8%e7%94%bb/9nblggh5q5fv?activetab=pivot:overviewtab) | 官方渠道下载b站视频 | [ShadowsocksR](https://github.com/shadowsocksrr/shadowsocksr-csharp) | 必备工具                       |
+| ~~[哔哩哔哩动画](https://www.microsoft.com/zh-cn/p/%e5%93%94%e5%93%a9%e5%93%94%e5%93%a9%e5%8a%a8%e7%94%bb/9nblggh5q5fv?activetab=pivot:overviewtab)~~ | ~~官方渠道下载b站视频~~ | ~~[ShadowsocksR](https://github.com/shadowsocksrr/shadowsocksr-csharp)~~ | ~~必备工具~~                   |
 | [万彩办公大师](http://www.wofficebox.com/) | 办公工具~~箱~~ | [wsl-notify-send](https://github.com/stuartleeks/wsl-notify-send)                    |                        WSL给win发通知                        |
 | ~~[软媒魔方](https://mofang.ruanmei.com/)~~ | ~~管理电脑的工具箱~~ |                            [ImageJ](https://imagej.nih.gov/ij/download.html)                            |                         图像处理软件                         |
 |[每日英语听力](https://www.eudic.net/v4/en/app/ting)|闭眼休息的时候听听英语|[spacedesk](https://spacedesk.net/##box_434)|将手机or平板变成电脑显示器|
@@ -110,7 +109,7 @@
 |Geomagic Wrap|三维模型处理工具|[Mellow Multi Player](http://mellow.official.jp/blog/archives/3081)|同时播放多个视频|
 |[WinDirStat](https://windirstat.net/download.html)|磁盘分析工具|[Sumatra PDF](https://www.sumatrapdfreader.org/download-free-pdf-viewer)|PDF阅读器，支持黑暗模式(快捷键I)|
 |[QTTabBar](https://github.com/indiff/qttabbar)|用浏览器的方式管理 Windows 资源管理器|          [HWiNFO](https://www.hwinfo.com/download/)          |查看电脑硬件，包含温度、功耗等|
-|||                                                              ||
+|[PowerToys](https://github.com/microsoft/PowerToys)|windows工具箱| CapsWriter-Offline |语音输入&&字幕生成工具|
 
 3. 大型软件：[Lightroom Classic](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Photoshop](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Microsoft Office](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[WLS（Ubuntu 20.04 LTS）](https://docs.microsoft.com/zh-cn/windows/wsl/install-win10)、[Visio](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[CLion](https://www.jetbrains.com/clion/download/#section=windows)、PyCharm、[SolidWorks](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)
 3. 安装msys2：[如何优雅地配置 Windows 环境下的 MSys2 + Git 开发环境？（上） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/33751738)
@@ -195,3 +194,9 @@
 - [warning C4819](https://blog.csdn.net/lcb_coconut/article/details/76136725)：因为换行符不对
 - error LNK2019: 无法解析的外部符号
     - 如果是在一个库（程序）中用到另外一个库的函数，可能是因为没有导出 or 导入
+
+# [PowerToys](https://github.com/microsoft/PowerToys)
+
+- 窗口堆叠：PowerToys=>FancyZones=>启动布局编辑器=>新建布局=>画布，创建3个or4个窗口（如下所示）
+
+    ![image-20250204170658860](images/image-20250204170658860.png)
