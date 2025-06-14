@@ -1,4 +1,4 @@
-## 杂：
+## 语法：
 
 ### layout
 
@@ -23,5 +23,16 @@
             }
         }
         ```
+### 扩展
 
-        
+- 语法： `#extension xxxxxxx : enable`
+
+- `GL_GOOGLE_include_directive`：支持#include
+
+- `GL_EXT_shader_atomic_float`：支持float的原子操作
+
+- 
+### 杂
+
+- 结构体中不能包含成员函数，需要结构体外面定义
+

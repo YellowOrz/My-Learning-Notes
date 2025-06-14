@@ -1631,6 +1631,14 @@
 - 推送常数的大小不可超过vk::PhysicalDeviceProperties::limits::maxPushConstantsSize所定义的最大值
 
 
+# 语法
+
+## Memory
+
+- Memory Mapping技术：把Vulkan当中生成的任何内存（VkDeviceMemory）映射到CPU端的一个void*指针，以便CPU端读取或者写入这块内存。
+
+    - 内存必须要带VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT标识符
+
 
 # 三方库
 
@@ -1638,3 +1646,6 @@
 
 > [Vulkan系列教程-VMA教程](https://www.zhihu.com/column/c_1462201569261744128)
 
+- 分配的内存默认属于一整块已经分配好的内存上。vmaAllocation用来记录它的offset和它的size。
+    - 如果不想从原有的内存上割一块，而是分配独立的内存，使用VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT这个flag
+    - 
