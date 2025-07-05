@@ -316,7 +316,7 @@
 | [CodeGlance Pro](https://plugins.jetbrains.com/plugin/18824-codeglance-pro) | 代码预览，类似VSCode                                         | [Smart Input](https://plugins.jetbrains.com/plugin/20575-smart-input) | 自动切换中英文                   |
 | [OpenCV Image Viewer](https://plugins.jetbrains.com/plugin/14371-opencv-image-viewer/versions) | debug的时候可视化opencv的变量                                | [VSCode Keymap](https://plugins.jetbrains.com/plugin/12062-vscode-keymap) | vscode快捷键                     |
 | [GitHub Theme](https://plugins.jetbrains.com/plugin/15418-github-theme) | github主题                                                   | Key Promoter X                                               | 快捷键提示                       |
-| CodeGeeX                                                     | AI助手（可能要[手动设置](https://zhipu-ai.feishu.cn/docx/CKXrdaLUFoqlhfxn9eGc36Bqnyb)） |                                                              |                                  |
+| ~~CodeGeeX~~                                                 | AI助手（可能要[手动设置](https://zhipu-ai.feishu.cn/docx/CKXrdaLUFoqlhfxn9eGc36Bqnyb)） | [Continue](https://plugins.jetbrains.com/plugin/22707-continue) | AI助手                           |
 
 - 快捷键：将快捷键换成VSCode，然后修改如下的快捷键
 
@@ -340,8 +340,8 @@
 
     | Pattern    | 颜色   | Pattern | 颜色   |
     | ---------- | ------ | ------- | ------ |
-    | \bnote\b.* | 00FF00 |         |        |
-    | !\s.*      | FF0000 | ?\s.*   | 0000FF |
+    | \bnote\b.* | 00FF00 | \?\s.*  | 00a8ff |
+    | !\s.*      | FF0000 |         |        |
 
 - [设置函数分割线](https://blog.csdn.net/xudahai513/article/details/126960141)：setting => Editor => General => Appearance，打钩"Show method sep"
 

@@ -109,7 +109,8 @@
 |Geomagic Wrap|三维模型处理工具|[Mellow Multi Player](http://mellow.official.jp/blog/archives/3081)|同时播放多个视频|
 |[WinDirStat](https://windirstat.net/download.html)|磁盘分析工具|[Sumatra PDF](https://www.sumatrapdfreader.org/download-free-pdf-viewer)|PDF阅读器，支持黑暗模式(快捷键I)|
 |[QTTabBar](https://github.com/indiff/qttabbar)|用浏览器的方式管理 Windows 资源管理器|          [HWiNFO](https://www.hwinfo.com/download/)          |查看电脑硬件，包含温度、功耗等|
-|[PowerToys](https://github.com/microsoft/PowerToys)|windows工具箱| CapsWriter-Offline |语音输入&&字幕生成工具|
+|[PowerToys](https://github.com/microsoft/PowerToys)|windows工具箱| [CapsWriter-Offline](https://github.com/HaujetZhao/CapsWriter-Offline) |语音输入&&字幕生成工具|
+|[cmdump-gui](https://git.taurusxin.com/taurusxin/ncmdump-gui)|网易云音乐文件ncm转mp3或flac格式|  ||
 
 3. 大型软件：[Lightroom Classic](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Photoshop](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[Microsoft Office](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[WLS（Ubuntu 20.04 LTS）](https://docs.microsoft.com/zh-cn/windows/wsl/install-win10)、[Visio](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)、[CLion](https://www.jetbrains.com/clion/download/#section=windows)、PyCharm、[SolidWorks](https://mp.weixin.qq.com/s/RH0oCJWD00QFXpuCYwB8oA)
 3. 安装msys2：[如何优雅地配置 Windows 环境下的 MSys2 + Git 开发环境？（上） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/33751738)
