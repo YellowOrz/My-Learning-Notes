@@ -1,8 +1,10 @@
-> 《Vulkan学习指南》 <=> 《Learning Vulkan》
+# 《Vulkan学习指南》
 
-# 第1章 开始学习新一代3D图形API
+>《Learning Vulkan》
 
-## 1.3 重要术语
+## 第1章 开始学习新一代3D图形API
+
+### 1.3 重要术语
 - physical device (物理设备): 各品牌型号的独显、集显等支持vulkan的硬件设备
 - device (设备): 物理设备在应用程序中的逻辑表示。一个物理设备对应一个设备？
 - queue (队列): 执行引擎与应用程序之间的接口。一个物理设备包含一个或多个队列。队列负责收集准备执行的工作（指令缓存）并分发到物理设备执行
@@ -14,7 +16,7 @@
     - synchronization command (同步指令): 通过设置同步事件、等待事件、流水线屏障对象、渲染通道、子通道的依赖，来保证多个动作指令的同步
 - command buffer (指令缓存): 一组指令的集合，记录多个指令并统一发送到队列中
 
-## 1.4 vulkan的原理
+### 1.4 vulkan的原理
 - （简化的）执行模型：vulkan程序控制一组vulkan设备，将多个command记录到 多个command buffer 中，并发送到多个queue。设备的驱动会读取queue并按照记录的顺序依次执行各个command
   
     ![image-20240504170458134](images/image-20240504170458134.png)
@@ -51,7 +53,7 @@
     - 上述所有的实现方法都可以通过`vk::getXXX()`获取  ？？？
     - 将指令记录到指令缓存中，使用`vk::cmdXXX()`  ？？？   
 
-## 1.5 理解vulkan应用程序
+### 1.5 理解vulkan应用程序
 
 ![image-20240504171129813](images/image-20240504171129813.png)
 
@@ -61,7 +63,7 @@
 - SPIV-R：将不同着色器代码语言（HLSL、GLSL）转成相同的、预编译的二进制数据格式
 - LunarG SDK：包含加载器、验证层、跟踪回放工具、SPIR-V工具、运行库、文档、demo等工具资源的vulkan skd
 
-## 1.6 开始学习Vulkan编程模型
+### 1.6 开始学习Vulkan编程模型
 
 - 应用程序编程模型：采用自顶向下的实现过程
 
@@ -128,9 +130,9 @@
     - 提交的工作通 过异步的方式执行
     - 多个command buffer可以被压送到独立、兼容的队列 里，从而实现并行的执行
 
-# 第2章 你的第一个Vulkan伪代码程序
+## 第2章 你的第一个Vulkan伪代码程序
 
-## 2.2 Hello World伪代码
+### 2.2 Hello World伪代码
 
 - 初始化过程：包括validtion layer（验证层）属性的初始化，以及`vk::Instance`（实例对象）的构建，然后检查是否有可用物理设备（vk::PhysicalDeveice），接着通过实例对象创建一个对应的逻辑设备（vk::Device）
 
@@ -254,24 +256,24 @@
     compute_queue.submit(submit_info);
     ```
 
-## 2.3 全部整合到一起
+### 2.3 全部整合到一起
 
 ![image-20240505143733468](images/image-20240505143733468.png)
 
-# 第3章 连接硬件设备
+## 第3章 连接硬件设备
 
-## 3.1 学习使用LunarG SDK
+### 3.1 学习使用LunarG SDK
 
 - Installable Client Driver (ICD)：兼容vulkan的显示驱动。不同ICD（例如nvidia和intel的驱动）可以互不影响地共存；
 - layer（层）：这是一种插件式的组件，可以捕捉或着拦截vulkan的指令，提供诸如调试、验证、跟踪等方面的服务功能
 - loader（加载器）：定位显示驱动的位置，并通过 与平台无关的方式提供layer所用的库文件。在Windows上，加载库（vulkan-1.dll）使用注册表来定位ICD和layer的配置信息
 
-## 3.3 扩展简介
+### 3.3 扩展简介
 
 - layer（层）：层会捕捉当前的Vulkan API并且将自己注入到 Vulkan指令的执行链中，使其与指定的层关联在一起。我们通常使用layer来进行开发过程当中的验证工作。例如，驱动程序不会检查Vulkan API 所传入的参数，所以我们可以通过层来完成输入参数的验证，判断它 们正确与否。 
 - extension（扩展）：扩展提供了额外的功能或者特性，它可能未 来会成为标准的一部分，也可能不会。扩展也可以作为设备或实例的 一部分存在。扩展指令的链接无法通过静态的方式实现，我们需要首 先进行查询，然后动态地将它们链接为函数指针。
 
-## 3.4 创建一个Vulkan实例
+### 3.4 创建一个Vulkan实例
 
 - 创建vulkan实例：
 
@@ -304,7 +306,7 @@
 
 > 可以直接显式地启用层，设置环境变量VK_INSTANCE_LAYERS=VK_LAYER_LUNARG_api_dump
 
-## 3.5 理解物理设备和逻辑设备
+### 3.5 理解物理设备和逻辑设备
 
 - 枚举物理设备：
 
@@ -374,7 +376,7 @@
 
 > 如果physical device丢失，创建的device会失败；但是device丢失，某些指令会返回VK_ERROR_DEVICE_LOST，但是physical device不受影响，不会重置device
 
-## 3.6 理解队列和队列族
+### 3.6 理解队列和队列族
 
 - queue: 应用程序和物理设备之间的通信过程
 
@@ -412,9 +414,9 @@
 
     > 一个queue family有多个queue，每个queue有唯一id。queueIndex设置queue family（对应queueFamilyIndex）中的queue id
 
-# 第4章 调试Vulkan程序
+## 第4章 调试Vulkan程序
 
-## 4.1 初探Vulkan中的调试方法
+### 4.1 初探Vulkan中的调试方法
 
 - 开启调试功能：实例级添加扩展名`VK_EXT_DEBUG_REPORT_EXTENSION_NAME`
 
@@ -425,7 +427,7 @@
     void vk::DebugReportCallbackEXT::clean(); // 内部调用的vkDestroyDebugReportCallbackEXT
     ```
 
-## 4.2 了解LunarG验证层及其特性
+### 4.2 了解LunarG验证层及其特性
 
 - VK_LAYER_GOOGLE_unique_objects：不可分发的Vulkan对象句柄并不需要自身是唯一的。驱动程序可能会为它认为等价的多个对象分配同一个句柄，导致跟踪对象变得困难。该层会将Vulkan创建的对象打包到一个统一的标识符中，当应用程序需要使用对象时再进行分包。这样的话，我们进行验证的时候就可以跟踪到正确的对象生命周期了。
     - LunarG官方推荐将该层放置在验证层的最后，这样它可以更为靠近显示驱动程序。
@@ -438,7 +440,7 @@
 - VK_LAYER_GOOGLE_threading：判断线程环境的安全性。可以检查多线程API的使用，保证对象的同步调用过程是在多个不同的线程中发生的。会检查和汇报线程的违规操作，并且强制对相关的调用使用互斥锁。在已经发生线程问题的情况下，依然让应用程序继续执行后续的代码。
 - VK_LAYER_LUNARG_standard_validation：按照正确的顺序，启用所有的标准层。
 
-## 4.3 在Vulkan程序中实现调试
+### 4.3 在Vulkan程序中实现调试
 
 - 验证层的种类与供应商以及SDK版本都是有直接关系
 
@@ -468,9 +470,9 @@
 
         ![image-20240508225719360](images/image-20240508225719360.png)
 
-# 第5章 Vulkan中的指令缓存和内存管理
+## 第5章 Vulkan中的指令缓存和内存管理
 
-## 5.1 开始使用指令缓存
+### 5.1 开始使用指令缓存
 
 - 指令缓存可以录制多种不同的Vulkan API指令，创建之后可以重复使用。分为如下两类
 
@@ -501,7 +503,7 @@
     - 单队列提交（single queue submission）：按照具体操作的顺序排列
     - 多队列提交（multiple queue submission）：按照任何一种顺序执行，除非使用信号量、屏障等同步机制
 
-## 5.2 理解指令池和指令缓存API
+### 5.2 理解指令池和指令缓存API
 
 - command pool的创建信息：结构体，构造函数如下
 
@@ -579,7 +581,7 @@
             const vk::CommandBuffer *pCommandBuffers, Dispatch const &d) const;
     ```
 
-## 5.3 记录指令缓存
+### 5.3 记录指令缓存
 
 ![image-20240512171328310](images/image-20240512171328310.png)
 
@@ -641,7 +643,7 @@
     void Queue::waitIdle( Dispatch const & d ) const;
     ```
 
-## 5.5 管理Vulkan内存
+### 5.5 管理Vulkan内存
 
 - Vulkan使用宿主机内存来存储API的内部数据结构
 
@@ -820,9 +822,9 @@
     vk::DeviceSize Device::getMemoryCommitment(vk::DeviceMemory memory, Dispatch const &d) const;
     ```
 
-## 第7章 缓存资源、渲染通道、帧缓存以及SPIR-V着色器
+### 第7章 缓存资源、渲染通道、帧缓存以及SPIR-V着色器
 
-## 7.1 理解Vulkan的缓存资源类型
+### 7.1 理解Vulkan的缓存资源类型
 
 - vk::Buffer可以直接作为顶点数据的数据源访问，或者通过shader的描述符进行访问。
 
@@ -901,7 +903,7 @@
                                    Dispatch const &d);
     ```
 
-## 7.2 使用缓存资源创建几何体
+### 7.2 使用缓存资源创建几何体
 
 - 完整的buffer创建流程
 
@@ -909,7 +911,7 @@
 
     ![image-20240518232533079](images/image-20240518232533079.png)
 
-## 7.6 在Vulkan中实现着色器
+### 7.6 在Vulkan中实现着色器
 
 - 顶点、细分控制、细分计算、几何着色器，都用于顶点处理阶段；之后是片元着色器的阶段，它需要在光栅化结束之后执行。
 
@@ -1015,9 +1017,9 @@
 
             
 
-# 第8章 流水线和流水线状态管理
+## 第8章 流水线和流水线状态管理
 
-## 8.1 开始学习流水线
+### 8.1 开始学习流水线
 
 - ==流水线==：由一系列固定阶段组成，输入数据流，每一个阶段对数据处理、传递下一阶段。最终的成果是光栅化后的绘制图形（图形流水线），或者通过某种计算逻辑（计算流水线）完成更新的资源信息（缓存或者图像）
 
@@ -1033,7 +1035,7 @@
 
 - ==descriptor set layout==：将资源关联到逻辑（shader？）对象上
 
-## 8.2 通过PCO缓冲流水线对象
+### 8.2 通过PCO缓冲流水线对象
 
 - Pipeline cache有两种方式
 
@@ -1091,7 +1093,7 @@
 
     - 负载数据
 
-## 8.4 理解计算流水线
+### 8.4 理解计算流水线
 
 - 创建计算流水线
 
@@ -1140,7 +1142,7 @@
             >
             > pSpecializationInfo_：==特化常量（Specialization Constants）==，允许在运行时修改SPIR-V模块中的常量，从而为shader提供可配置的参数，而无需重新编译shader
 
-## 8.5 Vulkan的流水线状态对象
+### 8.5 Vulkan的流水线状态对象
 
 - ==pipeline state（流水线状态）==：控制物理设备的硬件设置接口的方法
     - dynamic state（动态状态）：设置流水线中用到的动态状态
@@ -1152,13 +1154,13 @@
     - depth stencil state（深度/模板状态）：定义深度/模板的操作方式
     - multi sample state（多重采样状态）：控制光栅化过程中的像素采样方式，实现抗锯齿的需求
 
-## 8.6 实现流水线
+### 8.6 实现流水线
 
 <img src="images/image-20240522125346894.png" alt="image-20240522125346894" style="zoom:67%;" />
 
-# 第9章 绘制对象
+## 第9章 绘制对象
 
-## 9.2 准备绘制对象
+### 9.2 准备绘制对象
 
 - 绑定pipeline
 
@@ -1173,7 +1175,7 @@
     >     CommandBuffer::dispatchIndirect()
     > - eCompute  = VK_PIPELINE_BIND_POINT_COMPUTE：如果是这个，则能用CommandBuffer::draw()、CommandBuffer::drawIndexed()、CommandBuffer::drawIndirect()、CommandBuffer::drawIndexedIndirect()
 
-## 9.5 理解Vulkan中的同步图元
+### 9.5 理解Vulkan中的同步图元
 
 - 同步类型
 
@@ -1338,7 +1340,7 @@
         >
         > imageMemoryBarriers：用于同步图像资源的访问
 
-# 第10章 描述符与推送常数
+## 第10章 描述符与推送常数
 
 - ==一致变量（Uniform）==：shader中只读的数据块
     - 通过描述符和描述符池来进行管理
@@ -1346,7 +1348,7 @@
 - ==描述符池（descriptor pool）==：描述符的缓存区域，方便经常性地修改变量的值
 - 推送常数：有助于更新着色器中的常量数据，并且可以优化更新的速度使其更快
 
-## 10.1 理解描述符的概念
+### 10.1 理解描述符的概念
 
 > [一张图形象理解Vulkan DescriptorSet](https://zhuanlan.zhihu.com/p/450434645)：在DescriptorSetLayout的指导下，利用Descriptor Pool提供的Descriptors，组装成一个符合DescriptorSetLayout的Set
 
@@ -1629,4 +1631,38 @@
 - 推送常数的大小不可超过vk::PhysicalDeviceProperties::limits::maxPushConstantsSize所定义的最大值
 
 
+# 语法
 
+## Memory
+
+- **Memory Mapping技术**：把Vulkan当中生成的任何内存（VkDeviceMemory）映射到CPU端的一个void*指针，以便CPU端读取或者写入这块内存。
+    - `vkMapMemory()`进行映射操作，`vkUnmapMemory()`进行映射解除操作
+    - 内存必须要带`VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT`标识符
+    - 一块内存只能Mapping一次
+    - 除非GPU上要使用，否则可以不需要UnMap操作
+- **Cache flush and invalidate**：没有`VK_MEMORY_PROPERTY_HOST_COHERENT_BIT`标识符的内存，CPU与GPU的数据就无法及时更新入内存（存在缓存）
+    - 在CPU端读取之前，调用**invalidate cache**操作，即`vkInvalidateMappedMemoryRanges()`；
+        - 在 `vkMapMemory()`之后调用
+
+    - 在CPU写入数据后，进行**flush cache**操作（CPU的Cache到主存RAM都会有一些延迟），即`vkFlushMappedMemoryRanges()`；
+        - 在 `vkUnmapMemory()` 之前调用
+
+
+## layer && extension
+
+- instance的layer
+    - `VK_LAYER_KHRONOS_validation`：由 Khronos 提供的标准验证层，可在开发阶段捕获常见的使用错误，避免运行时崩溃或未定义行为
+- device的extension
+    - `VK_EXT_shader_atomic_float`：在shader中使用float的原子操作
+    - `VK_KHR_shader_non_semantic_info`：在shader中可以printf
+
+
+# 三方库
+
+## VMA
+
+> [Vulkan系列教程-VMA教程](https://www.zhihu.com/column/c_1462201569261744128)
+
+- 分配的内存默认属于一整块已经分配好的内存上。vmaAllocation用来记录它的offset和它的size。
+    - 如果不想从原有的内存上割一块，而是分配独立的内存，使用VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT这个flag
+    - 

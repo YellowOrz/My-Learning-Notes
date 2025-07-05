@@ -13,6 +13,58 @@
     >
     > /Od：禁用所有优化
 
+# CMake Code Style
+
+- 变量：使用下划线相连
+
+    - 使用小写的变量：基本上都是一些自定义、临时、局部变量
+
+        ```cmake
+        # 用户自定义变量
+        set(my_variable "value")
+        # 循环变量
+        foreach(file IN LISTS source_files)
+            message(STATUS "Processing: ${file}")
+        endforeach()
+        # 函数参数和局部变量
+        function(my_function arg1 arg2)
+            set(local_var "${arg1}_${arg2}")
+            message(STATUS "${local_var}")
+        endfunction()
+        ```
+
+    - 使用全大写的变量：缓存、option、环境变量、官方函数
+
+        ```cmake
+        # 缓存变量（CACHE），比如通过通过 ccmake 或命令行 -D 设置
+        set(MY_CACHE_VAR "default_value" CACHE STRING "Description of the variable")
+        # 选项（option），因为它默认生成的是全大写变量名
+        option(BUILD_TESTS "Build unit tests" ON)
+        # 环境变量引用
+        message(STATUS "Current user is: $ENV{USER}")
+        # 调用官方函数得到的变量名。NOTE: 如果是临时使用，可以用小写
+        file(GLOB_RECURSE HEADER_FILES "include/*.h")
+        get_target_property(TARGET_TYPE my_target TYPE)
+        # 官方或第三方模块导出的变量
+        find_package(OpenCV REQUIRED)
+        include_directories(${OpenCV_INCLUDE_DIRS})
+        # cmake_parse_arguments()里的变量
+        set(options  MY_OPTION)
+        set(oneValueArgs NAME)
+        set(multiValueArgs SOURCES)
+        cmake_parse_arguments(
+            PARSE_ARGV 0
+            "MY_FUNCTION" # 前缀（可自定义）
+            "${options}"
+            "${oneValueArgs}"
+            "${multiValueArgs}"
+        )
+        ```
+
+- 函数名：小写，单词之间用下划线 _ 分隔
+
+- target名称：推荐小写，可以带命名空间（用 :: 分隔）
+
 # CMake Practice
 
 > https://gavinliu6.github.io/CMake-Practice-zh-CN/#/

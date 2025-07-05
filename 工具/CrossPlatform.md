@@ -140,14 +140,25 @@
 
     ![Screenshot](images/example-1705206069501-3.png)
 
-- vsode server安装包下载：根据系统、CPU架构选择连接，然后将其中的commit号换成对应vsode的即可
+- vsode server离线安装：
 
-    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable
+    - 下载server：根据系统、CPU架构选择连接，然后将其中的commit号换成对应vsode的即可
+        
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32-x64/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux-x64/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux-arm64/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-darwin-arm64/stable
+    - 下载cli：
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/cli-win32/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/cli-win32-x64/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/cli-linux-x64/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/cli-linux-arm64/stable
+        -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/cli-darwin-arm64/stable
+    
+    - 旧版vscode：只需要server，解压后存放在`~/.vscode-server/bin/6c3e3dba23e8fadc360aed75ce363ba185c49794`（完成后路径下有文件LICENSE）
 
-    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32-x64/stable
-    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux_x64/stable
-    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux-arm64/stable
-    -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-darwin-arm64/stable
+    - 新版vscode：server下载后解压存放到`~/.vscode-server/cli/servers/Stable-6c3e3dba23e8fadc360aed75ce363ba185c49794/server`，cli下载后解压，把文件code放到`~/.vscode-server/code-6c3e3dba23e8fadc360aed75ce363ba185c49794`
 
 - [修改C++中访问限定符（public、private等）的颜色](https://blog.csdn.net/NEKOic/article/details/118855221)：在设置的json中加入如下内容
 

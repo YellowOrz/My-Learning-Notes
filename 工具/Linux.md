@@ -22,8 +22,6 @@ snap install stretchly mission-center
 
 # gnome
 apt install gedit guake gnome-shell-extensions   
-# apt装不了的就用snap
-apt install x2goserver x2goserver-xsession x2goclient
 
 # deepin-wine
 wget -O- https://deepin-wine.i-m.dev/setup.sh | sh
@@ -56,6 +54,7 @@ sudo apt install polychromatic  # Full installation
 
 ### 舍弃 ###
 # apt install indicator-cpufreq
+# apt install x2goserver x2goserver-xsession x2goclient	# apt装不了的就用snap
 ```
 
 | 软件名                                                       | 介绍                                                         | 软件名                                                       | 介绍                                      |
@@ -453,10 +452,10 @@ apt install libgtk-3-dev
 - 性能指示器：[indicator-sysmonitor](https://github.com/fossfreedom/indicator-sysmonitor)  ，显示于状态栏，支持GNOME和MATE，程序里面设置**开机自启**，显示格式为
 
   ```
-  {netcomp} {cpu} {nvgpu} {mem}
+  {netcomp}║C:{cpu}║G:{nvgpu}║M:{mem}
   ```
 
-- 快捷键设置
+- 快捷键设置：Settings=>Keyboard=>Keyboard Shortcuts
 
   | 名称          | 命令                             | 快捷键               | 系统默认                 |
   | ------------- | -------------------------------- | -------------------- | ------------------------ |
@@ -541,6 +540,45 @@ apt install libgtk-3-dev
 - 设置锁屏时间：设置=>Xfce Screensaver=>Lock Screen=>Lock Screen with Screeensaver
 
 # 通用配置
+
+- [fcitx5安装rime](https://www.cnblogs.com/Undefined443/p/-/rime)：
+
+    ```bash
+    # 安装 Fcitx5 框架和中文插件
+    sudo apt install fcitx5 fcitx5-chinese-addons
+    # 安装基于 Fcitx5 的 RIME 引擎
+    sudo apt install fcitx5-rime librime-plugin-lua
+    
+    cd /opt
+    curl -fsSL https://raw.githubusercontent.com/rime/plum/master/rime-install | sudo bash
+    sudo chmod a+w -R plum	
+    rime_frontend=fcitx5-rime bash ./plum/rime-install double-pinyin
+    ```
+
+    - 配置：编辑`~/.local/share/fcitx5/rime/default.custom.yaml`，添加如下内容
+
+      ```bash
+      patch:
+        # 要启用的输入方案
+        schema_list:
+          - schema: double_pinyin_flypy   # 小鹤双拼
+        menu:
+          # 候选词个数
+          page_size: 4
+      ```
+      
+    - [切换简体中文](https://miaostay.com/2018/11/rime%E8%AE%BE%E7%BD%AE%E4%B8%BA%E9%BB%98%E8%AE%A4%E7%AE%80%E4%BD%93/)：编辑`~/.local/share/fcitx5/rime/double_pinyin_flypy.schema.yaml`
+
+      ```bash
+      # 将如下内容
+        - name: simplification
+          states: [ 漢字, 汉字 ]
+      # 改成
+        - name: simplification
+          reset: 1
+          states: [ 漢字, 汉字 ]
+      ```
+      
 
 - root登录：[Ubuntu 18.04-20.04开机自动root用户登录（测试可用）_ubuntu开机进入root用户_墨痕诉清风的博客-CSDN博客](https://blog.csdn.net/u012206617/article/details/122343463)
 
