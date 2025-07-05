@@ -1635,9 +1635,26 @@
 
 ## Memory
 
-- Memory Mapping技术：把Vulkan当中生成的任何内存（VkDeviceMemory）映射到CPU端的一个void*指针，以便CPU端读取或者写入这块内存。
+- **Memory Mapping技术**：把Vulkan当中生成的任何内存（VkDeviceMemory）映射到CPU端的一个void*指针，以便CPU端读取或者写入这块内存。
+    - `vkMapMemory()`进行映射操作，`vkUnmapMemory()`进行映射解除操作
+    - 内存必须要带`VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT`标识符
+    - 一块内存只能Mapping一次
+    - 除非GPU上要使用，否则可以不需要UnMap操作
+- **Cache flush and invalidate**：没有`VK_MEMORY_PROPERTY_HOST_COHERENT_BIT`标识符的内存，CPU与GPU的数据就无法及时更新入内存（存在缓存）
+    - 在CPU端读取之前，调用**invalidate cache**操作，即`vkInvalidateMappedMemoryRanges()`；
+        - 在 `vkMapMemory()`之后调用
 
-    - 内存必须要带VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT标识符
+    - 在CPU写入数据后，进行**flush cache**操作（CPU的Cache到主存RAM都会有一些延迟），即`vkFlushMappedMemoryRanges()`；
+        - 在 `vkUnmapMemory()` 之前调用
+
+
+## layer && extension
+
+- instance的layer
+    - `VK_LAYER_KHRONOS_validation`：由 Khronos 提供的标准验证层，可在开发阶段捕获常见的使用错误，避免运行时崩溃或未定义行为
+- device的extension
+    - `VK_EXT_shader_atomic_float`：在shader中使用float的原子操作
+    - `VK_KHR_shader_non_semantic_info`：在shader中可以printf
 
 
 # 三方库

@@ -31,7 +31,13 @@
 
 - `GL_EXT_shader_atomic_float`：支持float的原子操作
 
-- 
+- `GL_EXT_debug_printf`：用于调试时打印信息
+
+    ```glsl
+    debugPrintfEXT("tid %u id %u Sum: %f\n", tid, id, sums[0]);
+    ```
+
+    
 ### 杂
 
 - 结构体中不能包含成员函数，需要结构体外面定义
