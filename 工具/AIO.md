@@ -51,17 +51,25 @@
 
 ## 主板设置
 
+NOTE：以MSI B450i为例
+
 - 由于我买的PCIE转4个M2的转接卡，需要在MSI B450I主板的BIOS中，设置 高级=>PCIe=>PCI子系统设备=>PCI_E1 Lanes Configuration=>x8+x4+x4
 
-- 主板中开启VT虚拟化技术：以MSI B450i为例，Overclocking settings(OC) =>高级CPU配置=>SVM Mode，设置为允许
+- 主板中开启VT虚拟化技术：Overclocking settings(OC) =>高级CPU配置=>SVM Mode，设置为允许
 
-- 主板中关闭secure boot：以MSI B450i为例，Settings=>高级=>Windows操作系统的配置=>安全引导=>安全启动，设置为禁止
+- 主板中开启IOMMU：Overclocking settings(OC) =>高级CPU配置=>AMD CBS=>IOMMU，设置为允许
 
-- 主板设置来电自启：以MSI B450i为例，Settings=>高级=>电源管理设置=>AC电源掉电再来电的状态，设置为开机
+- 【按需开启】主板中开启CSM：Settings=>高级=>Windows操作系统的配置=>BIOS CSM/UEFI Mode，选择CSM
 
-- 主板设置wol：以MSI B450i为例，Settings=>高级=>唤醒事件设置=>PCIE设备唤醒，设置为允许
+- 主板中关闭secure boot：Settings=>高级=>Windows操作系统的配置=>安全引导=>安全启动，设置为禁止
 
-- 主板设置省电模式：以MSI B450i为例
+    - 如果已经设置过CSM可以跳过这一步
+
+- 主板设置来电自启：Settings=>高级=>电源管理设置=>AC电源掉电再来电的状态，设置为开机
+
+- 主板设置wol：Settings=>高级=>唤醒事件设置=>PCIE设备唤醒，设置为允许
+
+- 主板设置省电模式：
 
     - Settings=>高级=>电源管理设置=>ErR Ready
 
@@ -284,7 +292,132 @@
 
         - 如果“应用配置”点不了，尝试刷新、把inferface复制成inferface.new、把inferface里面新增的内容调整顺序到原来vmbr0的下面（没有空行）
 
-- 
+- 直通AMD集显
+
+    - [【NAS】PVE下AMD核显直通和基本配置 - 哔哩哔哩](https://www.bilibili.com/opus/822884865987838001)
+    
+    - https://perfectnewer.github.io/personal-note/post/pve/pci_passthrough_basic/
+    
+    - [amd 5700G igpu在qnap上的 直通_威联通 QNAP_那是云 | 智能生活 , 上那是云 - 智能生活,上那是云](http://www.nasyun.com/forum.php?mod=viewthread&tid=78369)
+    
+    - [PVE7 AMD 5700G 核显直通 (iGPU Passthrough)_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV11d4y1G7Nk/?shar=)
+    
+    - [AMD 5700G在Proxmox VE 7.x 中安装Win11并设置显卡直通 · udon.rocks](https://udon.rocks/6)
+    
+    - [Proxmox 5700G APU GPU Passthrough Notes](https://gist.github.com/matt22207/bb1ba1811a08a715e32f106450b0418a)
+    
+    - [PVE开启直通并提取核显 vBIOS - 自由de风](https://www.icn.ink/pve/53.html)
+    
+    - [[TUTORIAL\] - PCI/GPU Passthrough on Proxmox VE 8 : Installation and configuration | Proxmox Support Forum](https://forum.proxmox.com/threads/pci-gpu-passthrough-on-proxmox-ve-8-installation-and-configuration.130218/)
+    
+    - 
+    
+    - 使用pvetools开启硬件直通的支持
+    
+        ![image-20250517215800690](./images/image-20250517215800690.png)![image-20250517215814583](./images/image-20250517215814583.png)![image-20250517215834138](./images/image-20250517215834138.png)
+    
+    - 使用pvetools开启AMD集显直通的支持
+    
+        ![image-20250517215800690](./images/image-20250517215800690.png)![image-20250517215925889](./images/image-20250517215943590.png)![image-20250517215925889](./images/image-20250517215925889.png)
+    
+        ![image-20250517220103893](./images/image-20250517220103893.png)![image-20250517220111721](./images/image-20250517220111721.png)
+    
+        - 确认是否添加成功：
+    
+            ```bash
+            lspci -D -nnk | grep VGA
+            # 查看输出最最后[]里的字段，例如1002:1638
+            # 0000:30:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Cezanne [Radeon Vega Series / Radeon Vega Mobile Series] [1002:1638] (rev c8)
+            cat /etc/modprobe.d/vfio.conf
+            # 查看是否有1002:1638
+            # 查看是否有options vfio-pci disable_idle_d3=1
+            # 没有的话手动加一下，然后运行命令update-initramfs -u -k all，再重启
+            ```
+            
+    
+    - 禁用显卡驱动 或者 指定加载顺序
+    
+        ```bash
+        # 禁用显卡驱动
+        # AMD GPUs
+        echo "blacklist amdgpu" >> /etc/modprobe.d/blacklist.conf
+        echo "blacklist radeon" >> /etc/modprobe.d/blacklist.conf
+        # NVIDIA GPUs
+        echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf 
+        echo "blacklist nvidia*" >> /etc/modprobe.d/blacklist.conf 
+        # Intel GPUs
+        echo "blacklist i915" >> /etc/modprobe.d/blacklist.conf
+        
+        # 指定加载顺序
+        # For AMD
+        echo "softdep radeon pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        echo "softdep amdgpu pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        # For Nvidia
+        echo "softdep nouveau pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        echo "softdep nvidia pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        echo "softdep nvidiafb pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        echo "softdep nvidia_drm pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        echo "softdep drm pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        # For Intel
+        echo "softdep snd_hda_intel pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        echo "softdep snd_hda_codec_hdmi pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        echo "softdep i915 pre: vfio-pci" >> /etc/modprobe.d/vfio.conf
+        # NOTE: 如果没有softdep这个命令，则运行apt isntall user-mode-linux
+        ```
+    
+        
+    
+    - 导出vbios的rom：如果报错permission deny之类的，确保主板开启CSM，如果还不行则尝试更新pve或者pve内核
+    
+        - [isc30/ryzen-gpu-passthrough-proxmox: Get the Ryzen processors with AMD Radeon 680M/780M integrated graphics or RDNA2/RDNA3 GPUs running with Proxmox, GPU passthrough and UEFI included.](https://github.com/isc30/ryzen-gpu-passthrough-proxmox)
+    
+        ```bash
+        lspci -D -nnk | grep VGA
+        # 查看输出最前面的字段，例如0000:30:00.0
+        
+        cd /sys/bus/pci/devices/0000:30:00.0
+        echo 1 > rom
+        cat rom > /tmp/vbios.rom
+        echo 0 > rom
+        mv /tmp/vbios.rom /usr/share/kvm/
+        ```
+    
+        - 检查vbios
+    
+            ```bash
+            apt-get install make gcc
+            
+            # cd ~
+            git clone https://github.com/awilliam/rom-parser
+            cd rom-parser
+            make
+            
+            ./rom-parser /usr/share/kvm/vbios.rom
+            # 输出如下：vendor和device和命令lspci -D -nnk | grep VGA里的一样
+            # Valid ROM signature found @0h, PCIR offset 1b0h
+            #        PCIR: type 0 (x86 PC-AT), vendor: 1002, device: 1638, class: 030000
+            #        PCIR: revision 0, vendor revision: 110a
+            #        Last image
+            ```
+    
+    - 给虚拟机添加AMD集显：编辑/etc/pve/qemu-server/下的配置文件
+    
+        - 在`cpu:host`后面添加：`,hidden=1`
+        - 添加一行`hostpci0: 0000:30:00.0,pcie=1,x-vga=1,romfile=vbios.rom`
+            - 如果已经有hostpciX的行了，就让上面的0为X+1
+    
+    - 如果虚拟机关机后在启动报如下[错误](https://forum.proxmox.com/threads/gpu-passthrough-ends-up-with-pci_num_pins-error.143481/)
+    
+        ```bash
+        # kvm: ../hw/pci/pci.c:1637: pci_irq_handler: Assertion `0 <= irq_num && irq_num < PCI_NUM_PINS' failed.
+        # TASK ERROR: start failed: QEMU exited with code 1
+        echo 0 > /sys/bus/pci/devices/.../d3cold_allowed
+        ```
+    
+        
+    
+        
+
 
 # 虚拟机
 
@@ -330,69 +463,6 @@
     startup: order=1
     vmgenid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     ```
-
-- 修改IP：编辑/etc/config/network，然后重启网络`service network restart`
-
-    - NOTE: 如果连不了外网，可能是网关获取不对，把`option proto `从static改成dhcp，再运行命令
-
-- [更换中科大镜像源](https://mirrors.ustc.edu.cn/help/openwrt.html)
-
-    ```bash
-    sed -i 's/downloads.openwrt.org/mirrors.ustc.edu.cn\/openwrt/g' /etc/opkg/distfeeds.conf
-    ```
-
-- [切换中文](https://blog.beanbang.cn/2023/11/26/pve-install-openwrt-as-secondary-router)：
-
-    ```c++
-    opkg install luci-i18n-base-zh-cn
-    opkg install luci-i18n-firewall-zh-cn
-    ```
-
-- [更换主题](https://blog.csdn.net/sunky7/article/details/138198347)：`opkg install luci-compat luci-lib-ipkg`，然后下载主题（.ipk格式，比如[这个](https://github.com/jerrykuku/luci-theme-argon/releases/download/v2.2.9.4/luci-theme-argon-master_2.2.9.4_all.ipk)）通过software upload package就可以了，默认上传直接生效
-
-- [安装OpenClash](https://github.com/vernesong/OpenClash/wiki/%E5%AE%89%E8%A3%85)：
-
-    - 允许如下命令查看openwrt用的是iptables还是nftables，大概率是nftables
-
-        ```bash
-        opkg list-installed | grep -E 'iptables|nftables'
-        ```
-
-    - 安装依赖
-
-        ```bash
-        opkg update
-        # iptables
-        opkg install coreutils-nohup bash iptables dnsmasq-full curl ca-certificates ipset ip-full iptables-mod-tproxy iptables-mod-extra libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip luci-compat luci luci-base
-        # nftables
-        opkg install coreutils-nohup bash dnsmasq-full curl ca-certificates ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base
-        ```
-
-    - 下载[.ipk文件](https://github.com/vernesong/OpenClash/releases)，上传到openwrt
-
-        ```bash
-        opkg install ./luci-app-openclash_0.33.7-beta_all.ipk
-        ```
-
-    - 到openwrt的网页后台，服务=>OpenClash，即为OpenClash的管理界面
-
-    - 下载内核？：
-
-    - 添加订阅：OpenClash的管理界面，配置订阅=>添加
-
-- ~~[安装v2raya](https://v2raya.org/docs/prologue/installation/openwrt/)~~：
-
-    ```bash
-    opkg update
-    opkg install luci-i18n-v2raya-zh-cn v2ray-geoip v2ray-geosite
-    
-    uci set v2raya.config.enabled='1'
-    uci commit v2raya
-    /etc/init.d/v2raya enable
-    /etc/init.d/v2raya start
-    ```
-
-    ![image-20241026230248081](images/image-20241026230248081.png)
 
 ## Windows
 
