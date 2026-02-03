@@ -23,6 +23,13 @@
             }
         }
         ```
+
+- [内存对齐](https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Memory_layout)：`layout(xxxx)`，xxxx为shared, packed, std140, std430中的一个
+
+    - shared：默认布局。由实现（驱动）决定成员的内存排列。
+    - packed：尽可能紧凑排列成员，不填充对齐空隙。访问性能可能降低
+    - std140：
+    - std430
 ### 扩展
 
 - 语法： `#extension xxxxxxx : enable`
