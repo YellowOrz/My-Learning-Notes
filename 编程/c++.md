@@ -23,7 +23,37 @@
         - 操作void *指针所指向的对象（经过强制类型转换就可以了）
         - 直接给其他非void *指针赋值（经过强制类型转换就可以了）
     - 示例： malloc 函数返回的指针就是 void \* 型
-- 
+
+## 类型转换
+
+- 四种cast
+
+| 转换方式               | 检查时机 | 安全性             | 主要用途                           | 典型场景                                    |
+| :--------------------- | :------- | :----------------- | :--------------------------------- | :------------------------------------------ |
+| **`static_cast`**      | 编译时   | 中等（程序员保证） | 相关类型转换、类层次转换           | 基本类型转换、向上(子→父)转型（向下不安全） |
+| **`dynamic_cast`**     | 运行时   | 高（自动检查）     | 多态类型的向下转型                 | 安全地将基类指针转为派生类                  |
+| **`const_cast`**       | 编译时   | 低（易引发 UB）    | 添加或移除 `const`/`volatile` 属性 | 兼容旧代码、移除常量性                      |
+| **`reinterpret_cast`** | 编译时   | 极低（仅重新解释） | 无关类型的低级转换                 | 指针↔整数、函数指针转换                     |
+
+- 自定义类型转换符
+
+    ```c++
+    Class A;
+    Class B {
+      public:
+        operator A () const { ... }	                                     // 把B转A
+        operator A &() const { return *reinterpret_cast<A*>(this); }	 // 把B转A的引用
+        operator A *() const { return reinterpret_cast<A*>(this); }	     // 把B转A的指针
+        operator bool () const { return ptr == nullptr; }                // 把B转bool类型
+        bool operator ! () const { return ptr != nullptr; }	             // 上一个函数的取反操作
+        B & operator = (nullptr) const { ptr = nullptr; return *this; }  // 清空操作
+        B & operator = (int *p) const { ptr = p; return *this; }         // 重新赋值
+      private:
+        int * ptr;
+    }
+    ```
+
+    
 
 # 多线程
 
