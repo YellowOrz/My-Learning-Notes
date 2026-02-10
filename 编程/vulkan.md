@@ -1553,13 +1553,232 @@
 
     - 在 `vkUnmapMemory()` 之前调用
 
-## layer && extension
+## layer
 
 - instance的layer
-  - `VK_LAYER_KHRONOS_validation`：由 Khronos 提供的标准验证层，可在开发阶段捕获常见的使用错误，避免运行时崩溃或未定义行为
-- device的extension
-  - `VK_EXT_shader_atomic_float`：在shader中使用float的原子操作
-  - `VK_KHR_shader_non_semantic_info`：在shader中可以printf
+    - `VK_LAYER_KHRONOS_validation`：由 Khronos 提供的标准验证层，可在开发阶段捕获常见的使用错误，避免运行时崩溃或未定义行为
+
+## Extension
+
+- Vulkan API 的extension：创建instance或者device的时候使用
+
+    - 要区分instance或者device，是因为它们所影响的对象层级、可用时机、依赖的硬件/驱动能力不同
+        - instance 层抽象的是“平台+Vulkan 运行时环境”
+
+        - device 层抽象的是“特定 GPU 的硬件能力”
+
+    - 所有带"\_2"的extension基本上都是不带“\_2”的原版的增强、重构、规范化或向后兼容的升级版，且往往伴随着官方弃用（deprecation）旧版
+
+    - 以下提到所有的extension都是字符串，把它们**变成大写**后**加上“_EXTENSION_NAME”**就可以获得它们对应的**宏定义**，从而使用代码补全
+
+    - instance和device的extension要分开给到vk::InstanceCreateInfo和vk::DeviceCreateInfo，不能混在一起用
+
+- Instance extension
+
+    - `VK_EXT_debug_utils`：用于调试，必须开启VK_LAYER_KHRONOS_validation
+
+- Device extension
+
+    - `VK_EXT_shader_atomic_float2`：在shader中使用float的原子操作
+
+    - [`VK_KHR_shader_non_semantic_info`](https://www.lunarg.com/wp-content/uploads/2021/08/Using-Debug-Printf-02August2021.pdf)：在shader中可以printf
+
+        - GLSL中使用如下
+
+            ```glsl
+            #extension GL_EXT_debug_printf : enable
+            float myfloat = 1;
+            debugPrintfEXT("My float is %f", myfloat);
+            vec4 pos = ...;
+            debugPrintfEXT("Position = %v4f", pos);
+            ```
+
+        - HLSL中使用如下
+
+            ```hlsl
+            printf("My float is %f", myfloat);
+            ```
+
+- 
+
+## Physical Device
+
+- 核心特性：在`vk::PhysicalDeviceFeatures`里面
+
+    - `shaderStorageBufferArrayDynamicIndexing`：在着色器中**使用运行时的变量（非常量）作为索引**，来访问 **Shader Storage Buffer（SSBO）**数组中的任意元素
+
+    - `sparseBinding`：允许将物理内存块与资源的虚拟地址空间进行**按需延迟绑定**。实现流程如下  ==TODO==
+
+        - 创建稀疏资源：添加标记位
+
+            ```c++
+            vk::BufferCreateInfo bufferInfo;
+            bufferInfo.usage = vk::BufferUsageFlagBits::eStorageBuffer | 
+                               vk::BufferUsageFlagBits::eSparseBinding;
+            ```
+
+        - 查询稀疏内存要求
+
+            ```c++
+            vk::BufferMemoryRequirementsInfo2 memReqInfo;
+            memReqInfo.buffer = sparseBuffer;
+            vk::MemoryRequirements2 memReq = device.getBufferMemoryRequirements2(memReqInfo);
+            ```
+
+        - 分配稀疏内存并绑定：要使用`vk::BindSparse`
+
+            ```c++
+            // 创建不连续内存块（多次分配）
+            vk::MemoryAllocateInfo allocInfo;
+            allocInfo.allocationSize = memReq.memoryRequirements.size;
+            allocInfo.memoryTypeIndex = findMemoryType(memReq.memoryRequirements.memoryTypeBits);
+            
+            vk::DeviceMemory sparseMemory = device.allocateMemory(allocInfo);
+            
+            // 绑定资源到内存（vkBindSparse）
+            vk::SparseBufferMemoryBindInfo bindInfo;
+            bindInfo.buffer = sparseBuffer;
+            bindInfo.resourceOffset = 0;  // 资源偏移量
+            bindInfo.size = memReq.memoryRequirements.size; // 绑定大小
+            bindInfo.memory = sparseMemory;
+            bindInfo.memoryOffset = 0; // 内存偏移量
+            
+            vk::SparseMemoryBind bind;
+            bind.resourceOffset = 0;
+            bind.size = memReq.memoryRequirements.size;
+            bind.memory = sparseMemory;
+            bind.memoryOffset = 0;
+            bindInfo.binds.push_back(bind);
+            
+            device.bindSparse(
+                vk::SubmitInfo().setPSparseBufferMemoryBinds(&bindInfo),
+                Fence()
+            );
+            ```
+
+- 新特性：在特征链中，使用`vk::PhysicalDeviceFeatures2`和 pNext 
+
+    - `vk::PhysicalDeviceVulkan12Features`：包含 Vulkan 1.2 版本的新功能（如 Bindless、8/16位运算等）。
+
+    - `vk::PhysicalDeviceVulkan13Features`：包含 Vulkan 1.3 版本的新功能（如动态渲染、着色器内建不可变采样器等）。
+
+    - `vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT`：在 Shader 中对浮点数进行原子操作
+
+        - 对应`VK_EXT_shader_atomic_float`
+        - 后缀 `EXT`代表这是一个扩展。**必须显式开启对应的device的extension**，见[这里](# Extension)
+
+        | 名字                         | 说明     |
+        | ---------------------------- | -------- |
+        | shaderBufferFloat32AtomicAdd | ==TODO== |
+        | shaderSharedFloat32AtomicAdd |          |
+
+    - `vk::PhysicalDeviceDescriptorIndexingFeatures`
+
+        - `vk::PhysicalDeviceDescriptorIndexingFeatures`是Vulkan 1.2 核心规范，而`vk::PhysicalDeviceDescriptorIndexingFeaturesEXT`是Vulkan 1.0+的扩展（`VK_EXT_descriptor_indexing`）
+
+- 开启指定feature：
+
+    - 首先检查物理设备是否支持该特性
+
+        - 如果使用多个新特性，可以使用`vk::StructureChain`（见[这里](#工具类)）
+
+        ```c++
+        // 核心特性：例如shaderStorageBufferArrayDynamicIndexing
+        vk::PhysicalDeviceFeatures features = physical_device.getFeatures();
+        if (!features.shaderStorageBufferArrayDynamicIndexing) {
+            cerr << "不支持shaderStorageBufferArrayDynamicIndexing" << endl;
+        }
+        // 新特性：例如vk::PhysicalDeviceVulkan12Features和vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT
+        vk::PhysicalDeviceFeatures2 feats2;
+        vk::PhysicalDeviceVulkan12Features feats12;
+        vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT atomic_float_feats;
+        feats2.pNext = &feats12;
+        feats12.pNext = &atomic_float_feats;
+        physical_device.getFeatures2(&feats2);
+        if (!feats12.bufferDeviceAddress) 
+            cerr << "不支持bufferDeviceAddress" << endl;
+        if (!atomic_float_feats.shaderBufferFloat32AtomicAdd) 
+            cerr << "不支持shaderBufferFloat32AtomicAdd" << endl;
+        ```
+
+    - 在创建**逻辑设备**时显式请求开启该特性：只开启需要的feat。遵循vulkan显式控制的设计原则
+
+        ```c++
+        // 核心特性：以ShaderStorageBufferArrayDynamicIndexing为例
+        vk::DeviceCreateInfo create_info;
+        vk::PhysicalDeviceFeatures need_feats;
+        need_feats.setShaderStorageBufferArrayDynamicIndexing(true); 
+        create_info.setPEnabledFeatures(&need_feats);
+        // 新特性：以vk::PhysicalDeviceVulkan12Features和vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT为例
+        vk::DeviceCreateInfo create_info;
+        vk::PhysicalDeviceVulkan12Features need_feats12;
+        need_feats12.setBufferDeviceAddress(true);
+        vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT need_atomic_float_feats;
+        need_atomic_float_feats.setShaderBufferFloat32AtomicAdd(true);
+        need_feats12.pNext = &need_atomic_float_feats;	// 组成特征链。可以在createInfo.pNext之后，但必须在createDevice之前调用
+        createInfo.pNext = &need_feats12; 
+        ```
+
+        
+
+## 调试
+
+> [Vulkan Debug Utilities Extension :: Vulkan Documentation Project](https://docs.vulkan.org/samples/latest/samples/extensions/debug_utils/README.html)
+
+## shader
+
+- SSBO（Shader Storage Buffer Object）数组
+
+    - 需要在physical device的feature中启用ShaderStorageBufferArrayDynanmicIndexing
+
+    - 在Descriptor Set Layout中绑定：绑定 4 个 SSBO
+
+        ```c++
+        vk::DescriptorSetLayoutBinding binding;
+        binding.binding = 0;
+        bingding.descriptorType = vk::DescriptorType::eStorageBuffer;
+        binding.descriptorCount = 4; // ← 数组大小
+        binding.stageFlags = vk::ShaderStageFlagBits::eCompute;
+        ```
+
+    - shader中的使用示例代码如下
+
+        ```glsl
+        // GLSL 示例：动态索引 SSBO 数组
+        layout(set=0, binding=0) buffer MySSBO {
+            vec4 values[];
+        } ssboArray[];  // ← 这是一个 SSBO 数组（每个元素是一个缓冲区实例）
+        
+        uint idx = some_runtime_computed_value(); // 如 gl_GlobalInvocationID.x % numBuffers
+        vec4 v = ssboArray[idx].values[0];        // ✅ 动态索引 ssboArray[]
+        ```
+
+    - 
+
+## 工具类
+
+- `vk::StructureChain`：不仅自动处理 pNext 链接和 sType 填充，还能提供类型安全的访问接口
+
+    ```c++
+    // 修改前：以查找物理设备多个新特性为例
+    vk::PhysicalDeviceFeatures2 feats2;
+    vk::PhysicalDeviceVulkan12Features feats12;
+    vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT atomic_float_feats;
+    feats2.pNext = &feats12;
+    feats12.pNext = &atomic_float_feats;
+    physical_device.getFeatures2(&feats2);
+    // 修改后：代码好像也没有精炼多少。。。
+    using FeatureChain = vk::StructureChain<
+        vk::PhysicalDeviceFeatures2,
+        vk::PhysicalDeviceVulkan12Features,
+        vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT
+    >;
+    FeatureChain chain;
+    physical_device.getFeatures2(&chain.get<vk::PhysicalDeviceFeatures2>());	// .get() 返回的是列表里的第一个对象
+    auto& feats12 = chain.get<vk::PhysicalDeviceVulkan12Features>();
+    auto& atomicFeats = chain.get<vk::PhysicalDeviceShaderAtomicFloatFeaturesEXT>();
+    ```
+    
 
 # 三方库
 
