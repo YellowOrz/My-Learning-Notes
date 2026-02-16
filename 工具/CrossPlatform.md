@@ -143,7 +143,7 @@
 - vsode server离线安装：
 
     - 下载server：根据系统、CPU架构选择连接，然后将其中的commit号换成对应vsode的即可
-        
+      
         -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32/stable
         -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-win32-x64/stable
         -  https://update.code.visualstudio.com/commit:6c3e3dba23e8fadc360aed75ce363ba185c49794/server-linux-x64/stable
@@ -336,7 +336,7 @@
 | Ctrl + Shift + E   | Project                          | 项目文件管理窗口打开/关闭  |
 | Ctrl + K, Ctrl + F | Reformat Code                    | 格式化代码                 |
 | Ctrl + `           | Terminal                         | 终端开启/关闭              |
-| Ctrl + J           | Hide All Tool Windows            | 隐藏所有侧边窗口           |
+| Ctrl + J           | Hide All Tool Windows            | 隐藏所有工具窗口           |
 | F9                 | Toggle Line Breakpoint           | 启用/取消break point       |
 | Alt + F9           | Toggle Temporary Line Breakpoint | 启用一次性的break point    |
 | Shift + F9         | Toggle Breakpoint Enabled        | 禁用/启用 break point      |
@@ -345,7 +345,9 @@
 | Ctrl + Alt + F5    | Attach to Process                | 附加到进程进行调试         |
 |                    |                                  |                            |
 
-- 双击标签页让窗口最大化：setting => advanced settings => Editor Tabs => Perform 'Maximize Editor''Normalize Splits'with double-click on editor tab
+- 双击标签页让编辑器最大化：setting => advanced settings => Editor Tabs => Perform 'Maximize Editor''Normalize Splits'with double-click on editor tab
+
+- 双击标签页隐藏工具窗口：setting => advanced settings => Editor Tabs => Perform 'Maximize Editor''Normalize Splits'with double-click on editor tab
 
 - 注释添加高亮规则：setting => Editor => TODO，添加新的Pattern，取消勾选“Use color scheme TODO default colors”来自定义颜色
 
@@ -366,6 +368,11 @@
 
     - 旧版：setting=>Editor=>Code Style=>C/C++=>Code Generation=>Docummentation Comments，勾选"Add @brief tag"
     - 新版：setting=>Languages & Frameworks=>C/C++=>Code Generation=>Docummentation Comment Template，勾选"Add @brief tag"
+
+- 终端接收快捷键：
+
+    - `Esc`：设置=>高级设置=>终端=>使用Escape将焦点移至编辑器，取消勾选
+
 
 
 
