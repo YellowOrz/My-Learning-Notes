@@ -876,7 +876,7 @@
 - ，它可以用来执行，程序用法为
 
   ```bash
-
+  
   ```
 - 不同shader对应的glsl文件格式如下
 
@@ -911,13 +911,13 @@
       	const char* shaderStrings[1];
       	TBuiltInResource Resources;
       	initializeResources(Resources);
-
+      
       	// Enable SPIR-V and Vulkan rules when parsing GLSL
       	EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
-
+      
       	EShLanguage stage = getLanguage(shaderType);
       	glslang::TShader shader(stage);
-
+      
       	shaderStrings[0] = pshader;
       	shader.setStrings(shaderStrings, 1);
           // 解析GLSL源代码
@@ -1536,10 +1536,12 @@
 
 # 语法
 
-## Feature && Extension
-
 ## Memory
 
+- Physical Device Memeory Properties：需要设定heap和type两个属性
+  - memory heap：==TODO==
+
+- Memory Barrier：在cuda中，同一个 Stream 里的后一个 Kernel 会**自动**等待前一个 Kernel 的内存写入完成；而在 Vulkan 中，驱动**不会**帮你做这件事，你必须手动插入 Memory Barrier 来强制“写完 -> 读完”的顺序
 - **Memory Mapping技术**：把Vulkan当中生成的任何内存（VkDeviceMemory）映射到CPU端的一个void*指针，以便CPU端读取或者写入这块内存。
   - `vkMapMemory()`进行映射操作，`vkUnmapMemory()`进行映射解除操作
   - 内存必须要带 `VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT`标识符
@@ -1553,7 +1555,7 @@
 
     - 在 `vkUnmapMemory()` 之前调用
 
-## layer
+## Layer
 
 - instance的layer
     - `VK_LAYER_KHRONOS_validation`：由 Khronos 提供的标准验证层，可在开发阶段捕获常见的使用错误，避免运行时崩溃或未定义行为
@@ -1632,7 +1634,6 @@
             vk::MemoryAllocateInfo allocInfo;
             allocInfo.allocationSize = memReq.memoryRequirements.size;
             allocInfo.memoryTypeIndex = findMemoryType(memReq.memoryRequirements.memoryTypeBits);
-            
             vk::DeviceMemory sparseMemory = device.allocateMemory(allocInfo);
             
             // 绑定资源到内存（vkBindSparse）
@@ -1667,14 +1668,22 @@
         - 对应`VK_EXT_shader_atomic_float`
         - 后缀 `EXT`代表这是一个扩展。**必须显式开启对应的device的extension**，见[这里](# Extension)
 
-        | 名字                         | 说明     |
-        | ---------------------------- | -------- |
-        | shaderBufferFloat32AtomicAdd | ==TODO== |
-        | shaderSharedFloat32AtomicAdd |          |
+        | 名字                         | 说明                   |
+        | ---------------------------- | ---------------------- |
+        | shaderBufferFloat32AtomicAdd | **缓冲区内存**是否支持 |
+        | shaderSharedFloat32AtomicAdd | **共享内存**是否支持   |
 
     - `vk::PhysicalDeviceDescriptorIndexingFeatures`
 
         - `vk::PhysicalDeviceDescriptorIndexingFeatures`是Vulkan 1.2 核心规范，而`vk::PhysicalDeviceDescriptorIndexingFeaturesEXT`是Vulkan 1.0+的扩展（`VK_EXT_descriptor_indexing`）
+
+        | 名字                                          | 说明                                                   |
+        | --------------------------------------------- | ------------------------------------------------------ |
+        | runtimeDescriptorArray                        | 着色器中可用运行时变长的数组，无需在编译时指定固定大小 |
+        | shaderStorageBufferArrayNonUniformIndexing    | 存储缓冲区支持非均匀索引，即不同线程使用不同索引       |
+        | descriptorBindingStorageBufferUpdateAfterBind |                                                        |
+        | descriptorBindingVariableDescriptorCount      |                                                        |
+        | descriptorBindingPartiallyBound               |                                                        |
 
 - 开启指定feature：
 
@@ -1719,13 +1728,42 @@
         createInfo.pNext = &need_feats12; 
         ```
 
-        
 
-## 调试
+## Descriptor
+
+- `vk::DescriptorSet`是allocate而不是create的原因：
+    - 从预先建好的池子（Descriptor Pool）里扣出来，从而实现无锁、O(1)、无碎片
+    - 用完直接归还，或整个池重置
+- `vk::WriteDescriptorSet`：用于将一个**实际GPU内存（Buffer/Image，相当于实参）**更新给描述符集（Descriptor Set）的一个binding（**相当于形参**），
+    - 这样做的目的是
+    - `vk::WriteDescriptorSet`完成后，需要调用`vk::Device::updateDescriptorSets()`
+
+## Binding
+
+- Bindless技术：
+
+## Pipeline
+
+- Cuda中在 Launch（启动）核函数的时候，才告诉 GPU 怎么跑；而vulkan要求你在 **创建管线** 的时候，就把大部分配置定死。
+    - 如果相换常量，可以使用**Specialization Constants（常量特化）**
+- Compute Pipeline：
+    - 一个compute pipeline大致对应一个cuda的kernel
+    - 
+
+## CommandBuffer
+
+-  CommandBuffer：相当于 CUDA 的 cudaStream + 多个核函数的批量提交机制，还包含了配置状态和内存操作。包含的步骤如下：
+    - `vk::CommandBuffer::reset()`：重新录制之前需要重置
+    - `vk::CommandBuffer::begin()`和`vk::CommandBuffer::end()`：开始&&结束录制
+    - `vk::CommandBuffer::bindPipeline()`、`vk::CommandBuffer::bindDescriptorSets()`
+    - `vk::CommandBuffer::dispatch()`
+    - `vk::CommandBuffer::copyBuffer()`：==TODO==
+
+## Debug
 
 > [Vulkan Debug Utilities Extension :: Vulkan Documentation Project](https://docs.vulkan.org/samples/latest/samples/extensions/debug_utils/README.html)
 
-## shader
+## Shader
 
 - SSBO（Shader Storage Buffer Object）数组
 
@@ -1753,7 +1791,15 @@
         vec4 v = ssboArray[idx].values[0];        // ✅ 动态索引 ssboArray[]
         ```
 
-    - 
+
+## Sync
+
+- Semaphore（信号量）：GPU <-> GPU同步，类似cuda中的`cudaEvent`
+- Fence（围栏）：GPU -> CPU同步，类似于cuda中的`cudaStreamSynchronize` / `cudaDeviceSynchronize`
+- Memory Barrier（内存屏障）：
+    - `vk::MemoryBarrier`：同步所有的资源（Buffer/Image）
+    - `vk::BufferMemoryBarrier`：同步单个Buffer
+
 
 ## 工具类
 
