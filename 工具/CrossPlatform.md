@@ -372,6 +372,8 @@
 - 终端接收快捷键：
 
     - `Esc`：设置=>高级设置=>终端=>使用Escape将焦点移至编辑器，取消勾选
+    
+- 运行程序时终端输出取消行宽限制：菜单栏中，点击 Help -> Find Action... (或按快捷键 Ctrl+Shift+A)，输入 Registry 后打开，取消勾选`run.processes.with.pty`，重启 CLion
 
 
 

@@ -911,8 +911,8 @@ NOTE：以MSI B450i为例
         image: yobasystems/alpine-mariadb
         hostname: alpine-mariadb
         networks:
-          private-network:
-            ipv4_address: 172.18.11.12
+          private-network:	# 改成实际的网络名称
+            ipv4_address: 172.18.11.12	# 注意网段
         restart: always
         env_file: mariadb.env
         volumes:
@@ -921,7 +921,7 @@ NOTE：以MSI B450i为例
           - '33306:3306'
     
     networks:
-      private-network:
+      private-network:	# 改成实际的网络名称
         external: true
     ```
     
@@ -942,8 +942,8 @@ NOTE：以MSI B450i为例
         image: fireflyiii/core:latest
         hostname: fireflyiii
         networks:
-          private-network:
-            ipv4_address: 172.18.11.13
+          private-network:	# 改成实际的网络名称
+            ipv4_address: 172.18.11.13	# 注意网段
         restart: always
         env_file: filrefly.env
         volumes:
@@ -1015,7 +1015,26 @@ NOTE：以MSI B450i为例
         30 1 * * * docker restart xiaoyaliu-alist-1
         ```
     
-        
+- zotero：docker-compose.yml如下所示
+
+    ```yaml
+    services:
+      zotero:
+        image: lscr.io/linuxserver/zotero:latest
+        container_name: zotero
+        restart: unless-stopped
+        shm_size: 1gb
+        environment:
+          - PUID=1000
+          - PGID=1000
+          - TZ=Asia/Shanghai
+        ports:
+          - "3000:3000"
+          - "3001:3001"
+        volumes:
+          - /xxxxxxx:/config
+    ```
+
     
 
 

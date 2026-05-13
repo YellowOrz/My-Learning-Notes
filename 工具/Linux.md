@@ -677,7 +677,7 @@ apt install libgtk-3-dev
     # set-window-option -g utf8 on #开启窗口的UTF-8支持，报错
     # 多窗口同步操作快捷键ctrl+b s
     bind-key s setw synchronize-panes
-    set -g history -limit 99999
+    set -g history-limit 99999
     ```
 
     复制模式步骤：
