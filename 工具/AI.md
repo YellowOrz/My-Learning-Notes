@@ -163,10 +163,69 @@
             - `"*"` 匹配所有工具
             - `"mcp__github__.*"` 匹配所有 GitHub MCP 工具
         - `"if"`：在满足matcher的前提下，缩小工具的调用场景。例如，只需拦截 `git push` 命令，则填写`"Bash(git push*)"`
+        - `"hooks"`：包含具体的hook事件内容
+            - `"type"`：包含command、prompt、agent、http、mcp_tool
 
 
--  
+- 环境变量`CLAUDE_CODE_SESSION_ID` 包含唯一的会话标识符——可使用它将钩子日志和外部遥测数据与特定会话关联起来。
 
+- hook输入输出：
+
+
+    - `PostToolUse`和`PostToolUseFailure` hook的输入包含一个`duration_ms`字段，该字段显示工具的执行时间
+
+    - `Stop` 和 `SubagentStop`  hook的输入包含 `background_tasks` 和 `session_crons` 数组。
+
+        - 前者 列出了回合结束时仍在后台运行的 bash 命令和子智能体
+
+        - 后者 列出了附加到会话的计划任务
+
+    - 退出码`0`表示成功，退出码`2`表示阻塞错误
+
+    - 
+
+- hook类型：
+
+    - command 类型：执行本地 shell 命令
+
+    - prompt 类型：要求 Claude 评估一段提示词，通常在Stop或SubagentStop时触发
+
+    - agent 类型：生成一个子智能体以进行多步验证。
+
+    - http 类型：会将相同的 JSON 负载以 POST 方式发送至网络钩子端点，这对于远程日志记录或策略服务场景非常实用。支持在请求头中进行环境变量插值，且这些变量必须被明确加入允许列表
+
+    - mcp_tool 类型：直接调用 MCP 工具。适用于需要调用外部服务（例如向 Slack 发布消息或创建 GitHub  issue）且无需通过 shell 执行时，该类型尤为适用
+
+        > [!NOTE]
+        >
+        > the in-app config builder目前还无法生成mcp_tool类型的 hooks
+
+- 可以使用 `hooks` 前置字段将钩子限定于特定skill和智能体
+
+    - `once: true` 标志会让钩子在每个会话中仅运行一次
+
+    ```markdown
+    ---
+    name: production-deploy
+    hooks:
+      PreToolUse:
+        - matcher: "Bash"
+          hooks:
+            - type: command
+              command: "./scripts/production-safety-check.sh"
+              once: true
+    ---
+    ```
+
+### 7 MCP Server：Model Context Protocol 
+
+### 8 Subagents
+
+### 9 Advanced Features
+
+### 10 Workflows and Automation
+
+### 11 Plugins
 
 
 # 概念
