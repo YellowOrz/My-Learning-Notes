@@ -4,6 +4,12 @@
 
 ### Claude Code
 
+- 功能：
+
+    - Auto Memory：自动把它觉得需要记录的东西记下
+
+    - Auto Dream：处理当前项目的memory记忆文件
+    
 - 安装：[官方的部署脚本](https://code.claude.com/docs/en/setup#installation)、[硅基流动的部署脚本](https://docs.siliconflow.cn/cn/usercases/use-siliconcloud-in-ClaudeCode#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%E8%84%9A%E6%9C%AC)
 
     - 如果启动claude报如下错，在`~/.claude.json`中添加内容`"hasCompletedOnboarding": true`
@@ -47,12 +53,38 @@
         _claude $name $price
     }
     ```
-    
+
     
 
 # 测评
 
 - [Arena Leaderboard](https://arena.ai/zh/leaderboard)：类别包含Text、Code、Vision、Text-to-Image、Image、Edit、Search、Text-to-Video、Image-to-Video
+
+
+
+# 技巧
+
+> 2026年4月29日：[开源「洁癖.skill」，让你的Agent越用越聪明。](https://mp.weixin.qq.com/s/tg1wd-iN2gWHWhXdY0faeg)
+
+- 让AI整理文档，合并优于追加，删除优于保留
+    - 在AI协作的场景里，信息多不是优势，信息准才是
+
+> 2026年4月14日：[用好Agent最重要的技巧不是Skills，是这四个字。](https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA==&mid=2647681510&idx=1&sn=427a2e5af2f9aa7ca81442ffac4f2a59)
+
+- Agent设定规则：**约束先行**
+    - 让Agent干任何事情之前，先把规范定好，全局、项目、文件夹的规矩。
+- 对于AI来说，你脑子里知道的东西，如果没有写进文档，就是不存在的
+
+> 2026年4月3日：[Claude Code悄悄学会了做梦。](https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA==&mid=2647681328&idx=1&sn=ef7b6d4a0ba5bb46313c142da225190b)
+
+- Claude Code有四层记忆：越来越完整，也越来越像人
+
+    - 第一层，CLAUDE.md。你手写的指令文件。项目规范、编码标准等等，这些是你主动教给Claude的东西。目前的最高权限。
+    - 第二层，Auto Memory。Claude在工作过程中自己记的笔记。
+    - 第三层，Session Memory。单次对话内的上下文记忆。即标准的上下文窗口，你跟它当前这轮对话里说的所有东西，对话结束就没了。但对话的原始记录会以JSONL日志文件的形式留在了本地。Claude平时不会去读这些日志，但Auto Dream做梦的时候会去翻它们，从里面捞有价值的信息出来。
+    - 第四层，Auto Dream。后台的记忆巩固层。定期清理、整理、优化Auto Memory积累的所有笔记。
+
+    
 
 # 教程
 
@@ -101,7 +133,9 @@
   - `argument-hint`：显示技能期望的参数
   - `allowed-tools`：限制技能运行时可使用的工具，其遵循与权限规则相同的模式语法
 - **层级二**：SKILL.md的全文（推荐长度在500行以内），只有在Claude需要使用当前skill的时候加载
-  - 使用`!command`的语法会在技能内容发送给 Claude 之前执行 shell 命令。输出会被内联处理——Claude 只能看到结果，无法看到命令。
+  - 使用!`<command>`的语法会在技能内容发送给 Claude 之前执行 shell 命令。输出会被内联处理——Claude 只能看到结果，无法看到命令。
+      - 内联形式仅在 `!` 出现在行首或紧跟在空白之后时被识别
+      - 多行命令，使用以 ````!` 开头的围栏代码块而不是内联形式
   - 捕获参数的方式有2种：`$ARGUMENTS` 会捕获命令名之后的所有内容作为单个字符串。`$0、$1、$2` 会捕获以空格分隔的单个参数
 - **层级三**：在skill目录中的辅助文件（模板、脚本），通过bash按需加载
   - 辅助文件通过相对路径进行引用
@@ -423,7 +457,11 @@
 
 # 概念
 
+> [手把手彻底学会 Agent Skills！【小白教程】](https://www.bilibili.com/video/BV1G3FNznEiS/) 
 
+- Skill
+    - 类比炒菜：流程<=>SKILL.md，配方<=>references，工具<=>scripts，材料==assets
+    - 
 
 ---------
 
@@ -492,6 +530,14 @@
 ​	![image-20260521151907459](./images/image-20260521151907459.png)
 
 # 理论
+
+> 2026-06-17：[【闪客】1M 上下文很难吗？深入解读 GLM5.2 上下文背后的技术](https://www.bilibili.com/video/BV1uVLX6uEYC/)
+
+- GLM 5.2支持1M上下文的技术：减少计算量、减少存储空间(KV缓存)、保证有效性
+    - IndexShare：解决计算量。让几个注意力层共享indexer
+        - DSA (DeepSeek Sparse Attension)：有一个indexer，给每个token打分，选出topk参与attension计算，也可以减少计算量
+    - LayerSplit：解决KV缓存占用。让每张GPU不再存储全部层的KV Cache，各自持有不同层的KV Cache
+    - slimeRL：提升训练效率。slime是一套agent的后训练的基础设施框架，支持多种训练任务和组织
 
 > [【闪客】上帝视角拆解三年 LLM 架构演进！](https://www.bilibili.com/video/BV1mxR9BiEm8)
 
