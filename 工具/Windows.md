@@ -151,11 +151,19 @@
 
     - [启用命令补全](https://learn.microsoft.com/zh-cn/powershell/module/psreadline/about/about_psreadline?view=powershell-7.4#predictive-intellisense)：Set-PSReadLineOption -PredictionSource History
 
+- 修改配置文件：打开 profile 文件 `notepad $PROFILE`
+
     - 使用page up和page down搜索历史命令：
 
         ```powershell
         Set-PSReadLineKeyHandler -Key PageUp -Function HistorySearchBackward
         Set-PSReadLineKeyHandler -Key PageDown -Function HistorySearchForward
+        ```
+
+    - tab触发菜单式补全
+
+        ```powershell
+        Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
         ```
 
         

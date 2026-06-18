@@ -426,13 +426,9 @@ NOTE：以MSI B450i为例
 
 ## OpenWrt
 
-- 镜像下载：
-    
-    - 23.05版本：[Index of /releases/23.05.5/targets/x86/64/](https://downloads.openwrt.org/releases/23.05.5/targets/x86/64/)
-    - 24.10版本：[Index of /releases/24.10.6/targets/x86/64/](https://downloads.openwrt.org/releases/24.10.6/targets/x86/64/)
-    - 25.12版本及之后把opkg换成了apk：[Index of /releases/25.12.4/targets/x86/64/](https://downloads.openwrt.org/releases/25.12.4/targets/x86/64/)
-    - 选择**ext4-combined-efi.img.gz**结尾的，说明在[这儿](https://openwrt.org/docs/guide-user/installation/openwrt_x86)
-    
+- 镜像下载：[Index of /releases/23.05.5/targets/x86/64/ (openwrt.org)](https://downloads.openwrt.org/releases/23.05.5/targets/x86/64/)
+    - 选择**ext4-combined.img.gz**结尾的，说明在[这儿](https://openwrt.org/docs/guide-user/installation/openwrt_x86)
+
 - 创建虚拟机：~~[【利用PVE虚拟机，来打造属于自己的All In One系统吧！】 【精准空降到 05:47】]( https://www.bilibili.com/video/BV1bc411v7A3/?share_source=copy_web&vd_source=31f11ba822b8d6c2d924c85d5b2cba06&t=347)~~、[PVE 安装 OpenWrt 作为旁路由 - 冰棒实验室 (beanbang.cn)](https://blog.beanbang.cn/2023/11/26/pve-install-openwrt-as-secondary-router/)、[ProxmoxVE（PVE）安装OpenWRT系统（旁路由模式）_pve安装openwrt-CSDN博客](https://blog.csdn.net/sunky7/article/details/138198347)
 
     - 创建虚拟机的时候，不要添加磁盘
@@ -753,7 +749,10 @@ NOTE：以MSI B450i为例
         PASSWORD=    # 为空
         ```
     
-        
+- [GithubStarsManager](https://github.com/AmintaCCCP/GithubStarsManager/tree/main)：docker-compose.yml如下所示
+
+    ```yaml
+    version: '3.8'
     
         
 
@@ -1037,6 +1036,71 @@ NOTE：以MSI B450i为例
           - "3001:3001"
         volumes:
           - /xxxxxxx:/config
+    ```
+
+- **[NextChat](https://github.com/ChatGPTNextWeb/NextChat)**：docker-compose.yaml如下所示
+
+    ```yaml
+    version: "3.9"
+    services:
+      chatgpt-next-web:
+        hostname: chatgpt-next-web
+        container_name: chatgpt-next-web
+        image: yidadaa/chatgpt-next-web
+        ports:
+          - 3000:3000
+    ```
+
+- bambustudio：docker-compose.yaml如下所示
+
+    ```yaml
+    services:
+      bambustudio:
+        image: lscr.io/linuxserver/bambustudio:latest
+        container_name: bambustudio
+        restart: unless-stopped
+        shm_size: 1gb
+        environment:
+          - PUID=1000
+          - PGID=1000
+          - TZ=Asia/Shanghai
+          - DARK_MODE=true #optional
+        ports:
+          - "3022:3000"
+          - "3023:3001"
+        volumes:
+          - /xxx/config:/config
+    ```
+
+- code-servere：docker-compose.yaml如下所示
+
+    ```c++
+    version: '3.8'
+    services:
+      code-server:
+        image: codercom/code-server:latest
+        container_name: code-server
+        ports:
+          - "8080:8080"
+        volumes:
+          - "/xxx/config:/home/coder/.config"
+          - "/xxx/Projects:/home/coder/project"   
+        environment:
+          - PUID=1000
+          - PGID=1000
+          - DOCKER_USER=${USER:-coder}       # 如果未设置 $USER，则默认 "coder"
+    ```
+
+- ~~安装qwrt：官方应用商店安装，docker-compose.yaml如下所示，然后按照[这个教程](https://club.fnnas.com/forum.php?mod=viewthread&tid=59080)配置~~
+
+- sub2api：运行如下命令得到.env和docker-compose.yml，修改
+
+    ```bash
+    # Create deployment directory
+    mkdir -p sub2api-deploy && cd sub2api-deploy
+    
+    # Download and run deployment preparation script
+    curl -sSL https://raw.githubusercontent.com/Wei-Shaw/sub2api/main/deploy/docker-deploy.sh | bash
     ```
 
     
